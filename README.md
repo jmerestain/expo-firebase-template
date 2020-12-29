@@ -15,6 +15,11 @@ npm i
 npm run start
 ```
 
+## Prerequisite
+
+1. Create a new Firebase project
+2. Make use of Firebase Auth using email and password
+
 ## Configuration
 
 1. Duplicate ```example.env```
