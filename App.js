@@ -1,21 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
+// React
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// React Navigation
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+// UI Kitten
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
+// Screens
+import WelcomeScreen from './screens/WelcomeScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import SampleAuthenticated from './screens/SampleAuthenticated'; // Sample screen
+// Firebase
+import { initFirebase } from './services/firebase';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const UiKitten = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <NavComponent />
+    </ApplicationProvider>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const NavComponent = () => (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Sample" component={SampleAuthenticated} />
+      </Stack.Navigator>
+    </NavigationContainer>
+)
+
+export default function App() {
+  // Initialize Firebase first
+  initFirebase();
+  return (
+    <UiKitten />
+  );
+
+}
