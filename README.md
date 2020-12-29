@@ -9,16 +9,18 @@ A simple template for creating authenticated Firebase apps with Expo
 * Expo
 * Firebase
 
+## Prerequisites
+
+1. Create a new Firebase project
+2. Make use of Firebase Auth using email and password
+
+## Installation
+
 ```
 npm install -g expo-cli
 npm i
 npm run start
 ```
-
-## Prerequisite
-
-1. Create a new Firebase project
-2. Make use of Firebase Auth using email and password
 
 ## Configuration
 
