@@ -25,7 +25,7 @@ export const initFirebase = () => {
 export const createUser = (email, password, setMessage, navigation) => {
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(() => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             setMessage('Registered user!');
             console.log(user);
