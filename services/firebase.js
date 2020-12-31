@@ -28,7 +28,7 @@ export const createUser = (email, password, setMessage, navigation) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             setMessage('Registered user!');
-            console.log(user);
+            //console.log(user);
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Sample' }], // Designated main page
@@ -52,7 +52,7 @@ export const loginUser = (email, password, setMessage, navigation) => {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
             setMessage('Authenticated User!');
-            console.log(user);
+            //console.log(user);
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Sample' }], // Designated main page
@@ -80,4 +80,17 @@ export const signOutUser = async (navigation) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const checkAuthenticated = (setUser, navigation) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            setUser(user);
+        } else {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Welcome' }],
+            });
+        }
+    });
 }
