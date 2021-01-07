@@ -4,8 +4,8 @@ import { loginUser } from '../services/firebase';
 import PopUpMessage from '../components/PopUpMessage';
 
 const LoginScreen = ({navigation}) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('test@test.com');
+    const [password, setPassword] = useState('jajaja113');
     const [message, setMessage] = useState('');
 
     return (

@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import { API_KEY, PROJECT_ID, SENDER_ID, FB_APP_ID, G_MEASURE_ID } from '@env';
 
 export const initFirebase = () => {
@@ -31,7 +32,7 @@ export const createUser = (email, password, setMessage, navigation) => {
             //console.log(user);
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Sample' }], // Designated main page
+                routes: [{ name: 'DashNav' }], // Designated main page
             });
         })
         .catch((error) => {
@@ -55,7 +56,7 @@ export const loginUser = (email, password, setMessage, navigation) => {
             //console.log(user);
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Sample' }], // Designated main page
+                routes: [{ name: 'DashNav' }], // Designated main page
             });
         })
         .catch((error) => {
@@ -93,4 +94,25 @@ export const checkAuthenticated = (setUser, navigation) => {
             });
         }
     });
+}
+
+const getMyStore = (user) => {
+    productsRef = '' // Get products where owner is user.uid
+}
+
+const getCatalogue = () => {
+    productsRef = ''
+}
+
+const getRecommendations = () => {
+    productsRef = ''
+}
+
+const getReview = (product) => {
+}
+
+const postMyProduct = (user) => {
+}
+
+const postReview = (product) => {
 }

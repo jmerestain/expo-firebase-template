@@ -9,7 +9,7 @@ function KiannaScreen ({navigation}) {
                 This is some large text
             </Text>
             <Button onPress={() => {
-                navigation.navigate('Sample');
+                navigation.navigate('Dashboard');
             }} size='medium'>
                 Return to Main Page
             </Button>
