@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { Layout, Text, Button, ButtonGroup, List, Card } from '@ui-kitten/components';
-import { checkAuthenticated } from '../services/firebase';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
+import { Layout, Text, Button, ButtonGroup, List, Card, Spinner } from '@ui-kitten/components';
+import { checkAuthenticated, getCatalogue } from '../services/firebase';
 
 const data = [
     {title: 'Title 1', description: 'This is the description of my shit'},
     {title: 'Title 2', description: 'This is the description of my shit'},
 ]
 
-const HomeComponent = ({user, db}) => {
+const HomeComponent = ({user, navigation}) => {
 
     const [homeProducts, setHomeProducts] = useState([]);
 
     const refreshItems = useEffect(() => {
-        setHomeProducts([]);
-        db.collection('products').get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                setHomeProducts(oldArray => [...oldArray, doc.data()]);
-                console.log(doc.data())
-            });
-        });
+        getCatalogue(setHomeProducts);
     }, []);
 
     return (
@@ -36,7 +28,7 @@ const HomeComponent = ({user, db}) => {
             </Text>
             {homeProducts.length != 0 ?
             <List data={homeProducts} renderItem={renderItem} extraData={homeProducts} /> : 
-            <Text>Loading!</Text>}
+            <Spinner style={styles.loading} size='giant'/>}
         </Layout>
     )
 }
@@ -62,7 +54,6 @@ const SampleAuthenticated = ({navigation}) => {
 
     const [user, setUser] = useState(null);
     const [isHome, setIsHome] = useState(true);
-    const db = firebase.firestore();
 
     useEffect(() => {
         checkAuthenticated(setUser, navigation);
@@ -87,7 +78,7 @@ const SampleAuthenticated = ({navigation}) => {
                 </Button>
             </ButtonGroup>
 
-            {isHome ? <HomeComponent user={user} db={db} /> : null}
+            {isHome ? <HomeComponent user={user} navigation={navigation} /> : null}
         </Layout>
     )
 }
@@ -112,6 +103,9 @@ const styles = StyleSheet.create({
         elevation: 2,
         marginHorizontal: 20,
         marginBottom: 20,
+    },
+    loading: {
+        alignSelf: 'center',
     }
 })
 

@@ -96,23 +96,52 @@ export const checkAuthenticated = (setUser, navigation) => {
     });
 }
 
-const getMyStore = (user) => {
-    productsRef = '' // Get products where owner is user.uid
+export const getMyStore = (user, setProducts) => {
+    const db = firebase.firestore();
+    if(user) {
+        db.collection("products").where("vendor", "==", user.uid)
+        .onSnapshot((querySnapshot) => {
+            setProducts([]);
+            querySnapshot.forEach(function(doc) {
+                setProducts(oldArray => [...oldArray, doc.data()])
+            });
+        });
+    }
 }
 
-const getCatalogue = () => {
+export const getCatalogue = (setCatalogue) => {
+    const db = firebase.firestore();
+    db.collection('products')
+    .onSnapshot((querySnapshot) => {
+        setCatalogue([]);
+        querySnapshot.forEach(function(doc) {
+            setCatalogue(oldArray => [...oldArray, doc.data()]);
+        });
+    });
+}
+
+export const getRecommendations = () => {
     productsRef = ''
 }
 
-const getRecommendations = () => {
-    productsRef = ''
+export const getReview = (product) => {
 }
 
-const getReview = (product) => {
+export const postMyProduct = (product, setMessage) => {
+    const db = firebase.firestore();
+    const productData = {
+        ...product,
+        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
+    }
+    const {title} = product;
+    db.collection("products").doc(title).set(productData)
+        .then(() => {
+            setMessage(`${title} successfully posted`);
+        })
+        .catch((e) => {
+            setMessage(`Error: ${e}`);
+        })
 }
 
-const postMyProduct = (user) => {
-}
-
-const postReview = (product) => {
+export const postReview = (product) => {
 }

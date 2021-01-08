@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Input, Text, Button, Card } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
-import { postMyItem } from '../../services/firebase';
+import { postMyProduct, checkAuthenticated } from '../../services/firebase';
 
 const NewItemScreen = ({navigation}) => {
 
     const [title, setTitle] = useState('Title');
     const [description, setDescription] = useState('Description');
     const [price, setPrice] = useState(0);
+    const [user, setUser] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    useEffect(() => {
+        checkAuthenticated(setUser, navigation)
+    }, [])
 
     return (
         <Layout style={styles.container}>
@@ -35,11 +41,33 @@ const NewItemScreen = ({navigation}) => {
                     <Input keyboardType='decimal-pad' onChangeText={value => setPrice(value)} />
                 </Layout>
                 <Layout style={styles.field}>
-                    <Button status='success'>
+                    <Button status='success' onPress={() => {
+                        const productData = {
+                            title,
+                            description,
+                            price,
+                            vendor: user.uid
+                        }
+
+                        postMyProduct(productData, setMessage);
+                    }}>
                         Add New Product
                     </Button>
                 </Layout>
+                {message ? <MessageComponent message={message} /> : null}
             </Layout>
+        </Layout>
+    )
+}
+
+const MessageComponent = ({message}) => {
+    return (
+        <Layout style={styles.field}>
+            <Card>
+                <Text category="h4">
+                    {message}
+                </Text>
+            </Card>
         </Layout>
     )
 }
