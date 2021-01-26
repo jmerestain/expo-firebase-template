@@ -18,6 +18,15 @@ const RegisterScreen = ({navigation}) => {
                 placeholder='Email'
             />
             <Input
+                onChangeText={value => setEmail(value)}
+                placeholder='Full Name'
+            />
+            <Input
+                onChangeText={value => setEmail(value)}
+                placeholder='Cellphone Number'
+                keyboardType='phone-pad'
+            />
+            <Input
                 onChangeText={value => setPassword(value)}
                 placeholder='Password'
                 secureTextEntry={true}

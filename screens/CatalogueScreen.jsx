@@ -3,11 +3,6 @@ import { StyleSheet } from 'react-native';
 import { Layout, Text, Button, ButtonGroup, List, Card, Spinner } from '@ui-kitten/components';
 import { checkAuthenticated, getCatalogue } from '../services/firebase';
 
-const data = [
-    {title: 'Title 1', description: 'This is the description of my shit'},
-    {title: 'Title 2', description: 'This is the description of my shit'},
-]
-
 const HomeComponent = ({user, navigation}) => {
 
     const [homeProducts, setHomeProducts] = useState([]);
@@ -18,11 +13,6 @@ const HomeComponent = ({user, navigation}) => {
 
     return (
         <Layout style={{flex: 1, flexDirection: 'column'}}>
-            <Layout style={styles.userMessage}>
-                <Text style={{textAlign: 'center'}}>
-                    Welcome to FoodEye {user ? user.email : 'loading...'}!
-                </Text>
-            </Layout>
             <Text style={{padding: 20, fontWeight: 'bold'}} category='label'>
                 Catalogue
             </Text>
@@ -50,7 +40,7 @@ const renderItem = ({item}) => {
     )
 }
 
-const SampleAuthenticated = ({navigation}) => {
+const CatalogueScreen = ({navigation}) => {
 
     const [user, setUser] = useState(null);
     const [isHome, setIsHome] = useState(true);
@@ -109,4 +99,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SampleAuthenticated;
+export default CatalogueScreen;

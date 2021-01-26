@@ -12,7 +12,7 @@ const DashHeader = () => {
     return (
             <SafeAreaView style={styles.container}>
                 <Pressable onPress={() => {
-                    signOutUser();
+                    signOutUser(navigation);
                 }}>
                     <Icon 
                         style={styles.icon}

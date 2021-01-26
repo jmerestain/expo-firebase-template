@@ -7,9 +7,12 @@ const VendorScreen = ({navigation}) => {
     
     const [user, setUser] = useState(null);
     const [myProducts, setProducts] = useState([]);
+    const [vendorApproved, setVendorApproved] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkAuthenticated(setUser, navigation)
+        checkAuthenticated(setUser, navigation);
+        //checkVendorApproved(setVendorApproved, setLoading, navigation);
     }, [])
     useEffect(() => {
         getMyStore(user, setProducts);

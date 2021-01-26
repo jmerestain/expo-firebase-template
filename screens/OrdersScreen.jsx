@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Layout, Text, Button, List, ButtonGroup } from '@ui-kitten/components';
 
-function KiannaScreen ({navigation}) {
+function OrdersScreen ({navigation}) {
     return(
         <Layout style={styles.container}>
             <Layout style={styles.inner}>
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default KiannaScreen;
+export default OrdersScreen;

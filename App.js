@@ -13,9 +13,9 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import SampleAuthenticated from './screens/SampleAuthenticated'; // Sample screen
+import CatalogueScreen from './screens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
-import OtherScreen from './screens/OtherScreen';
+import OrdersScreen from './screens/OrdersScreen';
 // Firebase
 import { initFirebase } from './services/firebase';
 // Header
@@ -47,7 +47,7 @@ const UiKitten = () => {
 
 const DashNavigator = () => (
   <Tab.Navigator>
-    <Tab.Screen name="Dashboard" component={SampleAuthenticated} options={{
+    <Tab.Screen name="Dashboard" component={CatalogueScreen} options={{
       tabBarIcon: () => (
         <Icon
           style={styles.icon}
@@ -56,7 +56,7 @@ const DashNavigator = () => (
         />
       ),
     }} />
-    <Tab.Screen name="Orders" component={OtherScreen} options={{
+    <Tab.Screen name="Orders" component={OrdersScreen} options={{
       tabBarIcon: () => (
         <Icon
           style={styles.icon}
