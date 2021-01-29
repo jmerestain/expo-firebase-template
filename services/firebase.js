@@ -9,7 +9,7 @@ export const initFirebase = () => {
         authDomain: `${PROJECT_ID}.firebaseapp.com`, // project-id.firebaseapp.com
         databaseURL: `https://${PROJECT_ID}.firebaseio.com`, // https://project-id.firebaseio.com
         projectId: `${PROJECT_ID}`, // project-id
-        storageBucket: `${PROJECT_ID}.appspot.com`, // project-id.appspot.com
+        storageBucket: `gs://${PROJECT_ID}.appspot.com`, // project-id.appspot.com
         messagingSenderId: `${SENDER_ID}`, // sender-id
         appId: `${FB_APP_ID}`, // facebook app id
         measurementId: `${G_MEASURE_ID}`, // google analytics id
@@ -121,10 +121,10 @@ export const getCatalogue = (setCatalogue) => {
 }
 
 export const getRecommendations = () => {
-    productsRef = ''
+    const productsRef = ''
 }
 
-export const getReview = (product) => {
+export const getReviews = (product) => {
 }
 
 export const postMyProduct = (product, setMessage) => {
@@ -143,5 +143,5 @@ export const postMyProduct = (product, setMessage) => {
         })
 }
 
-export const postReview = (product) => {
+export const postReview = (user, product) => {
 }

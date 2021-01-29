@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { Layout, Text, Button, ButtonGroup, List, Card, Spinner } from '@ui-kitten/components';
+import { Layout, Text, Button, ButtonGroup, List, Card, Spinner, Divider } from '@ui-kitten/components';
 import { checkAuthenticated, getCatalogue } from '../services/firebase';
 
 const HomeComponent = ({user, navigation}) => {
@@ -8,17 +8,19 @@ const HomeComponent = ({user, navigation}) => {
     const [homeProducts, setHomeProducts] = useState([]);
 
     const refreshItems = useEffect(() => {
-        getCatalogue(setHomeProducts);
+        getCatalogue(setHomeProducts); 
     }, []);
 
     return (
-        <Layout style={{flex: 1, flexDirection: 'column'}}>
+        <Layout style={styles.container} >
             <Text style={{padding: 20, fontWeight: 'bold'}} category='label'>
-                Catalogue
+                Categories
             </Text>
-            {homeProducts.length != 0 ?
-            <List data={homeProducts} renderItem={renderItem} extraData={homeProducts} /> : 
-            <Spinner style={styles.loading} size='giant'/>}
+            {
+                homeProducts.length != 0 ?
+                <List data={homeProducts} renderItem={renderItem} extraData={homeProducts} /> : 
+                <Spinner style={styles.loading} size='giant'/>
+            }
         </Layout>
     )
 }
@@ -43,7 +45,6 @@ const renderItem = ({item}) => {
 const CatalogueScreen = ({navigation}) => {
 
     const [user, setUser] = useState(null);
-    const [isHome, setIsHome] = useState(true);
 
     useEffect(() => {
         checkAuthenticated(setUser, navigation);
@@ -51,24 +52,7 @@ const CatalogueScreen = ({navigation}) => {
     
     return(
         <Layout style={styles.container}>
-            <ButtonGroup
-            style={styles.buttonGroup}
-            appearance='filled'
-            size='small'
-            status='basic'>
-                <Button onPress={() => {
-                    setIsHome(true);
-                }}>
-                    Home
-                </Button>
-                <Button onPress={() => {
-                    setIsHome(false);
-                }}>
-                    Discover
-                </Button>
-            </ButtonGroup>
-
-            {isHome ? <HomeComponent user={user} navigation={navigation} /> : null}
+            <HomeComponent user={user} navigation={navigation} />
         </Layout>
     )
 }
