@@ -7,7 +7,7 @@ import { default as theme } from './theme.json';
 const WelcomeScreen = ({navigation}) => {
     return (
     <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-        <Layout>
+        <Layout style={styles.container}>
             <Button
             size='large' 
             onPress={() => {
@@ -26,5 +26,12 @@ const WelcomeScreen = ({navigation}) => {
     </ApplicationProvider>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+    }
+})
 
 export default WelcomeScreen;
