@@ -1,0 +1,9 @@
+{
+  "strict": {
+    "bold-font-family": "Quicksand-Bold",
+    "light-font-family": "Quicksand-Light",
+    "medium-font-family": "Quicksand-Medium",
+    "text-font-family": "Quicksand-Regular",
+    "semibold-font-family": "Quicksand-SemiBold"
+  }
+}

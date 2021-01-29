@@ -1,14 +1,18 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, LogBox } from 'react-native';
 // React Navigation
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // UI Kitten
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, IconRegistry, Icon } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry, Icon, Layout, Button } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { default as theme } from './theme.json';
+import { default as mapping } from './mapping.json';
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -37,7 +41,7 @@ const UiKitten = () => {
   return (
     <>
     <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider {...eva} theme={eva.light}>
+    <ApplicationProvider {...eva} theme={eva.light} customMapping={mapping}>
       <NavComponent />
     </ApplicationProvider>
     </>
@@ -77,15 +81,28 @@ const DashNavigator = () => (
   </Tab.Navigator>
 )
 
+const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'rgb(255,255,255)',
+      border: 'rgb(138,18,20)',
+      text: 'rgb(255,255,255)',
+      notification: 'rgb(255,255,255)',
+      card: 'rgb(255, 255, 255)',
+    },
+  };
+
 const NavComponent = () => (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
+        <Stack.Screen name="Login" component={LoginScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
         <Stack.Screen name="DashNav" component={DashNavigator}
           options={{
-            header: (props) => {return(<DashHeader />)}
+            header: (props) => {return(<DashHeader />)},
+            headerStyle: {backgroundColor: 'rgb(138,18,20)'}
           }}
         />
       </Stack.Navigator>
@@ -99,11 +116,17 @@ const styles = StyleSheet.create({
   }
 })
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+  'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
+});
+};
+
 export default function App() {
+  const [dataLoaded,setDataLoaded] = useState(false);
   // Initialize Firebase first
   initFirebase();
   return (
     <UiKitten />
   );
-
 }
