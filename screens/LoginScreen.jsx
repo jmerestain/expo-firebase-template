@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { loginUser } from '../services/firebase';
 import PopUpMessage from '../components/PopUpMessage';
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Input, Button } from '@ui-kitten/components';
-import { default as theme } from './theme.json';
-import { default as mapping } from './mapping.json';
+import { Layout, Text, Input, Button } from '@ui-kitten/components';
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('test@test.com');
@@ -12,16 +10,15 @@ const LoginScreen = ({navigation}) => {
     const [message, setMessage] = useState('');
 
     return (
-    <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }} customMapping={mapping}>
-        <Layout>
+        <Layout style={ styles.container }>
             {message == '' ? null : <PopUpMessage message={message} />}
             <Text style={{ padding: 16, fontFamily: 'Quicksand-Regular' }}>Email</Text>
             <Input
                 onChangeText={value => setEmail(value)}
                 placeholder='Email'
-                style={{ paddingLeft: 16, paddingRight: 16}}
+                style={{ paddingHorizontal: 16}}
             />
-            <Text style={{ padding: 16}}>Password</Text>
+            <Text style={{ padding: 16, fontFamily: 'Quicksand-Regular' }}>Password</Text>
             <Input
                 onChangeText={value => setPassword(value)}
                 placeholder='Password'
@@ -37,11 +34,22 @@ const LoginScreen = ({navigation}) => {
                 }
             }}
             style={{ margin: 16}}>
-                Login
+                Submit
             </Button>
+            <Text category='h5' style={{
+                textAlign: 'center',
+            }}>
+                OR
+            </Text>
         </Layout>
-        </ApplicationProvider>
     )
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+    }
+})
 export default LoginScreen;

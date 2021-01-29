@@ -41,7 +41,7 @@ const UiKitten = () => {
   return (
     <>
     <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider {...eva} theme={eva.light} customMapping={mapping}>
+    <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }} customMapping={mapping}>
       <NavComponent />
     </ApplicationProvider>
     </>
@@ -119,12 +119,13 @@ const styles = StyleSheet.create({
 const fetchFonts = () => {
   return Font.loadAsync({
   'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
-});
+  });
 };
 
 export default function App() {
-  const [dataLoaded,setDataLoaded] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   // Initialize Firebase first
+  fetchFonts();
   initFirebase();
   return (
     <UiKitten />
