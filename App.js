@@ -17,6 +17,7 @@ import { AppLoading } from 'expo';
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import RegisterScreenNext from './screens/RegisterScreenNext';
 import CatalogueScreen from './screens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
 import OrdersScreen from './screens/OrdersScreen';
@@ -96,9 +97,10 @@ const MyTheme = {
 const NavComponent = () => (
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
-        <Stack.Screen name="Login" component={LoginScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
-        <Stack.Screen name="Register" component={RegisterScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'}}}/>
+        <Stack.Screen name="Welcome" component={WelcomeScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
+        <Stack.Screen name="Login" component={LoginScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
+        <Stack.Screen name="RegisterDetails" component={RegisterScreenNext} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
         <Stack.Screen name="DashNav" component={DashNavigator}
           options={{
             header: (props) => {return(<DashHeader />)},
@@ -118,7 +120,8 @@ const styles = StyleSheet.create({
 
 const fetchFonts = () => {
   return Font.loadAsync({
-  'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
+  'Quicksand-Regular': require('./assets/fonts/Quicksand-Medium.ttf'),
+  'NunitoSans-Regular': require('./assets/fonts/NunitoSans-Regular.ttf'),
   });
 };
 
