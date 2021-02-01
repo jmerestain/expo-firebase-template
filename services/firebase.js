@@ -16,6 +16,7 @@ export const initFirebase = () => {
     };
 
     if (!firebase.apps.length) {
+        console.log(firebaseConfig)
         firebase.initializeApp(firebaseConfig);
     }
     else {
