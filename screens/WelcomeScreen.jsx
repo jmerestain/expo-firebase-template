@@ -37,7 +37,7 @@ const WelcomeScreen = ({navigation}) => {
 
     return (
         <Layout style={styles.container}>
-            {firstTime ? <OnboardingScreen setFirstTime={setFirstTime} /> : <AuthOptions />}
+            {firstTime ? <OnboardingScreen setFirstTime={setFirstTime} /> : <AuthOptions navigation={navigation} />}
         </Layout>
     )
 }
@@ -135,7 +135,7 @@ const OScreen6 = ({setFirstTime}) => {
     )
 }
 
-const AuthOptions = () => {
+const AuthOptions = ({navigation}) => {
     return (
         <Layout style={styles.container}>
             <Button
