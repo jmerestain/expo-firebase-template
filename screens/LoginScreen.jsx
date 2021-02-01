@@ -11,14 +11,13 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <Layout style={ styles.container }>
-            {message == '' ? null : <PopUpMessage message={message} />}
-            <Text style={{ padding: 16, fontFamily: 'Quicksand-Regular' }}>Email</Text>
+            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular' }}>Email</Text>
             <Input
                 onChangeText={value => setEmail(value)}
                 placeholder='Email'
                 style={{ paddingHorizontal: 16}}
             />
-            <Text style={{ padding: 16, fontFamily: 'Quicksand-Regular' }}>Password</Text>
+            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular' }}>Password</Text>
             <Input
                 onChangeText={value => setPassword(value)}
                 placeholder='Password'
@@ -36,11 +35,34 @@ const LoginScreen = ({navigation}) => {
             style={{ margin: 16}}>
                 Submit
             </Button>
-            <Text category='h5' style={{
-                textAlign: 'center',
-            }}>
+            <Text category='h6' style={{ textAlign: 'center', marginBottom: 8, fontFamily: 'Quicksand-Regular' }}>
+            {message == '' ? null : <PopUpMessage message={message} />}
+
                 OR
             </Text>
+            <Button size='large'
+            onPress={() => {
+            }}
+            style={{ marginTop: 8, marginLeft: 16, marginRight: 16, backgroundColor: 'rgb(255,255,255)', borderColor: 'rgb(210,145,91)' }}>
+                <Text style={{color: 'rgb(210,145,91)', fontWeight:'bold'}}>Login with Facebook</Text>
+            </Button>
+            <Button size='large'
+            onPress={() => {
+            }}
+            style={{ marginTop: 8, marginLeft: 16, marginRight: 16, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)' }}>
+                Login with Google
+            </Button>
+            <Layout style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+            <Text category='h6' style={{
+                textAlign: 'center', marginTop: 32, fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}>
+                Don't have an account? 
+            </Text>
+            <Text category='h6' style={{
+                textAlign: 'center', marginTop: 32, marginLeft: 8, fontFamily: 'Quicksand-Regular', color:'rgb(138,18,20)' }}>
+                Signup
+            </Text>
+            </Layout>
+            
         </Layout>
     )
 }
@@ -50,6 +72,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-    }
+    },
 })
 export default LoginScreen;
