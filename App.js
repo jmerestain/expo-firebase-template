@@ -1,6 +1,6 @@
 // React
-import React, { useState } from 'react';
-import { StyleSheet, LogBox } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, LogBox, ActivityIndicator } from 'react-native';
 // React Navigation
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,7 +12,6 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { default as theme } from './theme.json';
 import { default as mapping } from './mapping.json';
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -118,19 +117,35 @@ const styles = StyleSheet.create({
   }
 })
 
-const fetchFonts = () => {
+const fetchFonts = async () => {
   return Font.loadAsync({
   'Quicksand-Regular': require('./assets/fonts/Quicksand-Medium.ttf'),
   'NunitoSans-Regular': require('./assets/fonts/NunitoSans-Regular.ttf'),
   });
 };
 
-export default function App() {
+
+
+const App = () => {
   const [dataLoaded, setDataLoaded] = useState(false);
-  // Initialize Firebase first
-  fetchFonts();
   initFirebase();
+  
+  useEffect(() => {
+    const loadBeforeApp = async () => {
+      await fetchFonts();
+      setDataLoaded(true);
+    }
+    loadBeforeApp();
+  }, []);
+
+  if(!dataLoaded) {
+    return (
+      <ActivityIndicator />
+    );
+  }
   return (
     <UiKitten />
   );
 }
+
+export default App;
