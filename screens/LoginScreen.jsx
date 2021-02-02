@@ -28,6 +28,7 @@ const LoginScreen = ({navigation}) => {
             onPress={() => {
                 if(email != '' && password != '') {
                     loginUser(email, password, setMessage, navigation);
+                    navigation.navigate('Category')
                 } else {
                     setMessage('Credentials provided is not valid');
                 }

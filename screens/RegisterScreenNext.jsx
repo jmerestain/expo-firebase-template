@@ -4,7 +4,7 @@ import { Layout, Input, Button, Text } from '@ui-kitten/components';
 import { createUser } from '../services/firebase';
 import PopUpMessage from '../components/PopUpMessage';
 
-const RegisterScreen = ({navigation}) => {
+const RegisterScreenNext = ({navigation}) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [contactNumber, setContactNumber] = useState('');
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default RegisterScreen;
+export default RegisterScreenNext;
