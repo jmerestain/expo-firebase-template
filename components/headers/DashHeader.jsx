@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#AA0000',
+        backgroundColor: '#8A1214',
     },
     icon: {
         width: 32,

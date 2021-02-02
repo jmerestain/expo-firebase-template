@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     containerList: {
       flex: 1,
       flexDirection: 'row',
-      flexWrap: 'wrap',
       alignItems: 'flex-start'
       },
       item: {
