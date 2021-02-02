@@ -20,6 +20,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import RegisterScreenNext from './screens/RegisterScreenNext';
 import CatalogueScreen from './screens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
+import Category from './screens/Category';
 import OrdersScreen from './screens/OrdersScreen';
 // Firebase
 import { initFirebase } from './services/firebase';
@@ -100,7 +101,8 @@ const NavComponent = () => (
         <Stack.Screen name="Welcome" component={WelcomeScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
         <Stack.Screen name="Login" component={LoginScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
         <Stack.Screen name="Register" component={RegisterScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
-        <Stack.Screen name="RegisterDetails" component={RegisterScreenNext} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
+        <Stack.Screen name="Registration Details" component={RegisterScreenNext} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
+        <Stack.Screen name="Category" component={Category} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
         <Stack.Screen name="DashNav" component={DashNavigator}
           options={{
             header: (props) => {return(<DashHeader />)},
