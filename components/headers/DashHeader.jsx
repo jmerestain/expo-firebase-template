@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input, Icon } from '@ui-kitten/components';
 import { signOutUser } from '../../services/firebase';
@@ -11,7 +11,7 @@ const DashHeader = () => {
 
     return (
             <SafeAreaView style={styles.container}>
-                <Pressable onPress={() => {
+                <TouchableOpacity onPress={() => {
                     signOutUser(navigation);
                 }}>
                     <Icon 
@@ -19,18 +19,18 @@ const DashHeader = () => {
                         fill='white'
                         name='log-out-outline'
                     />
-                </Pressable>
+                </TouchableOpacity>
                 <Input 
                 style={styles.input}
                 placeholder="Search..."
                 onChangeText={value => setSearch(value)} />
-                <Pressable onPress={() => {navigation.navigate("Orders")}}>
+                <TouchableOpacity onPress={() => {navigation.navigate("Orders")}}>
                 <Icon
                     style={styles.icon}
                     fill='white'
                     name='shopping-cart-outline'
                 />
-                </Pressable>
+                </TouchableOpacity>
             </SafeAreaView>
     )
 }
