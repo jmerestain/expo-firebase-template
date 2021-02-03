@@ -89,8 +89,9 @@ const NavComponent = () => (
         <Stack.Screen name="Registration Details" component={RegisterScreenNext} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
         <Stack.Screen name="DashNav" component={DashNavigator}
           options={{
-            header: (props) => {return(<DashHeader />)},
-            headerStyle: {backgroundColor: 'rgb(138,18,20)'}
+            //header: (props) => {return(<DashHeader />)},
+            headerStyle: {backgroundColor: 'rgb(138,18,20)'},
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

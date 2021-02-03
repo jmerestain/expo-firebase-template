@@ -18,7 +18,7 @@ function BottomTabBar ({ state, descriptors, navigation }) {
         let iconName;
 
         // Getting Icon Name for TabBarIcon
-        
+
         if (label === 'Dashboard') {
             iconName = 'home-outline';
         } else if (label === 'Orders') {
@@ -50,14 +50,16 @@ function BottomTabBar ({ state, descriptors, navigation }) {
         return (
         <>
             <TouchableOpacity
+                key={label}
                 accessibilityRole="button"
                 accessibilityStates={isFocused ? ['selected'] : []}
                 accessibilityLabel={options.tabBarAccessibilityLabel}
                 testID={options.tabBarTestID}
                 onPress={onPress}
                 onLongPress={onLongPress}
-                style={{ flex: 1, alignItems:"center" }}
+                style={{ flex: 1, alignItems: "center", flexDirection: 'column' }}
             >
+                <Layout style={{backgroundColor: isFocused ? '#8A1214' : '#BDBDBD', height: 2, width: '100%', alignSelf: 'flex-start'}} />
                 <Icon name={iconName} fill={isFocused ? '#8A1214' : '#BDBDBD' } style={{height: 30, width: 30}} />
                 <Text
                     category='c2'

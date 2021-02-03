@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Layout, Text, List, Card, Spinner, Icon } from '@ui-kitten/components';
 import { checkAuthenticated, getCatalogue } from '../services/firebase';
 import { useNavigation } from '@react-navigation/native';
 // Components
 import Category from './Category';
+import DashHeader from '../components/headers/DashHeader';
 
+const artscrafts = require('../assets/categories/artscrafts.png');
+const beautypersonalcare = require('../assets/categories/beautypersonalcare.png');
+const farmgardening = require('../assets/categories/farmgardening.png');
+const fashionwearables = require('../assets/categories/fashionwearables.png');
+const fooddrinks = require('../assets/categories/fooddrinks.png');
+const healthwellness = require('../assets/categories/healthwellness.png');
+const homeessentials = require('../assets/categories/homeessentials.png');
 
 const CatalogueNavigator = () => {
     const CStack = createStackNavigator();
     return (
         <CStack.Navigator>
-            <CStack.Screen name="CatalogueMain" component={CatalogueScreen} options={{headerShown: false}} />
-            <CStack.Screen name="Category" component={Category} options={{headerShown: false}} />
+            <CStack.Screen name="CatalogueMain" component={CatalogueScreen} options={{headerShown: true, header: (props) => {return(<DashHeader />)}}} />
+            <CStack.Screen name="Category" component={Category} options={({route}) => (
+                {
+                    headerTitle: route.params.category,
+                    headerStyle: {backgroundColor: 'rgb(138,18,20)'},
+                }
+            )} />
         </CStack.Navigator>
     )
 }
@@ -26,14 +39,8 @@ const HomeComponent = ({user, navigation}) => {
         getCatalogue(setHomeProducts); 
     }, []);
 
-    const data = new Array(8).fill({
-        title: 'Shop Name',
-        price: 'P100.00',
-        product: 'Cheeseburger',
-    });
-
     return (
-        <Layout style={styles.container}>
+        <Layout style={[styles.container]}>
             <Layout style={styles.inner}>
                 <Layout style={styles.categoryImage} />
                 <Text style={{paddingVertical: 20, fontWeight: 'bold'}} category='h6'>
@@ -46,7 +53,7 @@ const HomeComponent = ({user, navigation}) => {
                 {
                     homeProducts.length != 0 ?
                     <List 
-                        data={data} 
+                        data={homeProducts} 
                         renderItem={renderItem}
                         extraData={homeProducts}
                         horizontal={true}
@@ -60,12 +67,32 @@ const HomeComponent = ({user, navigation}) => {
 }
 const CategoryEntry = ({title, icon}) => {
     const navigation = useNavigation();
+    let imageSource;
+
+    if (icon === 'fooddrinks') {
+        imageSource = fooddrinks;
+    } else if (icon === 'artscrafts') {
+        imageSource = artscrafts;
+    } else if (icon === 'beautypersonalcare') {
+        imageSource = beautypersonalcare;
+    } else if (icon === 'farmgardening') {
+        imageSource = farmgardening;
+    } else if (icon === 'fashionwearables') {
+        imageSource = fashionwearables;
+    } else if (icon === 'healthwellness') {
+        imageSource = healthwellness;
+    } else if (icon === 'homeessentials') {
+        imageSource = homeessentials;
+    } else {
+        iamgeSource = fooddrinks;
+    }
+
     return (
         <TouchableOpacity onPress={() => {
             navigation.navigate('Category', {category: title});
         }}>
             <Layout style={styles.categoryEntry}>
-                <Icon name={icon} fill='#8A1214' style={styles.icon} />
+                <Image source={imageSource} style={styles.icon} />
                 <Text category='label' style={{textAlign: 'center', fontWeight: 'bold'}}>
                     {title}
                 </Text>
@@ -77,12 +104,13 @@ const CategoryEntry = ({title, icon}) => {
 const CategorySection = () => {
     return (
         <Layout style={styles.categorySection}>
-            <CategoryEntry title='Food & Drinks' icon='gift-outline' />
-            <CategoryEntry title='Home Essentials' icon='gift-outline' />
-            <CategoryEntry title='Arts & Crafts' icon='gift-outline' />
-            <CategoryEntry title='Fashion & Wearables' icon='gift-outline' />
-            <CategoryEntry title='Health & Wellness' icon='gift-outline' />
-            <CategoryEntry title='Farm & Gardening' icon='gift-outline' />
+            <CategoryEntry title='Food & Drinks' icon='fooddrinks' />
+            <CategoryEntry title='Home Essentials' icon='homeessentials' />
+            <CategoryEntry title='Arts & Crafts' icon='artscrafts' />
+            <CategoryEntry title='Fashion & Wearables' icon='fashionwearables' />
+            <CategoryEntry title='Beauty & Personal Care' icon='beautypersonalcare' />
+            <CategoryEntry title='Health & Wellness' icon='healthwellness' />
+            <CategoryEntry title='Farm & Gardening' icon='farmgardening' />
         </Layout>
     )
 }
@@ -149,7 +177,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     categoryImage: {
-        backgroundColor: 'gray',
+        backgroundColor: '#BDBDBD',
         resizeMode: 'contain',
         height: 140,
     },
@@ -172,7 +200,6 @@ const styles = StyleSheet.create({
     pickForYou: {
         flex: 1,
         marginRight: 10,
-        elevation: 2,
     }
 })
 
