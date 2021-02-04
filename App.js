@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, LogBox, ActivityIndicator } from 'react-native';
 // React Navigation
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // UI Kitten
@@ -22,8 +22,7 @@ import VendorNavigator from './screens/VendorScreens';
 import OrdersScreenNavigator from './screens/OrdersScreen';
 // Firebase
 import { initFirebase } from './services/firebase';
-// Header
-import DashHeader from './components/headers/DashHeader';
+// Lodash
 import _ from 'lodash';
 // Navigator
 import BottomTabBar from './components/BottomTabBar';
@@ -80,7 +79,8 @@ const MyTheme = {
     },
   };
 
-const NavComponent = () => (
+const NavComponent = () => {
+  return (
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options= {{headerStyle: {backgroundColor: 'rgb(138,18,20)'},  headerTitleStyle: { fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}}/>
@@ -96,7 +96,8 @@ const NavComponent = () => (
         />
       </Stack.Navigator>
     </NavigationContainer>
-)
+  )
+}
 
 const styles = StyleSheet.create({
   icon: {
@@ -117,6 +118,7 @@ const fetchFonts = async () => {
 
 const App = () => {
   const [dataLoaded, setDataLoaded] = useState(false);
+
   initFirebase();
   
   useEffect(() => {

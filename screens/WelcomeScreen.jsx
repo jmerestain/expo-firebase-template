@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Layout, Button, Text } from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { authOnOpen } from '../services/firebase';
 
 const getData = async () => {
     try {
@@ -26,6 +27,7 @@ const setData = async () => {
 
 const WelcomeScreen = ({navigation}) => {
     const [firstTime, setFirstTime] = useState(true);
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         async function fetchData() {
@@ -33,6 +35,7 @@ const WelcomeScreen = ({navigation}) => {
             setFirstTime(value);
         }
         fetchData();
+        authOnOpen(navigation);
     }, []);
 
     return (

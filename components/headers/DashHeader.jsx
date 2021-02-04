@@ -1,37 +1,56 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Input, Icon } from '@ui-kitten/components';
+import { Input, Icon, TopNavigation, Layout } from '@ui-kitten/components';
 import { signOutUser } from '../../services/firebase';
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
+
+const SignOutButton = ({navigation}) => (
+    <TouchableOpacity onPress={() => {
+        signOutUser(navigation);
+    }}>
+        <Icon 
+            style={styles.icon}
+            fill='white'
+            name='log-out-outline'
+        />
+    </TouchableOpacity>
+)
+
+const MessagesButton = ({navigation}) => (
+    <TouchableOpacity onPress={() => {
+        navigation.navigate("Orders")
+    }}>
+        <Icon
+            style={styles.icon}
+            fill='white'
+            name='shopping-cart-outline'
+        />
+    </TouchableOpacity>
+)
+
+const SearchBar = ({setSearch}) => (
+    <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', flexGrow: 1}}>
+        <Input 
+            style={styles.input}
+            placeholder="Search..."
+            onChangeText={value => setSearch(value)}
+        />
+    </Layout>
+)
 
 const DashHeader = () => {
     const [search, setSearch] = useState('');
     const navigation = useNavigation();
 
     return (
-            <SafeAreaView style={styles.container}>
-                <TouchableOpacity onPress={() => {
-                    signOutUser(navigation);
-                }}>
-                    <Icon 
-                        style={styles.icon}
-                        fill='white'
-                        name='log-out-outline'
-                    />
-                </TouchableOpacity>
-                <Input 
-                style={styles.input}
-                placeholder="Search..."
-                onChangeText={value => setSearch(value)} />
-                <TouchableOpacity onPress={() => {navigation.navigate("Orders")}}>
-                <Icon
-                    style={styles.icon}
-                    fill='white'
-                    name='shopping-cart-outline'
-                />
-                </TouchableOpacity>
-            </SafeAreaView>
+            <TopNavigation
+                style={styles.container}
+                accessoryLeft={SignOutButton}
+                accessoryRight={MessagesButton}
+                title={() => <SearchBar setSearch={setSearch} />}
+                alignment='start'
+            />
     )
 }
 
@@ -39,6 +58,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
         paddingVertical: 10,
+        paddingTop: Constants.statusBarHeight+5,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -50,8 +70,8 @@ const styles = StyleSheet.create({
         height: 32,
     },
     input: {
-        flexGrow: 1,
-        marginHorizontal: 15,
+        width: '80%',
+        marginHorizontal: 20,
     }
 })
 
