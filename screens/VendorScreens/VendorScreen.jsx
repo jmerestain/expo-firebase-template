@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Button, Text, List, Card } from '@ui-kitten/components';
+import { Layout, Button, Text, List, Card, Avatar } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
 import { checkAuthenticated, getMyStore } from '../../services/firebase';
 
@@ -32,6 +32,42 @@ const VendorScreen = ({navigation}) => {
             <Layout style={styles.field}>
                 <List data={myProducts} renderItem={RenderItem} />
             </Layout>
+
+            <Layout>
+            <Layout style={styles.avatar}>
+            <Avatar
+                rounded
+                size="giant"
+                shape='round'
+                source={require('../../screens/avatar-icon.png')}
+                style={{ marginHorizontal: 50, alignItems: 'center'}}
+            /> 
+            </Layout>
+            <Button size='large'
+                onPress={() => {}}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    My Account
+            </Button>
+            <Button size='large'
+                onPress={() => {}}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    My Shop
+            </Button>
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('Favorites');
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    Favorites
+            </Button>
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('Settings');
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    Settings
+            </Button>
+            </Layout>
         </Layout>
     )
 }
@@ -56,7 +92,12 @@ const RenderItem = ({item}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        justifyContent: 'center'
+    },
+    avatar: {
+        alignItems: 'center',
+        margin: 16
     },
     text: {
         textAlign: 'center',
