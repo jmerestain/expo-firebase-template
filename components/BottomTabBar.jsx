@@ -48,7 +48,6 @@ function BottomTabBar ({ state, descriptors, navigation }) {
         };
 
         return (
-        <>
             <TouchableOpacity
                 key={label}
                 accessibilityRole="button"
@@ -68,7 +67,6 @@ function BottomTabBar ({ state, descriptors, navigation }) {
                     {label}
                 </Text>
             </TouchableOpacity>
-        </>
         );
       })}
     </Layout>

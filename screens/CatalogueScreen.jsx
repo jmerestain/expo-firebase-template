@@ -19,12 +19,13 @@ const homeessentials = require('../assets/categories/homeessentials.png');
 const CatalogueNavigator = () => {
     const CStack = createStackNavigator();
     return (
-        <CStack.Navigator>
+        <CStack.Navigator screenOptions={{
+            headerStyle: {backgroundColor: 'rgb(138,18,20)'},
+        }}>
             <CStack.Screen name="CatalogueMain" component={CatalogueScreen} options={{headerShown: true, header: (props) => {return(<DashHeader />)}}} />
             <CStack.Screen name="Category" component={Category} options={({route}) => (
                 {
                     headerTitle: route.params.category,
-                    headerStyle: {backgroundColor: 'rgb(138,18,20)'},
                 }
             )} />
         </CStack.Navigator>

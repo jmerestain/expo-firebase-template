@@ -19,7 +19,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import RegisterScreenNext from './screens/RegisterScreenNext';
 import CatalogueNavigator from './screens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
-import OrdersScreen from './screens/OrdersScreen';
+import OrdersScreenNavigator from './screens/OrdersScreen';
 // Firebase
 import { initFirebase } from './services/firebase';
 // Header
@@ -61,7 +61,7 @@ const DashNavigator = () => (
   >
     <Tab.Screen name="Dashboard" component={CatalogueNavigator} options={{
     }} />
-    <Tab.Screen name="Orders" component={OrdersScreen} options={{
+    <Tab.Screen name="Orders" component={OrdersScreenNavigator} options={{
     }} />
     <Tab.Screen name="Vendor" component={VendorNavigator} options={{
     }} />
