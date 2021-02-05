@@ -5,34 +5,33 @@ import { Layout, Text, Button, Icon, Divider, Avatar, Tab, TabBar, List } from '
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import OrdersScreen from '../OrdersScreen';
+import OrderProcess from './OrderProcessScreen';
 
-const AccountStack = createStackNavigator();
-const AccountTopTab1 = createMaterialTopTabNavigator();
+const MyShopStack = createStackNavigator();
 
-const MyAccountStackNavigation = () => (
-    <AccountStack.Navigator screenOptions={{
+const MyShopStackNavigation = () => (
+    <MyShopStack.Navigator screenOptions={{
         headerStyle: {backgroundColor: 'rgb(138,18,20)'}
     }}>
-        <AccountStack.Screen name="Payment Options" component={OrdersScreen} />
-        <AccountStack.Screen name="Contact Support" component={OrdersScreen} />
-    </AccountStack.Navigator>
+        <MyShopStack.Screen name="View My Shop" component={OrdersScreen} />
+        <MyShopStack.Screen name="View DTI Certificate" component={OrdersScreen} />
+        <MyShopStack.Screen name="Contact Support" component={OrdersScreen} />
+        <MyShopStack.Screen name="Shop Settings" component={OrdersScreen} />
+        <MyShopStack.Screen name="OrderProcess" component={OrderProcess} />
+    </MyShopStack.Navigator>
 )
 
 const data = new Array(8).fill({
-    name: 'Amelia Bryers',
-    bio: 'P24, Live 🌿 Laugh 😂 Love ❤️',
+    name: 'Bea\'s Bakery',
   });
 
-function MyAccountScreen ({navigation}) {
+function MyShopScreen ({navigation}) {
 
     const renderItem = ({ item, index }) => (
         <Layout style={styles.container}>
             <Layout style={styles.inner}>
                     <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 12}}>
                         {item.name}
-                    </Text>
-                    <Text category='s1'>
-                        {item.bio}
                     </Text>
                 </Layout>
              </Layout>
@@ -46,106 +45,50 @@ function MyAccountScreen ({navigation}) {
                         size="giant"
                         shape='round'
                         source={require('../../screens/avatar-icon.png')}
-                        style={{ marginHorizontal: 50, marginTop: 24, marginBottom: 8, alignItems: 'center', alignSelf: 'center', alignContent: 'center'}}
+                        style={{ marginHorizontal: 50, marginTop: 24, alignItems: 'center', alignSelf: 'center', alignContent: 'center'}}
                     /> 
                     {/*<List
                         data={data}
                         renderItem={renderItem}
                     />*/}
                     <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 12}}>
-                        Amelia Bryers
-                    </Text>
-                    <Text category='s1' style={{alignSelf: 'center', alignContent: 'center', marginBottom: 12}}>
-                        24, Live 🌿 Laugh 😂 Love ❤️
+                        Bea's Bakery
                     </Text>
                 </Layout>
             </Layout>
-            <NavigationContainer independent='true'>
-                <AccountTabNavigation/>
-            </NavigationContainer>
-        </Layout>
-    )
-}
-
-const AccountTabNavigation = () => {
-    return (
-    <AccountTopTab1.Navigator tabBar={props => <TopTabBar {...props} />}>
-        <AccountTopTab1.Screen name="Pending Orders" component={PendingOrdersNav} />
-        <AccountTopTab1.Screen name="Past Orders" component={PastOrdersNav} />
-    </AccountTopTab1.Navigator>
-    )
-}
-
-const PastOrdersNav = () => {
-    return ( 
-        <Layout style={[styles.settingsCard]}>
-            
-        </Layout>
-    )
-}
-
-const TopTabBar = ({ navigation, state }) => (
-      <TabBar
-      selectedIndex={state.index}
-      onSelect={index => navigation.navigate(state.routeNames[index])}>
-        <Tab title='Pending Orders'/>
-        <Tab title='Past Orders'/>
-      </TabBar>
-)
-
-
-const PendingOrdersNav = ({navigation}) => {
-    return (
-        <Layout style={styles.container}>
+            <Divider/>
+            <Layout style={styles.container}>
             <Layout style={[styles.settingsCard]}>
                 <Layout style={styles.daInner}>
                 <Layout style={styles.buttonContain}>
                     <Layout>
-                    <Button  appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
+                    <Button appearance='ghost' size='large'
+                    onPress={() => {
+                        navigation.navigate('OrderProcess');
+                    }}>
+                        <TouchableOpacity
                             style={styles.button}
                         >
                             <Icon name='flip-2' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
+                        </TouchableOpacity>
+                    </Button>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Process
+                            Pending Orders
                         </Text>
                     </Layout>
                     <Layout>
-                    <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
+                    <Button appearance='ghost' size='large'
+                    onPress={() => {
+                        navigation.navigate('OrderProcess');
+                    }}>
+                        <TouchableOpacity
                             style={styles.button}
                         >
                             <Icon name='car-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
+                        </TouchableOpacity>
+                        </Button>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Deliver
-                        </Text>
-                    </Layout>
-                    <Layout>
-                        <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='archive-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Receive
-                        </Text>
-                    </Layout>
-                    <Layout>
-                    <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='checkmark-square-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Review
+                            Completed Orders
                         </Text>
                     </Layout>
                 </Layout>
@@ -153,7 +96,16 @@ const PendingOrdersNav = ({navigation}) => {
                 <TouchableOpacity>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
-                          Payment Options
+                            View My Shop
+                        </Text>
+                        <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
+                    </Layout>
+                </TouchableOpacity>
+                <Divider/>
+                <TouchableOpacity>
+                    <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
+                        <Text style={{paddingTop: 2}}>
+                        View DTI Certificate
                         </Text>
                         <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
                     </Layout>
@@ -168,12 +120,21 @@ const PendingOrdersNav = ({navigation}) => {
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
+                <TouchableOpacity>
+                    <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
+                        <Text style={{paddingTop: 2}}>
+                            Shop Settings
+                        </Text>
+                        <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
+                    </Layout>
+                </TouchableOpacity>
+                <Divider/>
                 </Layout>
             </Layout>
         </Layout>
+        </Layout>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -185,8 +146,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         minHeight: 80,
         justifyContent: 'space-around',
-        marginTop: 8,
-        marginBottom: 40,
+        marginTop: 4,
+        marginBottom: 40
     },
     settingsCard: {
         flexDirection: 'column',
@@ -212,9 +173,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#BDBDBD',
         alignItems: 'center',
+        alignSelf: 'center',
         justifyContent: 'center',
         borderRadius: 999,
     }
 })
 
-export default MyAccountScreen;
+export default MyShopScreen;

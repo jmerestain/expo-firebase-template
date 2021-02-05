@@ -4,8 +4,6 @@ import { StyleSheet } from 'react-native';
 import { checkAuthenticated, getMyStore } from '../../services/firebase';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import ManageProductsScreen from '../ManageProductScreens/ManageProductsScreen';
-
 const ManageNav = createStackNavigator();
 
 const VendorScreen = ({navigation}) => {
@@ -48,7 +46,7 @@ const VendorScreen = ({navigation}) => {
             </Button>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('Order Status');
+                    navigation.navigate('MyShopScreen');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop
