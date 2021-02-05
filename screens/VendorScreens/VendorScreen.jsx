@@ -24,7 +24,7 @@ const VendorScreen = ({navigation}) => {
                 <Button
                 status='basic'
                 onPress={() => {
-                    navigation.navigate('VendorNew');
+                    navigation.navigate('MyAccount');
                 }} >
                     New Product
                 </Button>
@@ -44,7 +44,9 @@ const VendorScreen = ({navigation}) => {
             /> 
             </Layout>
             <Button size='large'
-                onPress={() => {}}
+                onPress={() => {
+                    navigation.navigate('MyAccount');
+                }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Account
             </Button>

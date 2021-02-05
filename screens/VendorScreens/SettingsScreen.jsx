@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
 import { Layout, Text, Button, Icon, Divider } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
+import OrdersScreen from '../OrdersScreen';
 
 const SettingsStack = createStackNavigator();
 
@@ -11,6 +12,9 @@ const SettingsScreenNavigation = () => (
     }}>
         <SettingsStack.Screen name="Profile Information" component={OrdersScreen} />
         <SettingsStack.Screen name="Change Password" component={OrdersScreen} />
+        <SettingsStack.Screen name="Push Notification" component={OrdersScreen} />
+        <SettingsStack.Screen name="Push Information" component={OrdersScreen} />
+        <SettingsStack.Screen name="Privacy Policy" component={OrdersScreen} />
     </SettingsStack.Navigator>
 )
 

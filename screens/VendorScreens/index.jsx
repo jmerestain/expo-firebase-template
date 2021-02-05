@@ -5,6 +5,7 @@ import VendorScreen from './VendorScreen';
 import NewItemScreen from './NewItemScreen';
 import FavoritesScreen from './FavoritesScreen';
 import SettingsScreen from './SettingsScreen';
+import MyAccountScreen from './MyAccountScreen';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false}
@@ -19,6 +20,8 @@ const VendorNavigator = () => {
             <Vendor.Screen name="Favorites" component={FavoritesScreen} 
             options={noHeader}  />
             <Vendor.Screen name="Settings" component={SettingsScreen} 
+            options={noHeader}  />
+            <Vendor.Screen name="MyAccount" component={MyAccountScreen} 
             options={noHeader}  />
         </Vendor.Navigator>        
     )
