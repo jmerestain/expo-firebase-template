@@ -33,7 +33,7 @@ const renderItem = ({ item, index }) => (
 ); 
 
 const data = new Array(8).fill({
-    title: 'Shop Name',
+    shop: 'Shop Name',
     price: 'P100.00',
     product: 'Cheeseburger',
 });

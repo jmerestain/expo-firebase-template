@@ -92,7 +92,7 @@ const TopTabBar = ({ navigation, state }) => (
 )
 
 
-const PendingOrdersNav = () => {
+const PendingOrdersNav = ({navigation}) => {
     return (
         <Layout style={styles.container}>
             <Layout style={[styles.settingsCard]}>
