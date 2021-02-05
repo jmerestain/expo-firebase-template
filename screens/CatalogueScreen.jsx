@@ -43,7 +43,9 @@ const HomeComponent = ({user, navigation}) => {
     return (
         <Layout style={[styles.container]}>
             <Layout style={styles.inner}>
-                <Layout style={styles.categoryImage} />
+                <Layout>
+                    <Image source={require('../assets/dashboardHeader.png')} style={styles.categoryImage} />
+                </Layout>
                 <Text style={{paddingVertical: 20, fontWeight: 'bold'}} category='h6'>
                     Categories
                 </Text>
@@ -179,8 +181,9 @@ const styles = StyleSheet.create({
     },
     categoryImage: {
         backgroundColor: '#BDBDBD',
-        resizeMode: 'contain',
-        height: 140,
+        height: 120,
+        alignSelf: 'center',
+        paddingHorizontal: 20,
     },
     categoryEntry: {
         flexDirection: 'column',

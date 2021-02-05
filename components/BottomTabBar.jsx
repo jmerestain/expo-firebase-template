@@ -23,7 +23,7 @@ function BottomTabBar ({ state, descriptors, navigation }) {
             iconName = 'home-outline';
         } else if (label === 'Orders') {
             iconName = 'shopping-bag-outline';
-        } else if (label === 'Vendor') {
+        } else if (label === 'Menu') {
             iconName = 'menu-outline';
         } else {
             iconName = 'question-mark-outline';

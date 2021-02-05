@@ -99,45 +99,41 @@ const PendingOrdersNav = ({navigation}) => {
                 <Layout style={styles.daInner}>
                 <Layout style={styles.buttonContain}>
                     <Layout>
-                        <Button
+                        <TouchableOpacity
                             style={styles.button}
-                            appearance='ghost'
                         >
                             <Icon name='flip-2' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </Button>
+                        </TouchableOpacity>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', marginTop: 8, alignSelf: 'center'}}>
                             To Process
                         </Text>
                     </Layout>
                     <Layout>
-                        <Button
+                        <TouchableOpacity
                             style={styles.button}
-                            appearance='ghost'
                         >
                             <Icon name='car-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </Button>
+                        </TouchableOpacity>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', marginTop: 8, alignSelf: 'center'}}>
                             To Deliver
                         </Text>
                     </Layout>
                     <Layout>
-                        <Button
+                        <TouchableOpacity
                             style={styles.button}
-                            appearance='ghost'
                         >
                             <Icon name='archive-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </Button>
+                        </TouchableOpacity>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', marginTop: 8, alignSelf: 'center'}}>
                             To Receive
                         </Text>
                     </Layout>
                     <Layout>
-                        <Button
+                        <TouchableOpacity
                             style={styles.button}
-                            appearance='ghost'
                         >
                             <Icon name='checkmark-square-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </Button>
+                        </TouchableOpacity>
                         <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', marginTop: 8, alignSelf: 'center'}}>
                             To Review
                         </Text>
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
         minHeight: 80,
         justifyContent: 'space-around',
         marginTop: 16,
-        marginBottom: 32
+        marginBottom: 32,
     },
     settingsCard: {
         flexDirection: 'column',
@@ -201,13 +197,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     button: {
-        margin: 2,
-        elevation: 5,
-        shadowColor: 'rgb(255,255,255)',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 1,
-        borderColor: 'rgb(220,220,220)'
+        width: 55,
+        height: 55,
+        borderWidth: 1,
+        borderColor: '#BDBDBD',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        borderRadius: 999,
     }
 })
 

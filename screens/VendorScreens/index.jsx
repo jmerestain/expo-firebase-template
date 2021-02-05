@@ -9,23 +9,28 @@ import MyAccountScreen from './MyAccountScreen';
 import OrderStatusScreen from './OrderStatusScreen';
 
 const Vendor = createStackNavigator();
-const noHeader = {headerShown: false}
+const noHeader = {headerShown: false};
+const showHeader = {headerShown: true};
 
 const VendorNavigator = () => {
     return (
-        <Vendor.Navigator>
-            <Vendor.Screen name="VendorMain" component={VendorScreen} 
-            options={noHeader} />
-            <Vendor.Screen name="VendorNew" component={NewItemScreen} 
-            options={noHeader}  />
+        <Vendor.Navigator screenOptions={{
+            headerStyle: {
+                backgroundColor: 'rgb(138,18,20)',
+            }
+        }}>
+            <Vendor.Screen name="Menu" component={VendorScreen} 
+            options={showHeader} />
+            <Vendor.Screen name="New Item" component={NewItemScreen} 
+            options={showHeader}  />
             <Vendor.Screen name="Favorites" component={FavoritesScreen} 
-            options={noHeader}  />
+            options={showHeader}  />
             <Vendor.Screen name="Settings" component={SettingsScreen} 
-            options={noHeader}  />
-            <Vendor.Screen name="MyAccount" component={MyAccountScreen} 
-            options={noHeader}  />
-            <Vendor.Screen name="OrderStatus" component={OrderStatusScreen} 
-            options={noHeader}  />
+            options={showHeader}  />
+            <Vendor.Screen name="My Account" component={MyAccountScreen} 
+            options={showHeader}  />
+            <Vendor.Screen name="Order Status" component={OrderStatusScreen} 
+            options={showHeader}  />
         </Vendor.Navigator>        
     )
 }

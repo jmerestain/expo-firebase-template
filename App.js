@@ -62,7 +62,7 @@ const DashNavigator = () => (
     }} />
     <Tab.Screen name="Orders" component={OrdersScreenNavigator} options={{
     }} />
-    <Tab.Screen name="Vendor" component={VendorNavigator} options={{
+    <Tab.Screen name="Menu" component={VendorNavigator} options={{
     }} />
   </Tab.Navigator>
 )

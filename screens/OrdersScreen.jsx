@@ -16,7 +16,7 @@ const OrdersScreenNavigator = () => (
 function OrdersScreen ({navigation}) {
     return (
         <Layout style={styles.container}>
-            <DeliverAddress />
+            <DeliverAddress navigation={navigation} />
             <Layout style={styles.inner}>
                 <Layout style={styles.field}>
                     <Text category='label'>
@@ -28,9 +28,11 @@ function OrdersScreen ({navigation}) {
     )
 }
 
-const DeliverAddress = () => {
+const DeliverAddress = ({navigation}) => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('Settings')
+        }}>
             <Layout style={[styles.deliverAddress]}>
                 <Layout style={styles.daInner}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', paddingVertical: 10, justifyContent: 'space-between'}}>

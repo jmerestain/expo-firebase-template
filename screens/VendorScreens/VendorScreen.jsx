@@ -20,15 +20,6 @@ const VendorScreen = ({navigation}) => {
 
     return (
         <Layout style={styles.container}>
-            <Layout>
-                <Button
-                status='basic'
-                onPress={() => {
-                    navigation.navigate('MyAccount');
-                }} >
-                    New Product
-                </Button>
-            </Layout>
             <Layout style={styles.field}>
                 <List data={myProducts} renderItem={RenderItem} />
             </Layout>
@@ -45,17 +36,30 @@ const VendorScreen = ({navigation}) => {
             </Layout>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('MyAccount');
+                    navigation.navigate('My Account');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Account
             </Button>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('OrderStatus');
+                    navigation.navigate('Order Status');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop
+            </Button>
+            <Button size='large'
+                onPress={() => {
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    Manage Products
+            </Button>
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('New Item')
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    New Item
             </Button>
             <Button size='large'
                 onPress={() => {
