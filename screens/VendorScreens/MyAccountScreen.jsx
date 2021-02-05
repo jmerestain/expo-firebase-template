@@ -78,7 +78,9 @@ const AccountTabNavigation = () => {
 
 const PastOrdersNav = () => {
     return ( 
-        <Layout style={[styles.settingsCard]}></Layout>
+        <Layout style={[styles.settingsCard]}>
+            
+        </Layout>
     )
 }
 

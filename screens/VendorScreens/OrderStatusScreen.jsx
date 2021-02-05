@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Layout, Text, Button, Icon, Divider, Input, Avatar, Tab, TabBar, List } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import OrdersScreen from '../OrdersScreen';
 
 const StatusTab = createMaterialTopTabNavigator();
 
@@ -19,6 +18,7 @@ const data = new Array(8).fill({
     <Icon name='search-outline' {...props} />
   );
 
+
   const renderItem = ({ item, index }) => (
     <Layout style={styles.container}>
         <Layout style={styles.inner}>
@@ -31,23 +31,23 @@ const data = new Array(8).fill({
                         style={{ marginHorizontal: 20,  alignSelf: 'center'}}
                  /> 
                 <Layout style={styles.textList}>
-                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 8}}>
+                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 6}}>
                         {item.product}
                     </Text>
-                    <Text category='s1'>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
                         {item.price}
                     </Text>
-                    <Text category='s1'>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
                         {item.quantity}
                     </Text>
-                    <Text category='s1'>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
                         {item.shop}
                     </Text>
                 </Layout>
                 </Layout>
                 <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
-                
             </Layout>
+
          </Layout>
          <Divider/>
     </Layout>
