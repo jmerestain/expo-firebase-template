@@ -51,7 +51,9 @@ const VendorScreen = ({navigation}) => {
                     My Account
             </Button>
             <Button size='large'
-                onPress={() => {}}
+                onPress={() => {
+                    navigation.navigate('OrderStatus');
+                }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop
             </Button>

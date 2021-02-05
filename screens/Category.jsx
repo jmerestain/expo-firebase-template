@@ -12,7 +12,7 @@ const SearchIcon = (props) => (
 
 
 const data = new Array(8).fill({
-    title: 'Shop Name',
+    shop: 'Shop Name',
     price: 'P100.00',
     product: 'Cheeseburger',
   });
@@ -32,7 +32,7 @@ const Category = ({navigation}) => {
                 source={require('./avatar-icon.png')}
                 style={{ marginRight: 8 }}
               /> 
-            <Text style={{ fontSize: 13, fontWeight: 'bold', color: 'rgb(138,18,20)' }}>{item.title}</Text>
+            <Text style={{ fontSize: 13, fontWeight: 'bold', color: 'rgb(138,18,20)' }}>{item.shop}</Text>
           </View>
 
 
