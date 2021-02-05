@@ -97,6 +97,17 @@ export const checkAuthenticated = (setUser, navigation) => {
     });
 }
 
+export const authOnOpen = (navigation) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'DashNav' }],
+            });
+        }
+    });
+}
+
 export const getMyStore = (user, setProducts) => {
     const db = firebase.firestore();
     if(user) {
