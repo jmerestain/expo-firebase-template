@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import MyShopMenu from './MyShopMenuScreen';
 import OrderProcess from './OrderProcessScreen';
+import CompletedOrder from './CompletedOrderScreen';
 
 const MyShopNav = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -18,6 +19,8 @@ const MyShopNavigator = () => {
             <MyShopNav.Screen name="MyShopMenu" component={MyShopMenu} 
             options={showHeader} />
             <MyShopNav.Screen name="OrderProcess" component={OrderProcess} 
+            options={showHeader} />
+            <MyShopNav.Screen name="CompletedOrder" component={CompletedOrder} 
             options={showHeader} />
         </MyShopNav.Navigator>        
     )
