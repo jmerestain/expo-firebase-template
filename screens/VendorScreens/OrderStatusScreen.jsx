@@ -12,6 +12,7 @@ const data = new Array(8).fill({
     price: 'P150',
     quantity: 'x3',
     shop: 'Mary’s Makeup',
+    deliverDate: '01/12/21'
   });
 
   const SearchIcon = (props) => (
@@ -53,6 +54,123 @@ const data = new Array(8).fill({
     </Layout>
 );
 
+const renderItemDeliver = ({ item, index }) => (
+    <Layout style={styles.container}>
+        <Layout style={styles.inner}>
+            <Layout style={styles.containerList}>
+                <Layout style={styles.innerList}>
+                <Avatar
+                        rounded
+                        size="giant"
+                        source={require('../../screens/avatar-icon.png')}
+                        style={{ marginHorizontal: 20,  alignSelf: 'center'}}
+                 /> 
+                <Layout style={styles.textList}>
+                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 6}}>
+                        {item.product}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.price}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.quantity}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.shop}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        Expected delivery by {item.deliverDate}
+                    </Text>
+                </Layout>
+                </Layout>
+                <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+            </Layout>
+
+         </Layout>
+         <Divider/>
+    </Layout>
+);
+
+
+const renderItemReceived = ({ item, index }) => (
+    <Layout style={styles.container}>
+        <Layout style={styles.inner}>
+            <Layout style={styles.containerList}>
+                <Layout style={styles.innerList}>
+                <Avatar
+                        rounded
+                        size="giant"
+                        source={require('../../screens/avatar-icon.png')}
+                        style={{ marginHorizontal: 20,  alignSelf: 'center'}}
+                 /> 
+                <Layout style={styles.textList}>
+                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 6, maxWidth: 200}}>
+                        {item.product}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.price}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.quantity}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.shop}
+                    </Text>
+                </Layout>
+                </Layout>
+                <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
+                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                    <Button size='medium' style={{alignSelf: 'right', marginVertical: 8, marginRight: 16}}>
+                        Item Received
+                    </Button>
+                </Layout>
+            </Layout>
+
+         </Layout>
+         <Divider/>
+    </Layout>
+);
+
+const renderItemRate = ({ item, index }) => (
+    <Layout style={styles.container}>
+        <Layout style={styles.inner}>
+            <Layout style={styles.containerList}>
+                <Layout style={styles.innerList}>
+                <Avatar
+                        rounded
+                        size="giant"
+                        source={require('../../screens/avatar-icon.png')}
+                        style={{ marginHorizontal: 20,  alignSelf: 'center'}}
+                 /> 
+                <Layout style={styles.textList}>
+                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 6, maxWidth: 200}}>
+                        {item.product}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.price}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.quantity}
+                    </Text>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 1, color: 'rgb(128, 128, 128)'}}>
+                        {item.shop}
+                    </Text>
+                </Layout>
+                </Layout>
+                <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
+                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                    <Button size='medium' style={{alignSelf: 'right', marginVertical: 8, marginRight: 16}}>
+                        Rate Order
+                    </Button>
+                </Layout>
+            </Layout>
+
+         </Layout>
+         <Divider/>
+    </Layout>
+);
+
+
 
 function OrderStatusScreen ({navigation}) {
     return (
@@ -74,9 +192,9 @@ const StatusTabNavigation = () => {
     return (
     <StatusTab.Navigator tabBar={props => <TopTabBar {...props} />}>
         <StatusTab.Screen name="To Process" component={ToProcessNav} />
-        <StatusTab.Screen name="To Deliver" component={ToProcessNav} />
-        <StatusTab.Screen name="To Receive" component={ToProcessNav} />
-        <StatusTab.Screen name="To Review" component={ToProcessNav} />
+        <StatusTab.Screen name="To Deliver" component={ToDeliverNav} />
+        <StatusTab.Screen name="To Receive" component={ToReceiveNav} />
+        <StatusTab.Screen name="To Review" component={ToRateNav} />
     </StatusTab.Navigator>
     )
 }
@@ -89,6 +207,51 @@ const ToProcessNav = () => {
                     <List
                         data={data}
                         renderItem={renderItem}
+                    />
+                </Layout>
+            </Layout>
+        </Layout>
+    )
+}
+
+const ToDeliverNav = () => {
+    return ( 
+        <Layout style={[styles.settingsCard]}>
+            <Layout style={styles.inner}>
+                <Layout style={{justifyContent: 'flex-start'}}>
+                    <List
+                        data={data}
+                        renderItem={renderItemDeliver}
+                    />
+                </Layout>
+            </Layout>
+        </Layout>
+    )
+}
+
+const ToReceiveNav = () => {
+    return ( 
+        <Layout style={[styles.settingsCard]}>
+            <Layout style={styles.inner}>
+                <Layout style={{justifyContent: 'flex-start'}}>
+                    <List
+                        data={data}
+                        renderItem={renderItemReceived}
+                    />
+                </Layout>
+            </Layout>
+        </Layout>
+    )
+}
+
+const ToRateNav = () => {
+    return ( 
+        <Layout style={[styles.settingsCard]}>
+            <Layout style={styles.inner}>
+                <Layout style={{justifyContent: 'flex-start'}}>
+                    <List
+                        data={data}
+                        renderItem={renderItemRate}
                     />
                 </Layout>
             </Layout>
