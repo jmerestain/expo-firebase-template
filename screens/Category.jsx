@@ -48,7 +48,7 @@ const Category = ({navigation}) => {
             placeholder='Search here'
             accessoryLeft={SearchIcon}
             style={{
-              marginBottom: 10,
+              marginVertical: 16,
             }}
           />
           <List

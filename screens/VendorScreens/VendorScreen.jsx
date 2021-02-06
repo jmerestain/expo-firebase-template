@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Button, Text, List, Card, Avatar } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
 import { checkAuthenticated, getMyStore } from '../../services/firebase';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const ManageNav = createStackNavigator();
 
 const VendorScreen = ({navigation}) => {
     
@@ -43,23 +46,10 @@ const VendorScreen = ({navigation}) => {
             </Button>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('Order Status');
+                    navigation.navigate('MyShopScreen');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    Manage Products
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('New Item')
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    New Item
             </Button>
             <Button size='large'
                 onPress={() => {
@@ -74,6 +64,14 @@ const VendorScreen = ({navigation}) => {
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     Settings
+            </Button>
+            
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('ManageProductsScreen');
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
+                    Manage Products
             </Button>
             </Layout>
         </Layout>
