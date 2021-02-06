@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import { API_KEY, PROJECT_ID, SENDER_ID, FB_APP_ID, G_MEASURE_ID } from '@env';
 
 export const initFirebase = () => {
@@ -8,13 +9,14 @@ export const initFirebase = () => {
         authDomain: `${PROJECT_ID}.firebaseapp.com`, // project-id.firebaseapp.com
         databaseURL: `https://${PROJECT_ID}.firebaseio.com`, // https://project-id.firebaseio.com
         projectId: `${PROJECT_ID}`, // project-id
-        storageBucket: `${PROJECT_ID}.appspot.com`, // project-id.appspot.com
+        storageBucket: `gs://${PROJECT_ID}.appspot.com`, // project-id.appspot.com
         messagingSenderId: `${SENDER_ID}`, // sender-id
         appId: `${FB_APP_ID}`, // facebook app id
         measurementId: `${G_MEASURE_ID}`, // google analytics id
     };
 
     if (!firebase.apps.length) {
+        console.log(firebaseConfig)
         firebase.initializeApp(firebaseConfig);
     }
     else {
@@ -31,7 +33,7 @@ export const createUser = (email, password, setMessage, navigation) => {
             //console.log(user);
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Sample' }], // Designated main page
+                routes: [{ name: 'DashNav' }], // Designated main page
             });
         })
         .catch((error) => {
@@ -55,7 +57,7 @@ export const loginUser = (email, password, setMessage, navigation) => {
             //console.log(user);
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Sample' }], // Designated main page
+                routes: [{ name: 'DashNav' }], // Designated main page
             });
         })
         .catch((error) => {
@@ -93,4 +95,65 @@ export const checkAuthenticated = (setUser, navigation) => {
             });
         }
     });
+}
+
+export const authOnOpen = (navigation) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'DashNav' }],
+            });
+        }
+    });
+}
+
+export const getMyStore = (user, setProducts) => {
+    const db = firebase.firestore();
+    if(user) {
+        db.collection("products").where("vendor", "==", user.uid)
+        .onSnapshot((querySnapshot) => {
+            setProducts([]);
+            querySnapshot.forEach(function(doc) {
+                setProducts(oldArray => [...oldArray, doc.data()])
+            });
+        });
+    }
+}
+
+export const getCatalogue = (setCatalogue) => {
+    const db = firebase.firestore();
+    db.collection('products')
+    .onSnapshot((querySnapshot) => {
+        setCatalogue([]);
+        querySnapshot.forEach(function(doc) {
+            setCatalogue(oldArray => [...oldArray, doc.data()]);
+        });
+    });
+}
+
+export const getRecommendations = () => {
+    const productsRef = ''
+}
+
+export const getReviews = (product) => {
+}
+
+export const postMyProduct = (product, setMessage) => {
+    const db = firebase.firestore();
+    const productData = {
+        ...product,
+        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
+    }
+    const {title} = product;
+    db.collection("products").doc(title).set(productData)
+        .then(() => {
+            setMessage(`${title} successfully posted`);
+        })
+        .catch((e) => {
+            setMessage(`Error: ${e}`);
+        })
+}
+
+export const postReview = (user, product) => {
 }
