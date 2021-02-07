@@ -65,10 +65,17 @@ const VendorScreen = ({navigation}) => {
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     Settings
             </Button>
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('Vendor Application');
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8}}>
+                    Vendor App
+            </Button>
             
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('ManageProductsScreen');
+                    navigation.navigate('Manage Products Screen');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
                     Manage Products
