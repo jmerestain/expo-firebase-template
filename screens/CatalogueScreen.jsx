@@ -119,20 +119,22 @@ const CategorySection = () => {
 }
 
 const renderItem = ({item}) => {
-    const {title, description, price} = item;
+    const {title, description, price, imageUrl} = item;
+    console.log(imageUrl)
     return (
         <TouchableOpacity>
-            <Card style={styles.pickForYou}>
+            <Layout style={styles.pickForYou}>
+                <Image source={{uri: imageUrl}} style={{width: 120, height: 90}}/>
                 <Text>
                     {title}
                 </Text>
-                <Text>
+                <Text numberOfLines={1}>
                     {description}
                 </Text>
                 <Text>
                     {price} Pesos
                 </Text>
-            </Card>
+            </Layout>
         </TouchableOpacity>
     )
 }
@@ -204,6 +206,7 @@ const styles = StyleSheet.create({
     pickForYou: {
         flex: 1,
         marginRight: 10,
+        maxWidth: 120,
     }
 })
 

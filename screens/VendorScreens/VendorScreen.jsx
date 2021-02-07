@@ -47,7 +47,7 @@ const VendorScreen = ({navigation}) => {
             <Button size='large'
                 onPress={() => {
                     {/*if empty*/}
-                    navigation.navigate('EmptyState');
+                    navigation.navigate('Vendor Application');
                     {/*if filled
                     navigation.navigate('MyShopScreen');*/}
                 }}
@@ -67,13 +67,6 @@ const VendorScreen = ({navigation}) => {
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     Settings
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('Vendor Application');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    Vendor App
             </Button>
             
             <Button size='large'

@@ -139,16 +139,41 @@ export const getRecommendations = () => {
 export const getReviews = (product) => {
 }
 
-export const postMyProduct = (product, setMessage) => {
+export const postMyProduct = (product, image, setMessage) => {
     const db = firebase.firestore();
-    const productData = {
-        ...product,
-        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
-    }
-    const {title} = product;
-    db.collection("products").doc(title).set(productData)
-        .then(() => {
-            setMessage(`${title} successfully posted`);
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const imageId = Date.now();
+    const productImageRef = storageRef.child(`product-images/${imageId}.jpg`);
+    let imageUrl
+
+    productImageRef.put(image)
+        .then((snapshot) => {
+            console.log(`Image Id: ${imageId}`);
+            productImageRef.getDownloadURL()
+                .then((url) => {
+                    imageUrl = url
+                    console.log(imageUrl);
+                })
+                .then(() => {
+                    const {title} = product;
+                    const productData = {
+                        ...product,
+                        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
+                        imageId,
+                        imageUrl: imageUrl,
+                    }
+                    db.collection("products").doc(title).set(productData)
+                    .then(() => {
+                        setMessage(`${title} successfully posted`);
+                    })
+                    .catch((e) => {
+                        setMessage(`Error: ${e}`);
+                    })
+                })
+                .catch((e) => {
+                    setMessage(`Error: ${e}`);
+                })
         })
         .catch((e) => {
             setMessage(`Error: ${e}`);

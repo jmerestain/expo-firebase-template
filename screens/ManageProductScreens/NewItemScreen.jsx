@@ -12,6 +12,7 @@ const NewItemScreen = ({navigation}) => {
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState(null);
     const [image, setImage] = useState(null);
+    const [blob, setBlob] = useState(null);
 
     useEffect(() => {
         checkAuthenticated(setUser, navigation)
@@ -49,7 +50,7 @@ const NewItemScreen = ({navigation}) => {
                     <Input keyboardType='decimal-pad' />
                 </Layout>
                 <Layout style={styles.field}>
-                    <ImagePickerComponent setImage={setImage} />
+                    <ImagePickerComponent setImage={setImage} setBlob={setBlob} />
                     <Button onPress={() => {
                         const productData = {
                             title,
@@ -58,7 +59,7 @@ const NewItemScreen = ({navigation}) => {
                             vendor: user.uid
                         }
 
-                        postMyProduct(productData, setMessage);
+                        postMyProduct(productData, blob, setMessage);
                     }}>
                         Add New Product
                     </Button>
@@ -105,7 +106,7 @@ const PreviewComponent = ({title, description, price, image}) => {
     )
 }
 
-function ImagePickerComponent ({setImage}) {
+function ImagePickerComponent ({setImage, setBlob}) {
     
   
     useEffect(() => {
@@ -131,6 +132,9 @@ function ImagePickerComponent ({setImage}) {
   
       if (!result.cancelled) {
         setImage(result.uri);
+        const response = await fetch(result.uri);
+        const blob = await response.blob();
+        setBlob(blob);
       }
     };
 

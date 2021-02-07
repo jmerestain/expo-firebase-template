@@ -12,7 +12,6 @@ import OrderProcess from '../MyShopScreens/OrderProcessScreen';
 import CompletedOrder from '../MyShopScreens/CompletedOrderScreen';
 import EmptyState from './EmptyStateScreen';
 import RegisterShopScreen from '../CreateShopScreens/RegisterShopScreen';
-import VendorApplication from '../VendorScreens/VendorApplication';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -43,12 +42,10 @@ const VendorNavigator = () => {
             options={showHeader}  />
             <Vendor.Screen name="CompletedOrder" component={CompletedOrder} 
             options={showHeader}  />
-            <Vendor.Screen name="Empty State" component={EmptyState} 
+            <Vendor.Screen name="Vendor Application" component={EmptyState} 
             options={showHeader} />
             <Vendor.Screen name="Register Shop" component={RegisterShopScreen} 
             options={showHeader} />
-            <Vendor.Screen name="Vendor Application" component={VendorApplication} 
-            options={showHeader}  />
         </Vendor.Navigator>        
     )
 }
