@@ -60,14 +60,12 @@ function MyAccountScreen ({navigation}) {
                     </Text>
                 </Layout>
             </Layout>
-            <NavigationContainer independent='true'>
-                <AccountTabNavigation/>
-            </NavigationContainer>
+            <AccountTabNavigation/>
         </Layout>
     )
 }
 
-const AccountTabNavigation = () => {
+export const AccountTabNavigation = () => {
     return (
     <AccountTopTab1.Navigator tabBar={props => <TopTabBar {...props} />}>
         <AccountTopTab1.Screen name="Pending Orders" component={PendingOrdersNav} />
@@ -99,75 +97,83 @@ const PendingOrdersNav = ({navigation}) => {
         <Layout style={styles.container}>
             <Layout style={[styles.settingsCard]}>
                 <Layout style={styles.daInner}>
-                <Layout style={styles.buttonContain}>
-                    <Layout>
-                    <Button  appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='flip-2' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Process
-                        </Text>
+                    <Layout style={styles.buttonContain}>
+                        <Layout>
+                            <Button appearance='ghost' onPress={() => {
+                                    navigation.navigate('Order Status');
+                            }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                >
+                                    <Icon name='flip-2' fill='#8A1214' style={{height: 26, width: 26}} />
+                                </TouchableOpacity>
+                            </Button>
+                                <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
+                                    To Process
+                                </Text>
+                            </Layout>
+                        <Layout>
+                            <Button appearance='ghost' onPress={() => {
+                                    navigation.navigate('Order Status');
+                            }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                >
+                                    <Icon name='car-outline' fill='#8A1214' style={{height: 26, width: 26}} />
+                                </TouchableOpacity>
+                            </Button>
+                            <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
+                                To Deliver
+                            </Text>
+                        </Layout>
+                        <Layout>
+                            <Button appearance='ghost' onPress={() => {
+                                navigation.navigate('Order Status');
+                            }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                >
+                                <Icon name='archive-outline' fill='#8A1214' style={{height: 26, width: 26}} />
+                                </TouchableOpacity>
+                            </Button>
+                            <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
+                                To Receive
+                            </Text>
+                        </Layout>
+                        <Layout>
+                            <Button appearance='ghost' onPress={() => {
+                                navigation.navigate('Order Status');
+                            }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                >
+                                <Icon name='checkmark-square-outline' fill='#8A1214' style={{height: 26, width: 26}} />
+                                </TouchableOpacity>
+                            </Button>
+                            <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
+                                To Review
+                            </Text>
+                        </Layout>
                     </Layout>
-                    <Layout>
-                    <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='car-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Deliver
-                        </Text>
-                    </Layout>
-                    <Layout>
-                        <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='archive-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Receive
-                        </Text>
-                    </Layout>
-                    <Layout>
-                    <Button appearance='ghost' onPress={() => {
-                            navigation.navigate('OrderStatus');
-                        }}><TouchableOpacity
-                            style={styles.button}
-                        >
-                            <Icon name='checkmark-square-outline' fill='#8A1214' style={{height: 26, width: 26}} />
-                        </TouchableOpacity></Button>
-                        <Text category='s2' style={{fontWeight:'bold', color: 'rgb(138,18,20)', alignSelf: 'center'}}>
-                            To Review
-                        </Text>
-                    </Layout>
-                </Layout>
-                <Divider/>
-                <TouchableOpacity>
-                    <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
-                        <Text style={{paddingTop: 2}}>
-                          Payment Options
-                        </Text>
-                        <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </TouchableOpacity>
-                <Divider/>
-                <TouchableOpacity>
-                    <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
-                        <Text style={{paddingTop: 2}}>
-                            Contact Support
-                        </Text>
-                        <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </TouchableOpacity>
-                <Divider/>
+                    <Divider/>
+                    <TouchableOpacity>
+                        <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
+                            <Text style={{paddingTop: 2}}>
+                            Payment Options
+                            </Text>
+                            <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
+                        </Layout>
+                    </TouchableOpacity>
+                    <Divider/>
+                    <TouchableOpacity>
+                        <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
+                            <Text style={{paddingTop: 2}}>
+                                Contact Support
+                            </Text>
+                            <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
+                        </Layout>
+                    </TouchableOpacity>
+                    <Divider/>
                 </Layout>
             </Layout>
         </Layout>

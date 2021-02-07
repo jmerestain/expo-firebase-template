@@ -15,7 +15,7 @@ const ManageProductsScreens = () => (
             backgroundColor: 'rgb(138,18,20)',
         }
     }}>
-        <ManageProducts.Screen name="ManageProduct" component={ManageProductsScreen} 
+        <ManageProducts.Screen name="Manage Products" component={ManageProductsScreen} 
         options={showHeader} />
         <ManageProducts.Screen name="New Item" component={NewItemScreen} 
         options={showHeader}  />

@@ -6,12 +6,13 @@ import FavoritesScreen from './FavoritesScreen';
 import SettingsScreen from './SettingsScreen';
 import MyAccountScreen from './MyAccountScreen';
 import OrderStatusScreen from './OrderStatusScreen';
-import ManageProductsScreen from '../ManageProductScreens/ManageProductsScreen';
+import ManageProductsScreen from '../ManageProductScreens';
 import MyShopScreen from '../MyShopScreens/MyShopMenuScreen';
 import OrderProcess from '../MyShopScreens/OrderProcessScreen';
 import CompletedOrder from '../MyShopScreens/CompletedOrderScreen';
 import EmptyState from './EmptyStateScreen';
 import RegisterShopScreen from '../CreateShopScreens/RegisterShopScreen';
+import VendorApplication from '../VendorScreens/VendorApplication';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -32,20 +33,22 @@ const VendorNavigator = () => {
             options={showHeader}  />
             <Vendor.Screen name="My Account" component={MyAccountScreen} 
             options={showHeader}  />
-            <Vendor.Screen name="OrderStatus" component={OrderStatusScreen} 
+            <Vendor.Screen name="Order Status" component={OrderStatusScreen} 
             options={showHeader}  />
-            <Vendor.Screen name="ManageProductsScreen" component={ManageProductsScreen} 
-            options={showHeader}  />
+            <Vendor.Screen name="Manage Products Screen" component={ManageProductsScreen} 
+            options={noHeader}  />
             <Vendor.Screen name="MyShopScreen" component={MyShopScreen} 
             options={showHeader}  />
             <Vendor.Screen name="OrderProcess" component={OrderProcess} 
             options={showHeader}  />
             <Vendor.Screen name="CompletedOrder" component={CompletedOrder} 
             options={showHeader}  />
-            <Vendor.Screen name="EmptyState" component={EmptyState} 
+            <Vendor.Screen name="Empty State" component={EmptyState} 
             options={showHeader} />
             <Vendor.Screen name="Register Shop" component={RegisterShopScreen} 
             options={showHeader} />
+            <Vendor.Screen name="Vendor Application" component={VendorApplication} 
+            options={showHeader}  />
         </Vendor.Navigator>        
     )
 }
