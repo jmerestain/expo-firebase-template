@@ -123,7 +123,7 @@ export const getMyStore = (user, setProducts) => {
 
 export const getCatalogue = (setCatalogue) => {
     const db = firebase.firestore();
-    db.collection('products')
+    db.collection('products').limit(10)
     .onSnapshot((querySnapshot) => {
         setCatalogue([]);
         querySnapshot.forEach(function(doc) {
@@ -153,7 +153,6 @@ export const postMyProduct = (product, image, setMessage) => {
             productImageRef.getDownloadURL()
                 .then((url) => {
                     imageUrl = url
-                    console.log(imageUrl);
                 })
                 .then(() => {
                     const {title} = product;
