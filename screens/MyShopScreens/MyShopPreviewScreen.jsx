@@ -107,9 +107,10 @@ function PreviewMyShopScreen ({navigation}) {
                     <Text style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2, color: 'rgb(180,180,180)'}}>
                         Cabanatuan, Nueva Ecija
                     </Text>
-                    <Layout style={{flexDirection:'row', justifyContent: 'space-around', marginTop: 24}}>
-                        <Layout style={{marginHorizontal: 16}}>
-                        <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 8}}>
+                    <Divider style={{marginTop: 12}}/>
+                    <Layout style={{flexDirection:'row', justifyContent: 'space-around', marginTop: 16}}>
+                        <Layout style={{marginHorizontal: 12}}>
+                        <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2}}>
                             3.5
                         </Text>
                         <Text style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2, color: 'rgb(180,180,180)'}}>
@@ -117,36 +118,18 @@ function PreviewMyShopScreen ({navigation}) {
                         </Text>
                         </Layout>
                         <Layout style={{marginHorizontal: 16}}>
-                        <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 8}}>
+                        <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2}}>
                             12
                         </Text>
                         <Text style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2, color: 'rgb(180,180,180)'}}>
                             Products
                         </Text>
                         </Layout>
-                        <Layout style={{marginHorizontal: 16}}>
-                        <Text category='h6' style={{alignSelf: 'center', alignContent: 'center', marginVertical: 8}}>
-                            234
-                        </Text>
-                        <Text style={{alignSelf: 'center', alignContent: 'center', marginVertical: 2, color: 'rgb(180,180,180)'}}>
-                            Followers
-                        </Text>
-                        </Layout>
-                </Layout>
+                    </Layout>
                 </Layout>
             </Layout>
-            <Divider/>
-        <Layout>
-                        
-                    <MyShopPreviewNavigation/>
-                    <Input
-                        onChangeText={value => setSearch(value)}
-                        placeholder='Search here'
-                        style={{ paddingHorizontal: 16, paddingVertical: 12}}
-                        accessoryLeft={SearchIcon}
-                    />
-                    </Layout>
-        </Layout>
+        <MyShopPreviewNavigation/>
+    </Layout>
     )
 }
 
@@ -154,7 +137,6 @@ const MyShopPreviewNavigation = () => {
     return (
     <MyShopPreviewTab.Navigator tabBar={props => <TopTabBar {...props} />}>
         <MyShopPreviewTab.Screen name="Products" component={ProductsNav} />
-        <MyShopPreviewTab.Screen name="Posts" component={ProductsNav} />
         <MyShopPreviewTab.Screen name="Preview" component={ProductsNav} />
     </MyShopPreviewTab.Navigator>
     )
@@ -165,7 +147,6 @@ const TopTabBar = ({ navigation, state }) => (
     selectedIndex={state.index}
     onSelect={index => navigation.navigate(state.routeNames[index])}>
       <Tab title='Products'/>
-      <Tab title='Posts'/>
       <Tab title='Preview'/>
     </TabBar>
 )
@@ -188,6 +169,12 @@ const renderItemProducts = ({ item, index }) => (
 const ProductsNav = () => {
     return ( 
         <Layout style={[styles.settingsCard]}>
+             <Input
+                        onChangeText={value => setSearch(value)}
+                        placeholder='Search here'
+                        style={{ paddingHorizontal: 16, paddingVertical: 12}}
+                        accessoryLeft={SearchIcon}
+            />
             <List
             contentContainerStyle={styles.containerList}
             data={data}
@@ -201,7 +188,7 @@ const ProductsNav = () => {
             columnWrapperStyle={{
               justifyContent: 'space-between'
             }}
-          />
+            />
         </Layout>
     )
 }
