@@ -45,10 +45,10 @@ const VendorScreen = ({navigation}) => {
             </Button>
             <Button size='large'
                 onPress={() => {
-                    {/*if empty
-                    navigation.navigate('Build My Shop');*/}
-                    {/*if filled*/}
-                    navigation.navigate('My Shop');
+                    {/*if empty*/}
+                    navigation.navigate('Build My Shop');
+                    {/*if filled
+                    navigation.navigate('My Shop');*/}
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop

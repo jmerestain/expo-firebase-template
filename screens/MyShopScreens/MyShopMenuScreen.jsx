@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Modal, TouchableOpacity, Image, SectionList } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Layout, Text, Button, Icon, Divider, Avatar, Tab, TabBar, List } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -36,6 +36,7 @@ function MyShopScreen ({navigation}) {
                 </Layout>
              </Layout>
     );
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <Layout style={styles.container}>
             <Layout style={styles.inner}>
@@ -105,7 +106,8 @@ function MyShopScreen ({navigation}) {
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => setModalVisible(true)}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                         View DTI Certificate
@@ -123,7 +125,10 @@ function MyShopScreen ({navigation}) {
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('Shop Settings');
+                }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                             Shop Settings
@@ -135,7 +140,29 @@ function MyShopScreen ({navigation}) {
                 </Layout>
             </Layout>
         </Layout>
+        <Layout style={styles.centeredView}>
+        <Modal
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}>
+            <Layout style={styles.centeredView}>
+                <Layout style={styles.modalView}>
+                    <Image
+                        style={{resizeMode: 'contain'}}
+                        source={require('../../assets/DTI_Registration.png')}/>
+                    <Button appearance='outline'
+                    onPress={() => setModalVisible(!modalVisible)}
+                    style={{marginTop: 12}}>
+                        Back to Shop
+                    </Button>
+                </Layout>
+            </Layout>
+        </Modal>
         </Layout>
+    </Layout>
     )
 }
 const styles = StyleSheet.create({
@@ -144,6 +171,27 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start'
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "stretch",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
     buttonContain: {
         flex: 1,
         flexDirection: 'row',
