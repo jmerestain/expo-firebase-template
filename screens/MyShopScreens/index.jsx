@@ -21,7 +21,7 @@ const MyShopNavigator = () => {
             options={showHeader} />
             <MyShopNav.Screen name="Pending Orders" component={OrderProcess} 
             options={showHeader} />
-            <MyShopNav.Screen name="Completed Orders" component={CompletedOrder} 
+            <MyShopNav.Screen name="Completed Orders" component={CompletedOrder}
             options={showHeader} />
             <MyShopNav.Screen name="Preview Shop" component={MyShopPreview} 
             options={showHeader} />

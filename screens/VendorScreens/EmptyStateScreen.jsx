@@ -28,7 +28,7 @@ function EmptyStateScreen ({navigation}) {
                     </Button>
                     <Button appearance='ghost' size='medium'
                     onPress={() => {
-                        
+                        navigation.navigate('About DTI Registration');
                     }}>
                         <Text category='s2' style={{alignSelf: 'center', color: 'rgb(186,186,186)', alignContent: 'center', marginVertical: 12}}>
                             How do I get certified?
