@@ -12,6 +12,9 @@ import OrderProcess from '../MyShopScreens/OrderProcessScreen';
 import CompletedOrder from '../MyShopScreens/CompletedOrderScreen';
 import EmptyState from './EmptyStateScreen';
 import RegisterShopScreen from '../CreateShopScreens/RegisterShopScreen';
+import VendorApplication from '../VendorScreens/VendorApplication';
+import DTIRegistrationInfoScreen from '../CreateShopScreens/DTIRegistrationInfoScreen';
+import DTIRegistrationNext from '../CreateShopScreens/DTIRegistrationNextScreen';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -34,17 +37,23 @@ const VendorNavigator = () => {
             options={showHeader}  />
             <Vendor.Screen name="Order Status" component={OrderStatusScreen} 
             options={showHeader}  />
-            <Vendor.Screen name="Manage Products Screen" component={ManageProductsScreen} 
+            <Vendor.Screen name="Manage Products" component={ManageProductsScreen} 
             options={noHeader}  />
-            <Vendor.Screen name="MyShopScreen" component={MyShopScreen} 
+            <Vendor.Screen name="My Shop" component={MyShopScreen} 
             options={showHeader}  />
-            <Vendor.Screen name="OrderProcess" component={OrderProcess} 
+            <Vendor.Screen name="Pending Orders" component={OrderProcess} 
             options={showHeader}  />
-            <Vendor.Screen name="CompletedOrder" component={CompletedOrder} 
+            <Vendor.Screen name="Completed Orders" component={CompletedOrder} 
             options={showHeader}  />
             <Vendor.Screen name="Vendor Application" component={EmptyState} 
             options={showHeader} />
             <Vendor.Screen name="Register Shop" component={RegisterShopScreen} 
+            options={showHeader} />
+            <Vendor.Screen name="Vendor Application" component={VendorApplication} 
+            options={showHeader}  />
+            <Vendor.Screen name="About DTI Registration" component={DTIRegistrationInfoScreen} 
+            options={showHeader} />
+            <Vendor.Screen name="How to File Registration" component={DTIRegistrationNext} 
             options={showHeader} />
         </Vendor.Navigator>        
     )

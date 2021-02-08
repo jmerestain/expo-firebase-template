@@ -17,7 +17,7 @@ const ManageProductsScreens = () => (
     }}>
         <ManageProducts.Screen name="Manage Products" component={ManageProductsScreen} 
         options={showHeader} />
-        <ManageProducts.Screen name="New Item" component={NewItemScreen} 
+        <ManageProducts.Screen name="Add New Item" component={NewItemScreen} 
         options={showHeader}  />
 
     </ManageProducts.Navigator>

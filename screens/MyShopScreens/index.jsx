@@ -16,11 +16,11 @@ const MyShopNavigator = () => {
                 backgroundColor: 'rgb(138,18,20)',
             }
         }}>
-            <MyShopNav.Screen name="MyShopMenu" component={MyShopMenu} 
+            <MyShopNav.Screen name="My Shop Account" component={MyShopMenu} 
             options={showHeader} />
-            <MyShopNav.Screen name="OrderProcess" component={OrderProcess} 
+            <MyShopNav.Screen name="Pending Orders" component={OrderProcess} 
             options={showHeader} />
-            <MyShopNav.Screen name="CompletedOrder" component={CompletedOrder} 
+            <MyShopNav.Screen name="Completed Orders" component={CompletedOrder} 
             options={showHeader} />
         </MyShopNav.Navigator>        
     )

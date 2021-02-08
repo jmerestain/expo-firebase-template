@@ -81,7 +81,7 @@ const ManageProductsScreen = ({navigation}) => {
             <Divider/>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('New Item');
+                    navigation.navigate('Add New Item');
                 }}
                 style={{ marginHorizontal: 20, marginVertical: 16}}>
                     + Add New Product
