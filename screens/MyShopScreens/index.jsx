@@ -5,6 +5,7 @@ import MyShopMenu from './MyShopMenuScreen';
 import OrderProcess from './OrderProcessScreen';
 import CompletedOrder from './CompletedOrderScreen';
 import MyShopPreview from './MyShopPreviewScreen';
+import ShopSettings from './ShopSettingsScreen';
 
 const MyShopNav = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -24,6 +25,8 @@ const MyShopNavigator = () => {
             <MyShopNav.Screen name="Completed Orders" component={CompletedOrder}
             options={showHeader} />
             <MyShopNav.Screen name="Preview Shop" component={MyShopPreview} 
+            options={showHeader} />
+            <MyShopNav.Screen name="Shop Settings" component={ShopSettings} 
             options={showHeader} />
         </MyShopNav.Navigator>        
     )

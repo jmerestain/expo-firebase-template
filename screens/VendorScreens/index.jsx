@@ -16,6 +16,7 @@ import VendorApplication from '../VendorScreens/VendorApplication';
 import DTIRegistrationInfoScreen from '../CreateShopScreens/DTIRegistrationInfoScreen';
 import DTIRegistrationNext from '../CreateShopScreens/DTIRegistrationNextScreen';
 import MyShopPreview from '../MyShopScreens/MyShopPreviewScreen';
+import ShopSettings from '../MyShopScreens/ShopSettingsScreen';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -57,6 +58,8 @@ const VendorNavigator = () => {
             <Vendor.Screen name="How to File Registration" component={DTIRegistrationNext} 
             options={showHeader} />
             <Vendor.Screen name="Preview Shop" component={MyShopPreview} 
+            options={showHeader} />
+            <Vendor.Screen name="Shop Settings" component={ShopSettings} 
             options={showHeader} />
         </Vendor.Navigator>        
     )

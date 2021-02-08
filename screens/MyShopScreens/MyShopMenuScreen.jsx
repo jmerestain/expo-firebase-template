@@ -125,7 +125,10 @@ function MyShopScreen ({navigation}) {
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('Shop Settings');
+                }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                             Shop Settings
