@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { Rating } from 'react-native-elements';
 import { Layout, Text, Button, Icon, Divider, Avatar, Tab, TabBar, List, Input, StatusTab } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -30,7 +31,11 @@ const data = new Array(8).fill({
     totalProducts: '12',
     totalFollowers: '234',
     product: 'Cheeseburger',
-    price: 'P150'
+    price: 'P150',
+    rating: '5',
+    review: 'Very responsive, good service. Carrot cake came just in time for my sister’s birthday.',
+    ratedBy: 'Nelly Cruz',
+    dateReviewed: '01/11/21'
   });
 
   const SearchIcon = (props) => (
@@ -137,7 +142,7 @@ const MyShopPreviewNavigation = () => {
     return (
     <MyShopPreviewTab.Navigator tabBar={props => <TopTabBar {...props} />}>
         <MyShopPreviewTab.Screen name="Products" component={ProductsNav} />
-        <MyShopPreviewTab.Screen name="Preview" component={ProductsNav} />
+        <MyShopPreviewTab.Screen name="Reviews" component={RatingNav} />
     </MyShopPreviewTab.Navigator>
     )
 }
@@ -147,7 +152,7 @@ const TopTabBar = ({ navigation, state }) => (
     selectedIndex={state.index}
     onSelect={index => navigation.navigate(state.routeNames[index])}>
       <Tab title='Products'/>
-      <Tab title='Preview'/>
+      <Tab title='Reviews'/>
     </TabBar>
 )
 const renderItemProducts = ({ item, index }) => (
@@ -166,9 +171,48 @@ const renderItemProducts = ({ item, index }) => (
     </Layout>
 );
 
+const renderItemRatings = ({ item, index }) => (
+    <Layout style={styles.item2}>
+        <Layout style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent:'space-between' }}>
+            <Layout style={{flexDirection: 'row', alignSelf: 'flex-start', marginTop: 12 }}>
+                <Avatar
+                    rounded
+                    size="small"
+                    shape='round'
+                    source={require('../../screens/avatar-icon.png')}
+                    style={{ marginRight: 12, marginLeft: 2,  marginBottom: 8, alignItems: 'center', alignSelf: 'center', alignContent: 'center'}}
+                /> 
+                <Layout>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 2 }} >
+                    {item.ratedBy}
+                </Text>
+                <Text style={{fontSize: 10, color: 'rgb(186,186,186)'}} >
+                    {item.dateReviewed}
+                </Text>
+                </Layout>
+            </Layout>
+            <Layout style={{marginLeft: '25%'}}>
+            <Rating
+                type='custom'
+                style={{ paddingVertical: 16 }}
+                ratingColor='rgb(210,145,91)'
+                imageSize={20}
+            />
+            </Layout>
+            <Layout>
+        </Layout>
+    </Layout>
+        <Text style={{marginBottom: 16}}>
+            {item.review}
+        </Text>
+        <Divider/>
+    </Layout>
+);
+
+
 const ProductsNav = () => {
     return ( 
-        <Layout style={[styles.settingsCard]}>
+        <Layout style={styles.container}>
              <Input
                         onChangeText={value => setSearch(value)}
                         placeholder='Search here'
@@ -176,15 +220,10 @@ const ProductsNav = () => {
                         accessoryLeft={SearchIcon}
             />
             <List
-            contentContainerStyle={styles.containerList}
             data={data}
-            showsVerticalScrollIndicator={false}
             numColumns={2}
             renderItem={renderItemProducts}
-            style={{
-              backgroundColor: 'transparent',
-              flex: 1,
-            }}
+            style={{marginHorizontal:12}}
             columnWrapperStyle={{
               justifyContent: 'space-between'
             }}
@@ -193,6 +232,17 @@ const ProductsNav = () => {
     )
 }
 
+const RatingNav = () => {
+    return ( 
+        <Layout style={styles.container}>
+            <List
+            data={data}
+            renderItem={renderItemRatings}
+            style={{marginHorizontal:12}}
+            />
+        </Layout>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -209,6 +259,12 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'flex-start'
     },
+    item2: {
+        paddingBottom: 10,
+        paddingHorizontal: 16,
+        alignItems: 'stretch',
+        flexDirection: 'column'
+      },
     daInner: {
         marginHorizontal: 20,
         backgroundColor: 'transparent',
