@@ -64,7 +64,7 @@ function MyShopScreen ({navigation}) {
                     <Layout>
                     <Button appearance='ghost' size='large'
                     onPress={() => {
-                        navigation.navigate('OrderProcess');
+                        navigation.navigate('Pending Orders');
                     }}>
                         <TouchableOpacity
                             style={styles.button}
@@ -79,7 +79,7 @@ function MyShopScreen ({navigation}) {
                     <Layout>
                     <Button appearance='ghost' size='large'
                     onPress={() => {
-                        navigation.navigate('CompletedOrder');
+                        navigation.navigate('Completed Orders');
                     }}>
                         <TouchableOpacity
                             style={styles.button}
@@ -93,7 +93,10 @@ function MyShopScreen ({navigation}) {
                     </Layout>
                 </Layout>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('Preview Shop');
+                }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                             View My Shop

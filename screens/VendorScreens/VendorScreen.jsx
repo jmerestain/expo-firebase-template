@@ -23,10 +23,9 @@ const VendorScreen = ({navigation}) => {
 
     return (
         <Layout style={styles.container}>
-            <Layout style={styles.field}>
+            {/*<Layout style={styles.field}>
                 <List data={myProducts} renderItem={RenderItem} />
-            </Layout>
-
+            </Layout>*/}
             <Layout>
             <Layout style={styles.avatar}>
             <Avatar
@@ -46,10 +45,10 @@ const VendorScreen = ({navigation}) => {
             </Button>
             <Button size='large'
                 onPress={() => {
-                    {/*if empty*/}
-                    navigation.navigate('EmptyState');
-                    {/*if filled
-                    navigation.navigate('MyShopScreen');*/}
+                    {/*if empty
+                    navigation.navigate('Build My Shop');*/}
+                    {/*if filled*/}
+                    navigation.navigate('My Shop');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8}}>
                     My Shop
@@ -70,15 +69,7 @@ const VendorScreen = ({navigation}) => {
             </Button>
             <Button size='large'
                 onPress={() => {
-                    navigation.navigate('Vendor Application');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    Vendor App
-            </Button>
-            
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('Manage Products Screen');
+                    navigation.navigate('Manage Products');
                 }}
                 style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
                     Manage Products
