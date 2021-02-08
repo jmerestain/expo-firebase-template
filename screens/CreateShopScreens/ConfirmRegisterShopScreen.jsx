@@ -24,7 +24,8 @@ function ConfirmRegisterShopScreen ({navigation}) {
                     onPress={() => {
                     }}>
                         Back to Home
-                    </Button>
+                        
+</Button>
                 </Layout>
             </Layout>
         </Layout>
