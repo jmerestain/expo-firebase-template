@@ -30,10 +30,7 @@ export const createUser = (email, password, setMessage, navigation) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             setMessage('Registered user!');
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'Registration Details' }], // Designated main page
-            });
+            navigation.navigate('Registration Details', {uid: user.uid})
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -47,8 +44,77 @@ export const createUser = (email, password, setMessage, navigation) => {
     });
 }
 
-export const createUserProfile = () => {
+export const createUserProfile = (userDetails, navigation) => {
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const currentUserUID = auth.currentUser.uid;
+    db.collection('user-profiles').doc(currentUserUID).set(userDetails)
+        .then(() => {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'DashNav' }] // Designated main page
+            });
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            console.log(errorCode)
+        });
+}
 
+export const sendPersonalMessages = (toUID, message, callback) => {
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const currentUserUID = auth.currentUser.uid;
+    const personalMessage = {
+        message,
+        timestamp: Date.now()
+    }
+    db.collection('personal-messages').doc(toUID).collection(currentUserUID).add(personalMessage).then(callback());
+}
+
+export const readPersonalMessages = (senderUID, callback) => {
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const currentUserUID = auth.currentUser.uid;
+    db.collection('personal-messages').doc(currentUserUID).collection(senderUID)
+}
+
+export const getInbox = (userUID, callback) => {
+    const db = firebase.firestore();
+    db.collection('inboxes').doc(userUID)
+        .onSnapshot((inbox) => {
+            callback(inbox);
+        })
+}
+
+export const putInbox = (userUID, callback) => {
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const currentUserUID = auth.currentUser.uid;
+    db.collection('inboxes').doc(userUID).get()
+        .then((doc) => {
+            if (doc.exists) {
+                const oldInbox = doc.data()[users];
+                let newInbox;
+                if (!oldInbox.includes(currentUserUID)) {
+                    newInbox = {
+                        users: [...oldInbox, newInbox]
+                    }
+                } else {
+                    newInbox = oldInbox;
+                }
+                db.collection('inboxes').doc(userUID).set(newInbox)
+                    .then(callback())
+                    .catch((e) => console.log(e))
+            } else {
+                const inbox = {
+                    users: [currentUserUID]
+                }
+                db.collection('inboxes').doc(userUID).set(inbox)
+                    .then(callback())
+                    .catch((e) => console.log(e))
+            }
+        })
 }
 
 export const loginUser = (email, password, setMessage, navigation) => {
@@ -113,7 +179,7 @@ export const authOnOpen = (navigation) => {
 
 export const getMyStore = (user, setProducts) => {
     const db = firebase.firestore();
-    if(user) {
+    if (user) {
         db.collection("products").where("vendor", "==", user.uid)
         .onSnapshot((querySnapshot) => {
             setProducts([]);
@@ -137,21 +203,45 @@ export const getCatalogue = (setCatalogue) => {
 
 export const getUserFromUID = ( uid, callback ) => {
     const db = firebase.firestore();
-    db.collection('users').where('uid', '==', uid)
-    .onSnapshot((querySnapshot) => {
-        callback(querySnapshot);
-    })
+    db.collection('users').where('uid', '==', uid).get()
+        .then((user) => callback(user))
+        .catch((e) => console.log(e))
 }
 
 export const getStoreFromUID = ( uid, callback ) => {
+    const db = firebase.firestore();
+    db.collection('stores').where('uid', '==', uid).get()
+        .then((store) => callback(store))
+        .catch((e) => console.log(e))
+}
 
+export const getProductsFromUID = ( uid, callback ) => {
+    const db = firebase.firestore();
+    db.collection('products').where('vendor', '==', uid).get()
+        .then((products) => callback(user))
+        .catch((e) => console.log(e))
 }
 
 export const getRecommendations = () => {
     const productsRef = ''
 }
 
-export const getReviews = (product) => {
+export const getReviews = (productId, callback) => {
+    const db = firebase.firestore();
+    db.collection('reviews').where('productId', '==', productId).get()
+        .then((reviews) => callback(reviews))
+        .catch((e) => console.log(e))
+}
+
+export const postReview = (review, callback) => {
+    const db = firebase.firestore();
+    db.collection('reviews').add(review)
+        .then((reviewRef) => {
+            reviewRef.set({ id: ref.id }, { merge: true })
+                .then((review) => callback(review))
+                .catch((e) => console.log(e))
+        })
+        .catch((e) => console.log(e))
 }
 
 export const postMyProduct = (product, image, setMessage, setVisible) => {
@@ -176,7 +266,10 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
                         imageId,
                         imageUrl: imageUrl,
                     }
-                    db.collection("products").doc(title).set(productData)
+                    db.collection("products").add(productData)
+                        .then((ref) => {
+                            ref.set({ id: ref.id }, { merge: true })
+                        });
                 })
                 .then(() => {
                     setMessage(`${title} successfully posted`);
@@ -191,5 +284,26 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
         })
 }
 
-export const postReview = (user, product) => {
+export const createGroup = (groupName) => {
+
+}
+
+export const joinGroup = (groupId) => {
+
+}
+
+export const createPost = (topicId, post) => {
+
+}
+
+export const readPosts = (topicId) => {
+
+}
+
+export const vendorApply = (certification, id) => {
+
+}
+
+export const vendorApplyStatus = () => {
+    
 }
