@@ -45,7 +45,7 @@ const VendorNavigator = () => {
             options={showHeader}  />
             <Vendor.Screen name="Completed Orders" component={CompletedOrder} 
             options={showHeader}  />
-            <Vendor.Screen name="Empty State" component={EmptyState} 
+            <Vendor.Screen name="Vendor Application" component={EmptyState} 
             options={showHeader} />
             <Vendor.Screen name="Register Shop" component={RegisterShopScreen} 
             options={showHeader} />

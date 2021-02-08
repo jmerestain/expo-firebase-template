@@ -120,7 +120,7 @@ const renderItemReceived = ({ item, index }) => (
                 </Layout>
                 <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
                     <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
-                    <Button size='medium' style={{alignSelf: 'right', marginVertical: 8, marginRight: 16}}>
+                    <Button size='small' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
                         Item Received
                     </Button>
                 </Layout>
@@ -159,7 +159,7 @@ const renderItemRate = ({ item, index }) => (
                 </Layout>
                 <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
                     <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
-                    <Button size='medium' style={{alignSelf: 'right', marginVertical: 8, marginRight: 16}}>
+                    <Button size='small' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
                         Rate Order
                     </Button>
                 </Layout>
