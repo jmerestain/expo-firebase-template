@@ -30,10 +30,9 @@ export const createUser = (email, password, setMessage, navigation) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             setMessage('Registered user!');
-            //console.log(user);
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'DashNav' }], // Designated main page
+                routes: [{ name: 'Registration Details' }], // Designated main page
             });
         })
         .catch((error) => {
@@ -46,6 +45,10 @@ export const createUser = (email, password, setMessage, navigation) => {
         console.log(errorCode)
         setMessage(error.message);
     });
+}
+
+export const createUserProfile = () => {
+
 }
 
 export const loginUser = (email, password, setMessage, navigation) => {
