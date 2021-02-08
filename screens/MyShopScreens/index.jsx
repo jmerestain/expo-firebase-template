@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MyShopMenu from './MyShopMenuScreen';
 import OrderProcess from './OrderProcessScreen';
 import CompletedOrder from './CompletedOrderScreen';
+import MyShopPreview from './MyShopPreviewScreen';
 
 const MyShopNav = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -20,7 +21,9 @@ const MyShopNavigator = () => {
             options={showHeader} />
             <MyShopNav.Screen name="Pending Orders" component={OrderProcess} 
             options={showHeader} />
-            <MyShopNav.Screen name="Completed Orders" component={CompletedOrder} 
+            <MyShopNav.Screen name="Completed Orders" component={CompletedOrder}
+            options={showHeader} />
+            <MyShopNav.Screen name="Preview Shop" component={MyShopPreview} 
             options={showHeader} />
         </MyShopNav.Navigator>        
     )

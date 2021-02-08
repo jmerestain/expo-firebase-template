@@ -93,7 +93,10 @@ function MyShopScreen ({navigation}) {
                     </Layout>
                 </Layout>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('Preview Shop');
+                }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                             View My Shop

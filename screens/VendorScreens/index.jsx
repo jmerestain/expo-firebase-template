@@ -15,6 +15,7 @@ import RegisterShopScreen from '../CreateShopScreens/RegisterShopScreen';
 import VendorApplication from '../VendorScreens/VendorApplication';
 import DTIRegistrationInfoScreen from '../CreateShopScreens/DTIRegistrationInfoScreen';
 import DTIRegistrationNext from '../CreateShopScreens/DTIRegistrationNextScreen';
+import MyShopPreview from '../MyShopScreens/MyShopPreviewScreen';
 
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -45,6 +46,7 @@ const VendorNavigator = () => {
             options={showHeader}  />
             <Vendor.Screen name="Completed Orders" component={CompletedOrder} 
             options={showHeader}  />
+            <Vendor.Screen name="Build My Shop" component={EmptyState} 
             <Vendor.Screen name="Vendor Application" component={EmptyState} 
             options={showHeader} />
             <Vendor.Screen name="Register Shop" component={RegisterShopScreen} 
@@ -54,6 +56,8 @@ const VendorNavigator = () => {
             <Vendor.Screen name="About DTI Registration" component={DTIRegistrationInfoScreen} 
             options={showHeader} />
             <Vendor.Screen name="How to File Registration" component={DTIRegistrationNext} 
+            options={showHeader} />
+            <Vendor.Screen name="Preview Shop" component={MyShopPreview} 
             options={showHeader} />
         </Vendor.Navigator>        
     )
