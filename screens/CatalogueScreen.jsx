@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Layout, Text, List, Card, Spinner, Icon } from '@ui-kitten/components';
-import { checkAuthenticated, getCatalogue } from '../services/firebase';
+import { checkAuthenticated, getCatalogue, getUserFromUID } from '../services/firebase';
 import { useNavigation } from '@react-navigation/native';
 // Components
 import Category from './Category';
@@ -120,20 +120,23 @@ const CategorySection = () => {
 }
 
 const renderItem = ({item}) => {
-    const {title, description, price, imageUrl} = item;
-    console.log(imageUrl)
+    const {title, description, price, imageUrl, vendor} = item;
+    let userId;
+    getUserFromUID(vendor, (user) => {
+        userId = user.uid;
+    })
     return (
         <TouchableOpacity>
             <Layout style={styles.pickForYou}>
                 <Image source={{uri: imageUrl}} style={{width: 160, height: 120}}/>
-                <Text>
+                <Text category='s1' style={{fontWeight: 'bold', marginBottom: 5,}}>
                     {title}
                 </Text>
-                <Text numberOfLines={1}>
-                    {description}
+                <Text category='label'>
+                    PHP {price}
                 </Text>
-                <Text>
-                    {price} Pesos
+                <Text category='label'>
+                    { vendor }
                 </Text>
             </Layout>
         </TouchableOpacity>

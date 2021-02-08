@@ -23,59 +23,55 @@ const VendorScreen = ({navigation}) => {
 
     return (
         <Layout style={styles.container}>
-            <Layout style={styles.field}>
-                <List data={myProducts} renderItem={RenderItem} />
-            </Layout>
-
             <Layout>
-            <Layout style={styles.avatar}>
-            <Avatar
-                rounded
-                size="giant"
-                shape='round'
-                source={require('../../screens/avatar-icon.png')}
-                style={{ marginHorizontal: 50, alignItems: 'center'}}
-            /> 
-            </Layout>
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('My Account');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    My Account
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                    {/*if empty*/}
-                    navigation.navigate('Vendor Application');
-                    {/*if filled
-                    navigation.navigate('MyShopScreen');*/}
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    My Shop
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('Favorites');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    Favorites
-            </Button>
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('Settings');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8}}>
-                    Settings
-            </Button>
-            
-            <Button size='large'
-                onPress={() => {
-                    navigation.navigate('Manage Products Screen');
-                }}
-                style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
-                    Manage Products
-            </Button>
+                <Layout style={styles.avatar}>
+                    <Avatar
+                        rounded
+                        size="giant"
+                        shape='round'
+                        source={require('../../screens/avatar-icon.png')}
+                        style={{ marginHorizontal: 50, alignItems: 'center'}}
+                    /> 
+                </Layout>
+                <Button size='large'
+                    onPress={() => {
+                        navigation.navigate('My Account');
+                    }}
+                    style={{ marginHorizontal: 32, marginVertical: 8}}>
+                        My Account
+                </Button>
+                <Button size='large'
+                    onPress={() => {
+                        {/*if empty*/}
+                        navigation.navigate('Vendor Application');
+                        {/*if filled
+                        navigation.navigate('MyShopScreen');*/}
+                    }}
+                    style={{ marginHorizontal: 32, marginVertical: 8}}>
+                        My Shop
+                </Button>
+                <Button size='large'
+                    onPress={() => {
+                        navigation.navigate('Favorites');
+                    }}
+                    style={{ marginHorizontal: 32, marginVertical: 8}}>
+                        Favorites
+                </Button>
+                <Button size='large'
+                    onPress={() => {
+                        navigation.navigate('Settings');
+                    }}
+                    style={{ marginHorizontal: 32, marginVertical: 8}}>
+                        Settings
+                </Button>
+                
+                <Button size='large'
+                    onPress={() => {
+                        navigation.navigate('Manage Products Screen');
+                    }}
+                    style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
+                        Manage Products
+                </Button>
             </Layout>
         </Layout>
     )

@@ -132,6 +132,18 @@ export const getCatalogue = (setCatalogue) => {
     });
 }
 
+export const getUserFromUID = ( uid, callback ) => {
+    const db = firebase.firestore();
+    db.collection('users').where('uid', '==', uid)
+    .onSnapshot((querySnapshot) => {
+        callback(querySnapshot);
+    })
+}
+
+export const getStoreFromUID = ( uid, callback ) => {
+
+}
+
 export const getRecommendations = () => {
     const productsRef = ''
 }
@@ -139,23 +151,22 @@ export const getRecommendations = () => {
 export const getReviews = (product) => {
 }
 
-export const postMyProduct = (product, image, setMessage) => {
+export const postMyProduct = (product, image, setMessage, setVisible) => {
     const db = firebase.firestore();
     const storage = firebase.storage();
     const storageRef = storage.ref();
     const imageId = Date.now();
     const productImageRef = storageRef.child(`product-images/${imageId}.jpg`);
+    const {title} = product;
     let imageUrl
 
     productImageRef.put(image)
         .then((snapshot) => {
-            console.log(`Image Id: ${imageId}`);
             productImageRef.getDownloadURL()
                 .then((url) => {
                     imageUrl = url
                 })
                 .then(() => {
-                    const {title} = product;
                     const productData = {
                         ...product,
                         created_at: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -163,12 +174,10 @@ export const postMyProduct = (product, image, setMessage) => {
                         imageUrl: imageUrl,
                     }
                     db.collection("products").doc(title).set(productData)
-                    .then(() => {
-                        setMessage(`${title} successfully posted`);
-                    })
-                    .catch((e) => {
-                        setMessage(`Error: ${e}`);
-                    })
+                })
+                .then(() => {
+                    setMessage(`${title} successfully posted`);
+                    setVisible(true);
                 })
                 .catch((e) => {
                     setMessage(`Error: ${e}`);
