@@ -123,13 +123,25 @@ export const getMyStore = (user, setProducts) => {
 
 export const getCatalogue = (setCatalogue) => {
     const db = firebase.firestore();
-    db.collection('products')
+    db.collection('products').limit(10)
     .onSnapshot((querySnapshot) => {
         setCatalogue([]);
         querySnapshot.forEach(function(doc) {
             setCatalogue(oldArray => [...oldArray, doc.data()]);
         });
     });
+}
+
+export const getUserFromUID = ( uid, callback ) => {
+    const db = firebase.firestore();
+    db.collection('users').where('uid', '==', uid)
+    .onSnapshot((querySnapshot) => {
+        callback(querySnapshot);
+    })
+}
+
+export const getStoreFromUID = ( uid, callback ) => {
+
 }
 
 export const getRecommendations = () => {
@@ -139,16 +151,37 @@ export const getRecommendations = () => {
 export const getReviews = (product) => {
 }
 
-export const postMyProduct = (product, setMessage) => {
+export const postMyProduct = (product, image, setMessage, setVisible) => {
     const db = firebase.firestore();
-    const productData = {
-        ...product,
-        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
-    }
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const imageId = Date.now();
+    const productImageRef = storageRef.child(`product-images/${imageId}.jpg`);
     const {title} = product;
-    db.collection("products").doc(title).set(productData)
-        .then(() => {
-            setMessage(`${title} successfully posted`);
+    let imageUrl
+
+    productImageRef.put(image)
+        .then((snapshot) => {
+            productImageRef.getDownloadURL()
+                .then((url) => {
+                    imageUrl = url
+                })
+                .then(() => {
+                    const productData = {
+                        ...product,
+                        created_at: firebase.firestore.Timestamp.fromDate(new Date()),
+                        imageId,
+                        imageUrl: imageUrl,
+                    }
+                    db.collection("products").doc(title).set(productData)
+                })
+                .then(() => {
+                    setMessage(`${title} successfully posted`);
+                    setVisible(true);
+                })
+                .catch((e) => {
+                    setMessage(`Error: ${e}`);
+                })
         })
         .catch((e) => {
             setMessage(`Error: ${e}`);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Layout, Text, List, Card, Spinner, Icon } from '@ui-kitten/components';
-import { checkAuthenticated, getCatalogue } from '../services/firebase';
+import { checkAuthenticated, getCatalogue, getUserFromUID } from '../services/firebase';
 import { useNavigation } from '@react-navigation/native';
 // Components
 import Category from './Category';
@@ -41,7 +41,7 @@ const HomeComponent = ({user, navigation}) => {
     }, []);
 
     return (
-        <Layout style={[styles.container]}>
+        <ScrollView style={[styles.container]}>
             <Layout style={styles.inner}>
                 <Layout>
                     <Image source={require('../assets/dashboardHeader.png')} style={styles.categoryImage} />
@@ -51,7 +51,7 @@ const HomeComponent = ({user, navigation}) => {
                 </Text>
                 <CategorySection />
                 <Text style={{paddingVertical: 20, fontWeight: 'bold'}} category='h6'>
-                    Picks For You
+                    Latest Products
                 </Text>
                 {
                     homeProducts.length != 0 ?
@@ -61,11 +61,12 @@ const HomeComponent = ({user, navigation}) => {
                         extraData={homeProducts}
                         horizontal={true}
                         style={{backgroundColor: 'transparent'}}
+                        showsHorizontalScrollIndicator={false}
                     /> : 
                     <Spinner style={styles.loading} size='giant'/>
                 }
             </Layout>
-        </Layout>
+        </ScrollView>
     )
 }
 const CategoryEntry = ({title, icon}) => {
@@ -119,20 +120,25 @@ const CategorySection = () => {
 }
 
 const renderItem = ({item}) => {
-    const {title, description, price} = item;
+    const {title, description, price, imageUrl, vendor} = item;
+    let userId;
+    getUserFromUID(vendor, (user) => {
+        userId = user.uid;
+    })
     return (
         <TouchableOpacity>
-            <Card style={styles.pickForYou}>
-                <Text>
+            <Layout style={styles.pickForYou}>
+                <Image source={{uri: imageUrl}} style={{width: 160, height: 120}}/>
+                <Text category='s1' style={{fontWeight: 'bold', marginBottom: 5,}}>
                     {title}
                 </Text>
-                <Text>
-                    {description}
+                <Text category='label'>
+                    PHP {price}
                 </Text>
-                <Text>
-                    {price} Pesos
+                <Text category='label'>
+                    { vendor }
                 </Text>
-            </Card>
+            </Layout>
         </TouchableOpacity>
     )
 }
@@ -203,6 +209,7 @@ const styles = StyleSheet.create({
     },
     pickForYou: {
         flex: 1,
+        maxWidth: 160,
         marginRight: 10,
     }
 })
