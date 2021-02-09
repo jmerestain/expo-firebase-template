@@ -98,7 +98,7 @@ export const putInbox = (userUID, callback) => {
                 let newInbox;
                 if (!oldInbox.includes(currentUserUID)) {
                     newInbox = {
-                        users: [...oldInbox, newInbox]
+                        users: [...oldInbox, currentUserUID]
                     }
                 } else {
                     newInbox = oldInbox;
@@ -134,7 +134,8 @@ export const loginUser = (email, password, setMessage, navigation) => {
             console.log(errorCode)
             setMessage(error.message);
         });
-    }).catch((error) => {
+    })
+    .catch((error) => {
         const errorCode = error.code;
         console.log(errorCode)
         setMessage(error.message);
@@ -300,10 +301,110 @@ export const readPosts = (topicId) => {
 
 }
 
-export const vendorApply = (certification, id) => {
+export const vendorApply = (certImage, idImage, certDetails, shopDetails, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const storage = firebase.storage().ref();
+    
+    const currentUserUID = auth.currentUser.uid;
+    const idImageRef = storage.child(`id-images/${currentUserUID}.jpg`);
+    const certImageRef = storage.child(`certificate-images/${currentUserUID}.jpg`);
+
+    let idImageUrl;
+    let certImageUrl;
+
+    idImageRef.put(idImage)
+        .then(() => {
+            idImageRef.getDownloadURL()
+                .then((url) => idImageUrl = url)
+        })
+        .then(() => {
+            certImageRef.put(certImage)
+                .then(() => {
+                    idImageRef.getDownloadURL()
+                        .then((url) => idImageUrl = url)
+                })
+        })
+        .then(() => {
+            const vendorDetails = {
+                ...shopDetails,
+            }
+
+            db.collection('vendor-profiles').doc(currentUserUID).set(vendorDetails)
+                .then(() => console.log('Created Profile'))
+        })
+        .then(() => {
+            const appDetails = {
+                ...certDetails,
+                idImage: idImageUrl,
+                certImage: certImageUrl
+            }
+
+            db.collection('vendor-applications').doc(currentUserUID).set(appDetails)
+            .then((application) => {
+                callback(application);
+            })
+            .catch((e) => console.log(e))
+        })
+        .catch((e) => console.log(e))
+}
+
+export const vendorApplyStatus = (callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const currentUserUID = auth.currentUser.uid;
+
+    db.collection('vendor-profiles').doc(currentUserUID).get()
+        .then((vendor) => {
+            if (vendor.approved) {
+                callback(vendor);
+            } else {
+                callback(false);
+            }
+        })
+}
+
+export const newPendingOrder = (productId, vendorId, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const currentUserUID = auth.currentUser.uid;
+
+    const order = {
+        productId,
+        user: currentUserUID,
+        status: 1,
+        vendorId,
+    }
+
+    db.collection('orders').add(order)
+        .then((orderRef) => {
+            orderRef.set({id: orderRef.id}, {merge: true})
+                .then(order => callback(order))
+        })
+        .catch(e => console.log(e))
+}
+
+export const updatePendingOrder = (orderId, status, callback) => {
+    const db = firebase.firestore();
+
+    db.collection('orders').doc(orderId).set({status: status}, {merge: true})
+        .then(order => callback(order))
+        .catch(e => console.log(e))
+}
+
+export const completeOrder = (orderId, callback) => {
+    const db = firebase.firestore();
+
+    db.collection('orders').doc(orderId).set({status: 6}, {merge: true})
+        .then(order => callback(order))
+        .catch(e => console.log(e))
 
 }
 
-export const vendorApplyStatus = () => {
-    
+export const newTransaction = (orderId, callback) => {
+
+}
+
+export const purchaseProductCod = () => {
+
 }
