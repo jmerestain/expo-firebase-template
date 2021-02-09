@@ -285,19 +285,82 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
         })
 }
 
-export const createGroup = (groupName) => {
+export const createGroup = (groupName, image, description, callback) => {
+    const db = firebase.firestore();
+    const storage = firebase.storage().ref();
+    const auth = firebase.auth();
+
+    const currentUserUID = auth.currentUser.uid;
+    const groupImageRef = storage.child(`group-images/${groupName}.jpg`);
+
+    const groupList = db.collection('groups');
+    const groupMeta = db.collection(`forum-${groupName}`);
+
+    groupImageRef.put(image)
+        .then(() => {
+            groupImageRef.getDownloadURL()
+                .then((url) => {
+                    const groupDetails = {
+                        name: groupName,
+                        description,
+                        image: url,
+                        creator: currentUserUID,
+                    }
+                    groupList.add(groupDetails)
+                        .then((ref) => ref.set({id: ref.id}, {merge: true}))
+                })
+                .catch(e => console.log(e))
+        })
+        .then(() => {
+            groupMeta.doc('member-list').collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
+                .then((group) => callback(group))
+        })
 
 }
 
-export const joinGroup = (groupId) => {
+export const joinGroup = (groupId, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
+    const currentUserUID = auth.currentUser.uid;
+    let groupMeta;
+
+    db.collection('groups').where('id', '==', groupId).limit(1)
+        .then((documents) => {
+            groupMeta = documents[0];
+
+            groupMeta.doc('member-list').collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
+                .then((group) => callback(group))
+        })
 }
 
-export const createPost = (topicId, post) => {
+export const createTopic = (groupId, topicDetails, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
+    const currentUserUID = auth.currentUser.uid;
+    let groupMeta;
+
+    db.collection('groups').where('id', '==', groupId).limit(1)
+        .then((documents) => {
+            groupMeta = documents[0];
+
+            groupMeta.doc('topic-list').collection('topics').add(topicDetails)
+                .then((topic) => callback(topic))
+        })
 }
 
-export const readPosts = (topicId) => {
+export const createPost = (topicId, post, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const currentUserUID = auth.currentUser.uid;
+    let topicRef;
+
+    db.collection
+}
+
+export const readPosts = (topicId, callback) => {
 
 }
 
