@@ -50,7 +50,6 @@ const NewItemScreen = ({navigation}) => {
         else {
             setDisabled(true);
         }
-        console.log(disabled);
     }, [title, description, price, image, blob, stock, category]);
 
     return (
@@ -61,7 +60,11 @@ const NewItemScreen = ({navigation}) => {
                     <Text category='label'>
                         Product Title
                     </Text>
-                    <Input onChangeText={value => setTitle(value)} placeholder='Set Product Title' />
+                    <Input 
+                        onChangeText={value => setTitle(value)}
+                        placeholder='Set Product Title' 
+                        value={title}
+                    />
                 </Layout>
                 <Layout styles={styles.field}>
                     <Text category='label'>
@@ -72,6 +75,7 @@ const NewItemScreen = ({navigation}) => {
                         textStyle={{ minHeight: 64 }}
                         onChangeText={value => setDescription(value)}
                         placeholder='Describe your product here'
+                        value={description}
                     />
                 </Layout>
                 <Layout style={styles.field}>
@@ -87,7 +91,9 @@ const NewItemScreen = ({navigation}) => {
                     <Input 
                         keyboardType='decimal-pad'
                         onChangeText={value => setPrice(value)}
-                        accessoryLeft={() => <Text category='label'>PHP</Text>} />
+                        accessoryLeft={() => <Text category='label'>PHP</Text>} 
+                        value={price}
+                    />
                 </Layout>
                 <Layout styles={styles.field}>
                     <Text category='label'>
@@ -98,6 +104,7 @@ const NewItemScreen = ({navigation}) => {
                         onChangeText={value => setWeight(value)}
                         accessoryLeft={() => <Text category='label'>kg/pc</Text>}
                         placeholder='20'
+                        value={weight}
                     />
                 </Layout>
                 <Layout styles={styles.field}>
@@ -108,7 +115,9 @@ const NewItemScreen = ({navigation}) => {
                         keyboardType='decimal-pad'
                         onChangeText={value => setStock(value)}
                         placeholder='10'
-                        accessoryLeft={() => <Text category='label'>pc(s)</Text>} />
+                        accessoryLeft={() => <Text category='label'>pc(s)</Text>}
+                        value={stock}
+                    />
                 </Layout>
                 <Layout style={styles.field}>
                     <Button 
@@ -129,7 +138,7 @@ const NewItemScreen = ({navigation}) => {
                         Add New Product
                     </Button>
                 </Layout>
-                <MessageComponent visible={visible} setVisible={setVisible} message={message} />
+                <MessageComponent visible={visible} setVisible={setVisible} setMessage={setMessage} message={message} />
             </Layout>
         </ScrollView>
     )
@@ -154,7 +163,7 @@ const CategoryComponent = ({category, setCategory}) => {
     });
 
     const renderOption = (title) => (
-        <SelectItem title={title}/>
+        <SelectItem title={title} key={title} />
     );
 
     useEffect(() => {
@@ -176,14 +185,15 @@ const CategoryComponent = ({category, setCategory}) => {
     )
 }
 
-const MessageComponent = ({message, visible, setVisible}) => {
+const MessageComponent = ({message, visible, setVisible, setMessage}) => {
     return (
         <Modal visible={visible}>
             <Card disabled={true}>
             <Text>{message}</Text>
             <Button onPress={() => {
                 console.log(visible)
-                setVisible(false)
+                setVisible(false);
+                setMessage(null);
             }}>
                 Dismiss
             </Button>
