@@ -312,7 +312,7 @@ export const createGroup = (groupName, image, description, callback) => {
                 .catch(e => console.log(e))
         })
         .then(() => {
-            groupMeta.doc('member-list').collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
+            groupMeta.collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
                 .then((group) => callback(group))
         })
 
@@ -329,39 +329,69 @@ export const joinGroup = (groupId, callback) => {
         .then((documents) => {
             groupMeta = documents[0];
 
-            groupMeta.doc('member-list').collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
+            groupMeta.collection('members').doc(currentUserUID).set({user: currentUserUID, joined: Date.now()})
                 .then((group) => callback(group))
         })
 }
 
 export const createTopic = (groupId, topicDetails, callback) => {
     const db = firebase.firestore();
-    const auth = firebase.auth();
-
-    const currentUserUID = auth.currentUser.uid;
     let groupMeta;
 
     db.collection('groups').where('id', '==', groupId).limit(1)
         .then((documents) => {
             groupMeta = documents[0];
 
-            groupMeta.doc('topic-list').collection('topics').add(topicDetails)
-                .then((topic) => callback(topic))
+            groupMeta.collection('topics').add(topicDetails)
+                .then(topic => {
+                    topic.set({id: topic.id}, {merge: true})
+                        .then((topic) => callback(topic))
+                })
+                .catch(e => console.log(e))
         })
+        .catch(e => console.log(e))
 }
 
-export const createPost = (topicId, post, callback) => {
+export const createPost = (groupId, topicId, post, callback) => {
     const db = firebase.firestore();
     const auth = firebase.auth();
 
     const currentUserUID = auth.currentUser.uid;
-    let topicRef;
+    let groupRef;
 
-    db.collection
+    db.collection('groups').where('id', '==', groupId).limit(1)
+        .then(groups => {
+            groupRef = groups[0];
+            const postObject = {
+                topic: topicId,
+                user: currentUserUID,
+                ...post
+            }
+            groupRef.collection('posts').add(postObject)
+                .then(post => {
+                    post.set({id: post.id}, {merge: true})
+                        .then(callback(e))
+                })
+                .catch(e => console.log(e))
+        })
+        .catch(e => console.log(e))
 }
 
-export const readPosts = (topicId, callback) => {
+export const readPosts = (groupId, topicId, callback) => {
+    const db = firebase.firestore();
+    
+    let groupRef;
 
+    db.collection('groups').where('id', '==', groupId).limit(1)
+        .then(groups => {
+            groupRef = groups[0];
+            groupRef.collection('posts').where('topic', '==', topicId).get()
+                .then(posts => {
+                    callback(posts);
+                })
+                .catch(e => console.log(e))
+        })
+        .catch(e => console.log(e))
 }
 
 export const vendorApply = (certImage, idImage, certDetails, shopDetails, callback) => {
@@ -427,7 +457,20 @@ export const vendorApplyStatus = (callback) => {
         })
 }
 
-export const newPendingOrder = (productId, vendorId, callback) => {
+export const vendorConfirmTransaction = (orderId, callback) => {
+    const db = firebase.firestore();
+    
+    updateOrder(orderId, 2, (order) => {
+        db.collection('completed-transactions').doc(order.id).set(order)
+            .then(transaction => callback(transaction))
+    })
+}
+
+export const vendorUpdateOrder = (orderId, status, callback) => {
+    updateOrder(orderId, status, () => callback())
+}
+
+export const newOrder = (productId, callback) => {
     const db = firebase.firestore();
     const auth = firebase.auth();
     const currentUserUID = auth.currentUser.uid;
@@ -436,7 +479,6 @@ export const newPendingOrder = (productId, vendorId, callback) => {
         productId,
         user: currentUserUID,
         status: 1,
-        vendorId,
     }
 
     db.collection('orders').add(order)
@@ -447,7 +489,7 @@ export const newPendingOrder = (productId, vendorId, callback) => {
         .catch(e => console.log(e))
 }
 
-export const updatePendingOrder = (orderId, status, callback) => {
+const updateOrder = (orderId, status, callback) => {
     const db = firebase.firestore();
 
     db.collection('orders').doc(orderId).set({status: status}, {merge: true})
@@ -455,19 +497,62 @@ export const updatePendingOrder = (orderId, status, callback) => {
         .catch(e => console.log(e))
 }
 
-export const completeOrder = (orderId, callback) => {
+const completeOrder = (orderId, callback) => {
     const db = firebase.firestore();
 
     db.collection('orders').doc(orderId).set({status: 6}, {merge: true})
         .then(order => callback(order))
         .catch(e => console.log(e))
-
 }
 
-export const newTransaction = (orderId, callback) => {
+export const newTransaction = (orderId, payment, callback) => {
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const currentUserUID = auth.currentUser;
 
+    const transactionObject = {
+        customer: currentUserUID,
+        orderId,
+        created_at: Date.now(),
+        payment_method: payment,
+    }
+
+    db.collection('pending-transactions').add(transactionObject)
+        .then(ref => {
+            ref.set({id: ref.id}, {merge: true})
+                .then(transaction => callback(transaction))
+        })
 }
 
-export const purchaseProductCod = () => {
+export const buyFromOrders = (orderId, payment, callback) => {
+    const db = firebase.firestore();
 
+    db.collection('orders').where('id', '==', orderId).limit(1)
+        .then(documents => {
+            const order = documents[0]
+            order.set({status: 2})
+                .then((order) => {
+                    completeOrder(order.id, (order) => {
+                        newTransaction(order.id, payment, (transaction) => {
+                            callback(transaction);
+                        })
+                    })
+                })
+        })
+}
+
+export const buyNow = (productId, payment, callback) => {
+    const db = firebase.firestore();
+
+    db.collection('products').where('id', '==', productId).limit(1)
+        .then(documents => {
+            const product = documents[0]
+            newOrder(product.id, (order) => {
+                completeOrder(order.id, (order) => {
+                    newTransaction(order.id, payment, (transaction) => {
+                        callback(transaction);
+                    })
+                })
+            })
+        })
 }
