@@ -32,7 +32,7 @@ const data = new Array(8).fill({
     totalFollowers: '234',
     product: 'Cheeseburger',
     price: 'P150',
-    rating: '5',
+    rating: 5,
     review: 'Very responsive, good service. Carrot cake came just in time for my sister’s birthday.',
     ratedBy: 'Nelly Cruz',
     dateReviewed: '01/11/21'
@@ -194,6 +194,7 @@ const renderItemRatings = ({ item, index }) => (
             <Layout style={{marginLeft: '25%'}}>
             <Rating
                 type='custom'
+                rating={item.rating}
                 style={{ paddingVertical: 16 }}
                 ratingColor='rgb(210,145,91)'
                 imageSize={20}

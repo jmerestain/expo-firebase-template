@@ -18,6 +18,11 @@ import DTIRegistrationNext from '../CreateShopScreens/DTIRegistrationNextScreen'
 import MyShopPreview from '../MyShopScreens/MyShopPreviewScreen';
 import ShopSettings from '../MyShopScreens/ShopSettingsScreen';
 
+
+import ProductScreen from '../OrderMessagingScreens/ProductScreen';
+
+
+
 const Vendor = createStackNavigator();
 const noHeader = {headerShown: false};
 const showHeader = {headerShown: true};
@@ -61,6 +66,11 @@ const VendorNavigator = () => {
             options={showHeader} />
             <Vendor.Screen name="Shop Settings" component={ShopSettings} 
             options={showHeader} />
+
+            <Vendor.Screen name="Product" component={ProductScreen} 
+            options={showHeader} />
+
+
         </Vendor.Navigator>        
     )
 }

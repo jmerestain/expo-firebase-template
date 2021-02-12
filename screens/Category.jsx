@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Pressable } from 'react-native';
 import { Layout, Text, Input, Icon, List, Avatar } from '@ui-kitten/components';
 
 const SearchIcon = (props) => (
     <Icon name='search-outline' {...props} />
 );
 
-const renderItem = ({ item, index }) => (
+
+const renderItem = ({ item, index, navigation }) => (
   <Layout style={styles.item}>
     <Image
     style={{resizeMode: 'contain'}}
@@ -26,7 +27,7 @@ const renderItem = ({ item, index }) => (
           style={{ marginRight: 8 }}
         /> 
       <Text style={{ fontSize: 13, fontWeight: 'bold', color: 'rgb(138,18,20)' }}>
-        {item.title}
+        {item.shop}
       </Text>
     </Layout>
   </Layout>

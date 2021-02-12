@@ -72,10 +72,18 @@ const RegisterScreen = ({navigation}) => {
                 textAlign: 'center', marginTop: 32, fontFamily: 'Quicksand-Regular', fontWeight:'bold'}}>
                 Already have an account? 
             </Text>
+            <Layout>
+            <Button appearance='ghost' size='small'
+            style={{ textAlign: 'center', marginTop: 23 }}
+            onPress={() => {
+                navigation.navigate('Login')
+            }}>
             <Text category='h6' style={{
-                textAlign: 'center', marginTop: 32, marginLeft: 8, fontFamily: 'Quicksand-Regular', color:'rgb(138,18,20)' }}>
+                 marginLeft: 4, fontFamily: 'Quicksand-Regular', color:'rgb(138,18,20)' }}>
                 Login
             </Text>
+            </Button>
+            </Layout>
             </Layout>
         </Layout>
     )
