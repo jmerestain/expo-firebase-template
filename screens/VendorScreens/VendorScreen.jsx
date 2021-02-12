@@ -82,6 +82,16 @@ const VendorScreen = ({navigation}) => {
                 style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
                     Manage Products
             </Button>
+
+
+            <Button size='large'
+                onPress={() => {
+                    navigation.navigate('Product');
+                }}
+                style={{ marginHorizontal: 32, marginVertical: 8, backgroundColor: 'rgb(210,145,91)', borderColor: 'rgb(210,145,91)'}}>
+                    Product Screen Sample
+            </Button>
+
             </Layout>
         </Layout>
     )
