@@ -6,26 +6,34 @@ import OrdersIndividualScreen from './OrdersIndividualScreen';
 
 const OStack = createStackNavigator();
 
+const OrdersScreenNavigator = () => (
+    <OStack.Navigator screenOptions={{
+        headerStyle: {backgroundColor: 'rgb(138,18,20)'}
+    }}>
+        <OStack.Screen name="All Orders" component={OrdersScreen} />
+        <OStack.Screen name="Orders" component={OrdersIndividualScreen} />
+    </OStack.Navigator>
+)
+
 const data = new Array(8).fill({
     product: 'Maybelline Lipstick',
     quantity: '3',
     modeOfPayment: 'Gcash',
     price: 'P150',
     subtotal: 'P450',
+    total: 'P900',
+    shop: 'Mary\'s Makeup',
+    status: 'To ship'
   });
-
-const OrdersScreenNavigator = () => (
-    <OStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: 'rgb(138,18,20)'}
-    }}>
-        <OStack.Screen name="Cart" component={OrdersScreen} />
-        <OStack.Screen name="Orders" component={OrdersIndividualScreen} />
-    </OStack.Navigator>
-)
 
 const renderItem = ({ item, index }) => (
     <Layout style={styles.container}>
         <Layout style={styles.inner}>
+                <Layout style={styles.header}>
+                    <Text category='h6' style={styles.headerText}>
+                        {item.shop}
+                    </Text>
+                </Layout>
             <Layout style={styles.containerList}>
                 <Layout style={styles.innerList}>
                 <Avatar
@@ -35,7 +43,7 @@ const renderItem = ({ item, index }) => (
                         style={{ marginHorizontal: 20,  alignSelf: 'center'}}
                  /> 
                 <Layout style={styles.textList}>
-                    <Layout style={{ paddingHorizontal: 8, shadowRadius: 1, borderColor: 'rgb(220,220,220)', }}>
+                    <Layout style={{ paddingHorizontal: 8, shadowRadius: 1, borderColor: 'rgb(220,220,220)', marginVertical: 8}}>
                     <Text category='h6' style={{ alignContent: 'center', marginVertical: 6}}>
                         {item.product}
                     </Text>
@@ -50,13 +58,24 @@ const renderItem = ({ item, index }) => (
                         Subtotal: {item.subtotal}
                     </Text>
                     </Layout>
+                </Layout>
+                </Layout>
+                </Layout>
+                <Divider/>
+                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginVertical: 12}}>
+                    <Button size='medium'>View Order</Button>
+                    <Layout>
+                    <Text category='s1' style={{ alignContent: 'center', marginVertical: 1, textAlign: 'right', marginRight: 18}}>
+                        Order Total: {item.total}
+                    </Text>
+                    <Text category='s1' style={{ alignContent: 'center', marginVertical: 1, textAlign: 'right', marginRight: 18}}>
+                        {item.status}
+                    </Text>
                     </Layout>
                 </Layout>
-                </Layout>
+                <Divider />
             </Layout>
-
          </Layout>
-         <Divider/>
     </Layout>
 );
 
@@ -80,37 +99,7 @@ const DeliverAddress = ({navigation}) => {
     return (
         <ScrollView>
         <Layout>
-        <TouchableOpacity onPress={() => {
-            navigation.navigate('Settings')
-        }}>
-            <Layout style={[styles.deliverAddress]}>
-                <Layout style={styles.daInner}>
-                    <Layout style={{flexDirection: 'row', paddingVertical: 10, justifyContent: 'space-between'}}>
-                        <Layout style={{flex: 1, flexDirection: 'row', backgroundColor: 'transparent'}}>
-                            <Icon name='map-outline' fill='#8A1214' style={{height: 32, width: 32, marginRight: 10,}} />
-                            <Layout style={{backgroundColor: 'transparent', flexDirection: 'column', flexShrink: 1}}>
-                                <Text category='h6' style={{fontWeight: 'bold'}}>
-                                    Delivery Address
-                                </Text>
-                                <Text category='p2'>
-                                    Jong Ong | 0998 186 7756
-                                </Text>
-                                <Text category='label' style={{alignSelf: 'baseline', marginTop: 10, flexWrap: 'wrap'}}>
-                                    15 Round Robin Drive a daijwfioa jiowjfoa jifaiowf joiawjf ioawiofj
-                                </Text>
-                            </Layout>
-                        </Layout>
-                        <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </Layout>
-            </Layout>
-        </TouchableOpacity>
             <Layout>
-                <Layout style={styles.header}>
-                    <Text category='h6' style={styles.headerText}>
-                        Items in Cart
-                    </Text>
-                </Layout>
                 <Layout style={[styles.settingsCard]}>
             <Layout style={styles.inner}>
                 <Layout style={{justifyContent: 'flex-start'}}>
@@ -120,119 +109,8 @@ const DeliverAddress = ({navigation}) => {
                     />
                 </Layout>
             </Layout>
-            <Layout>
-                <Layout style={styles.header}>
-                    <Text category='h6' style={styles.headerText}>
-                        Shipping Options
-                    </Text>
-                </Layout>
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Fastbreak
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='s1'>
-                        P50
-                    </Text>
-                    <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Delivery Date
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        Select date
-                    </Text>
-                    <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Message
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        Please leave a message...
-                    </Text>
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Applied Discount Code
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='s1'>
-                        BILINE50
-                    </Text>
-                    <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Payment Options
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='s1'>
-                        Gcash
-                    </Text>
-                    <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 6}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        Product Subtotal
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        P900
-                    </Text>
-                    </Layout>
-                </Layout>
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', paddingVertical: 6}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        Delivery Subtotal
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        P50
-                    </Text>
-                    </Layout>
-                </Layout>
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', paddingVertical: 6}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        Discount Code
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='p2' style={{color: 'rgb(189,189,189)'}}>
-                        P50
-                    </Text>
-                    </Layout>
-                </Layout>
-                <Divider />
-                <Layout style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, alignItems: 'center', paddingVertical: 12}}>
-                    <Text category='s1'>
-                        Order Total
-                    </Text>
-                    <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text category='s1'>
-                        P950
-                    </Text>
-                    </Layout>
-                </Layout>
-                <Divider />
             </Layout>
-            <Button size='large' style={{marginHorizontal: 24}}>
-                Place Order
-            </Button>
-        </Layout>
-        </Layout>
+            </Layout>
         </Layout>
         </ScrollView>
     )
@@ -272,7 +150,8 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     inner: {
-        paddingVertical: 4,
+        paddingVertical: 16,
+        paddingHorizontal: 8,
     },
     field: {
         marginVertical: 10,
