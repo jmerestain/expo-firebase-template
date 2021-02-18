@@ -20,6 +20,7 @@ import RegisterScreenNext from './screens/RegisterScreenNext';
 import CatalogueNavigator from './screens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
 import OrdersScreenNavigator from './screens/OrdersScreen';
+import ForumNavigator from './screens/ForumScreens';
 // Firebase
 import { initFirebase } from './services/firebase';
 // Lodash
@@ -59,6 +60,8 @@ const DashNavigator = () => (
     tabBar={props => <BottomTabBar {...props} /> }
   >
     <Tab.Screen name="Dashboard" component={CatalogueNavigator} options={{
+    }} />
+    <Tab.Screen name="Forum" component={ForumNavigator} options={{
     }} />
     <Tab.Screen name="Orders" component={OrdersScreenNavigator} options={{
     }} />
