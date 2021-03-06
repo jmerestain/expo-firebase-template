@@ -1,18 +1,28 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+// Components
 
-const ForumNav = createStackNavigator();
+import GroupScreen from './GroupScreen';
+import PostsScreen from './PostsScreen';
+
+const Forum = createStackNavigator();
 const noHeader = {headerShown: false};
 const showHeader = {headerShown: true};
 
-const ForumNavScreens = () => (
-    <ForumNav.Navigator screenOptions={{
+const ForumScreens = () => {
+    return (
+    <Forum.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: 'rgb(138,18,20)',
         }
     }}>
-        <ForumNav.Screen component={ForumNav} />
-    </ForumNav.Navigator>
-)
+        <Forum.Screen name="Forums" component={GroupScreen} 
+        options={showHeader} />
+        <Forum.Screen name="Group" component={PostsScreen} 
+        options={showHeader}  />
 
-export default CreateShopScreens;
+    </Forum.Navigator>
+    )
+}
+
+export default ForumScreens;
