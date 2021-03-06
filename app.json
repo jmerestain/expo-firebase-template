@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "itm-template",
-    "slug": "itm-template",
+    "name": "biline",
+    "slug": "biline",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

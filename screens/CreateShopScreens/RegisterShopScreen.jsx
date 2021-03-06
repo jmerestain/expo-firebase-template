@@ -9,7 +9,8 @@ const RegisterShopScreen = ({navigation}) => {
     const [businessName, setBusinessName] = useState('');
     const [fullName, setFullName] = useState('');
     const [ID, setID] = useState('');
-    const [blob, setBlob] = useState('');
+    const [blob1, setBlob1] = useState('');
+    const [blob2, setBlob2] = useState('');
     const [DTIcert, setDTIcert] = useState('');
     const [message, setMessage] = useState('');
 
@@ -27,10 +28,10 @@ const RegisterShopScreen = ({navigation}) => {
                 placeholder='Registered Full Name'
                 style={{ paddingHorizontal: 16}}
             />
-            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular', marginBottom: 8 }}>Valid ID</Text>
-            <PreviewComponent image={ID} setID={setID} setBlob={setBlob} />
-            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular', marginBottom: 8, marginTop: 16 }}>DTI Certification</Text>
-            <PreviewComponent image={DTIcert} setDTIcert={setDTIcert} setBlob={setBlob} />
+            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular', marginBottom: 4 }}>Valid ID</Text>
+            <ImagePickerComponent image={ID} setImage={setID} setBlob={setBlob1} />
+            <Text category='h6' style={{ padding: 16, fontFamily: 'NunitoSans-Regular', marginBottom: 4, marginTop: 16 }}>DTI Certification</Text>
+            <ImagePickerComponent image={DTIcert} setImage={setDTIcert} setBlob={setBlob2} />
             <Button size='large'
             onPress={() => { 
                 if(businessName != '' && fullName != '' && ID != '' && DTIcert != '') {
@@ -44,14 +45,6 @@ const RegisterShopScreen = ({navigation}) => {
                 Register Shop
             </Button>
             {message == '' ? null : <PopUpMessage message={message} />}
-        </Layout>
-    )
-}
-
-const PreviewComponent = ({setImage, setBlob, image}) => {
-    return (
-        <Layout style={styles.field}>
-                <ImagePickerComponent setImage={setImage} setBlob={setBlob} image={image} />
         </Layout>
     )
 }
@@ -88,7 +81,7 @@ function ImagePickerComponent ({setImage, setBlob, image}) {
     };
 
     return (
-        <Layout style={{ flex: 1, justifyContent: 'center', marginVertical: 10 }}>
+        <Layout style={{}}>
           <Button onPress={pickImage} size='large' appearance='outline' color='rgb(186,186,186)' style={{borderColor: 'rgb(186,186,186)', backgroundColor: '#F3f3f3', marginHorizontal: 16}} 
           icon={ <Icon name="cloud-upload-outline" size={15} color='rgb(186,186,186)' />}>
               {image != null ? 'Change Image' : 'Upload Image'}
