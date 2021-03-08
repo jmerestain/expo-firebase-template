@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, TouchableOpacity, Image, SectionList, Dimensions } from "react-native";
 import { Rating } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -17,6 +17,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
+import { getProductByID } from "../../../services/products";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -189,22 +190,31 @@ const renderItemRatings = ({ item, index }) => (
   </Layout>
 );
 
-function ProductScreen({ navigation }) {
+function ProductScreen({ route, navigation }) {
+  const deviceWidth = Dimensions.get("window").width;
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    getProductByID(route.params.productId, setProduct);
+  }, []);
+
   return (
     <ScrollView>
       <Layout style={styles.container}>
         <Image
-          style={{ resizeMode: "contain" }}
-          source={require("../../../assets/Product.png")}
+          style={{ resizeMode: "contain", height: 200, width: deviceWidth }}
+          source={{ uri: product.imageUrl }}
         />
-        <Rating
-          type="custom"
-          rating={3}
-          style={{ paddingVertical: 12, position: "absolute", right: 10 }}
-          ratingColor="rgb(210,145,91)"
-          tintColor="rgb(0, 0, 0)"
-          imageSize={20}
-        />
+        {product.rating && (
+          <Rating
+            type="custom"
+            rating={product.rating}
+            style={{ paddingVertical: 12, position: "absolute", right: 10 }}
+            ratingColor="rgb(210,145,91)"
+            tintColor="rgb(0, 0, 0)"
+            imageSize={20}
+          />
+        )}
         <Layout style={styles.inner}>
           <Layout style={styles.containerList}>
             <Layout style={styles.innerList}>
@@ -217,7 +227,7 @@ function ProductScreen({ navigation }) {
                     marginLeft: 16,
                   }}
                 >
-                  Banana Bread
+                  {product.id}
                 </Text>
                 <Text
                   style={{
@@ -227,7 +237,7 @@ function ProductScreen({ navigation }) {
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  Bea’s Bakery
+                  {product.vendor}
                 </Text>
               </Layout>
             </Layout>
@@ -240,7 +250,7 @@ function ProductScreen({ navigation }) {
                   marginRight: 16,
                 }}
               >
-                P200
+                P{parseFloat(product.price).toFixed(2)}
               </Text>
             </Layout>
           </Layout>
@@ -258,7 +268,7 @@ function ProductScreen({ navigation }) {
               marginHorizontal: 16,
             }}
           >
-            Stock: 120
+            Stock: {product.stock}
           </Text>
           <Text
             style={{
@@ -268,16 +278,14 @@ function ProductScreen({ navigation }) {
               marginHorizontal: 16,
             }}
           >
-            Our banana bread will surely leave you drooling and craving for
-            more! Made from bananas and flour, this bread is one of the best
-            here in Nueva Ecija! Grab your loaf today!
+            {product.description}
           </Text>
           <Divider />
           <Layout
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text category="h6" style={{ marginTop: 10 }}>
-              More from Bea’s Bakery
+              More from {product.vendor}
             </Text>
             <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
               View Shop >

@@ -15,7 +15,6 @@ const renderItem = ({ item, index, navigation }) => (
       <Image
         style={{ resizeMode: "cover", height: 160, width: 160 }}
         source={{ uri: item.imageUrl }}
-        onPress={() => navigation.navigate("Build My Shop")}
       />
       <Layout style={{ alignSelf: "flex-start" }}>
         <Text

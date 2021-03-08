@@ -59,7 +59,7 @@ const HomeComponent = ({ user, navigation }) => {
   const [homeProducts, setHomeProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const refreshItems = useEffect(() => {
+  useEffect(() => {
     getCatalogue(setHomeProducts);
   }, []);
 
@@ -86,7 +86,7 @@ const HomeComponent = ({ user, navigation }) => {
         {homeProducts.length != 0 ? (
           <List
             data={homeProducts}
-            renderItem={renderItem}
+            renderItem={(props) => renderItem({navigation, ...props})}
             extraData={homeProducts}
             horizontal={true}
             style={{ backgroundColor: "transparent" }}
@@ -152,14 +152,21 @@ const CategorySection = ({ categories }) => {
   );
 };
 
-const renderItem = ({ item }) => {
-  const { title, description, price, imageUrl, vendor } = item;
+const renderItem = ({ item, navigation }) => {
+  const { title, description, price, imageUrl, vendor, id } = item;
   let userId;
   getUserFromUID(vendor, (user) => {
     userId = user.uid;
   });
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Product", {
+          productId: id,
+          title: title,
+        });
+      }}
+    >
       <Layout style={styles.pickForYou}>
         <Image source={{ uri: imageUrl }} style={{ width: 160, height: 120 }} />
         <Text category="s1" style={{ fontWeight: "bold", marginBottom: 5 }}>
