@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Layout, Input, Button, Text } from '@ui-kitten/components';
-import { createUser } from '../services/firebase';
+import { createUser } from '../services/users';
 import PopUpMessage from '../components/PopUpMessage';
 
 const RegisterScreen = ({navigation}) => {

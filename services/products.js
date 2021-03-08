@@ -31,7 +31,10 @@ export const getCategories = (callback) => {
   const db = firebase.firestore();
   db.collection("categories")
     .get()
-    .then((categories) => callback(categories.docs))
+    .then((categories) =>
+      categories.docs.map((cat) => ({ id: cat.id, ...cat.data() }))
+    )
+    .then((categories) => callback(categories))
     .catch((e) => console.log(e));
 };
 

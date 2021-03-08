@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Layout, Button, Text } from '@ui-kitten/components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { authOnOpen } from '../services/firebase';
+import { authOnOpen } from '../services/auth';
 
 const getData = async () => {
     try {

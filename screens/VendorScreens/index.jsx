@@ -19,8 +19,6 @@ import MyShopPreview from '../MyShopScreens/MyShopPreviewScreen';
 import ShopSettings from '../MyShopScreens/ShopSettingsScreen';
 
 
-import ProductScreen from '../OrderMessagingScreens/ProductScreen';
-
 
 
 const Vendor = createStackNavigator();
@@ -65,9 +63,6 @@ const VendorNavigator = () => {
             <Vendor.Screen name="Preview Shop" component={MyShopPreview} 
             options={showHeader} />
             <Vendor.Screen name="Shop Settings" component={ShopSettings} 
-            options={showHeader} />
-
-            <Vendor.Screen name="Product" component={ProductScreen} 
             options={showHeader} />
 
 

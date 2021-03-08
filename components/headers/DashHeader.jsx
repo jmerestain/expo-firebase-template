@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Input, Icon, TopNavigation, Layout } from '@ui-kitten/components';
-import { signOutUser } from '../../services/firebase';
+import { signOutUser } from '../../services/users';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 

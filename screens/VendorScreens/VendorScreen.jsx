@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Button, Text, List, Card, Avatar } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
-import { checkAuthenticated, getMyStore } from '../../services/firebase';
+import { checkAuthenticated } from '../../services/auth';
+import { getMyStore } from '../../services/products';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const ManageNav = createStackNavigator();

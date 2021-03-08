@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Input, Text, Button, Card, Modal, Select, SelectItem, IndexPath } from '@ui-kitten/components';
 import * as ImagePicker from 'expo-image-picker';
 import { StyleSheet, Image, ScrollView } from 'react-native';
-import { postMyProduct, checkAuthenticated } from '../../services/firebase';
+import { checkAuthenticated } from '../../services/auth';
+import { postMyProduct } from '../../services/products';
 
 const NewItemScreen = ({navigation}) => {
 

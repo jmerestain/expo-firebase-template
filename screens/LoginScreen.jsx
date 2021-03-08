@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { loginUser } from '../services/firebase';
+import { loginUser } from '../services/auth';
 import PopUpMessage from '../components/PopUpMessage';
 import { Layout, Text, Input, Button } from '@ui-kitten/components';
 
