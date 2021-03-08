@@ -44,7 +44,13 @@ const CatalogueNavigator = () => {
           headerTitle: route.params.title,
         })}
       />
-      <CStack.Screen name="Product" component={ProductScreen} />
+      <CStack.Screen
+        name="Product"
+        component={ProductScreen}
+        options={({ route }) => ({
+          headerTitle: route.params.title,
+        })}
+      />
     </CStack.Navigator>
   );
 };
@@ -120,10 +126,10 @@ const CategoryEntry = ({ category }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Category", { categoryId: id, title: title });
+        navigation.navigate("Category", { categoryId: id, title });
       }}
     >
-      <Layout style={styles.categoryEntry}> 
+      <Layout style={styles.categoryEntry}>
         <Image source={imageSource} style={styles.icon} />
         <Text
           category="label"
@@ -136,7 +142,7 @@ const CategoryEntry = ({ category }) => {
   );
 };
 
-const CategorySection = ({categories}) => {
+const CategorySection = ({ categories }) => {
   return (
     <Layout style={styles.categorySection}>
       {categories.map((category) => (

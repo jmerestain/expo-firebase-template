@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Image, Pressable } from "react-native";
+import { StyleSheet, Image, Pressable, TouchableOpacity } from "react-native";
 import { Layout, Text, Input, Icon, List, Avatar } from "@ui-kitten/components";
 import { getProductsFromCategory } from "../../../services/products";
 
@@ -7,24 +7,30 @@ const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
 const renderItem = ({ item, index, navigation }) => (
   <Layout style={styles.item}>
-    <Image
-      style={{ resizeMode: "contain" }}
-      source={require("../../Rectangle_164.png")}
-      onPress={() => navigation.navigate("Build My Shop")}
-    />
-    <Layout style={{ alignSelf: "flex-start" }}>
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "bold",
-          marginTop: 8,
-          marginBottom: 4,
-        }}
-      >
-        {item.product}
-      </Text>
-      <Text>{item.price}</Text>
-    </Layout>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Product", { productId: item.id, title: item.title });
+      }}
+    >
+      <Image
+        style={{ resizeMode: "cover", height: 160, width: 160 }}
+        source={{ uri: item.imageUrl }}
+        onPress={() => navigation.navigate("Build My Shop")}
+      />
+      <Layout style={{ alignSelf: "flex-start" }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            marginTop: 8,
+            marginBottom: 4,
+          }}
+        >
+          {item.title}
+        </Text>
+        <Text>P {parseFloat(item.price).toFixed(2)}</Text>
+      </Layout>
+    </TouchableOpacity>
     <Layout
       style={{
         flexDirection: "row",
@@ -51,9 +57,8 @@ const Category = ({ route, navigation }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log(route.params)
     getProductsFromCategory(route.params.categoryId, setProducts);
-  }, [products]);
+  }, []);
 
   return (
     <Layout style={styles.container}>
@@ -71,7 +76,7 @@ const Category = ({ route, navigation }) => {
           data={products}
           showsVerticalScrollIndicator={false}
           numColumns={2}
-          renderItem={renderItem}
+          renderItem={(props) => renderItem({...props, navigation})}
           style={{
             backgroundColor: "transparent",
             flex: 1,

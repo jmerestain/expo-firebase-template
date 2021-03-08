@@ -41,10 +41,16 @@ export const getCategories = (callback) => {
 export const getProductsFromCategory = (categoryId, callback) => {
   const db = firebase.firestore();
   db.collection("products")
-    .where("category", "==", categoryId)
-    .get()
-    .then((products) => callback(products))
-    .catch((e) => console.log(e));
+    .where("category", "array-contains", categoryId)
+    .onSnapshot((querySnapshot) => {
+      var products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({id: doc.id, ...doc.data()});
+      });
+      console.log(categoryId)
+      console.log(products)
+      callback(products);
+    });
 };
 
 export const getStoreFromUID = (uid, callback) => {
