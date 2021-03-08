@@ -45,11 +45,36 @@ export const createUserProfile = (userDetails, navigation) => {
     });
 };
 
-export const getUserFromUID = (uid, callback) => {
+export const getUserProfile = (uid, callback) => {
+  const auth = firebase.auth();
   const db = firebase.firestore();
-  db.collection("users")
-    .where("uid", "==", uid)
+  const currentUserUID = auth.currentUser.uid;
+  db.collection("user-profiles")
+    .doc(currentUserUID)
     .get()
-    .then((user) => callback(user))
+    .then((userProfile) =>
+      callback({ id: currentUserUID, ...userProfile.data() })
+    )
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+    });
+};
+
+export const getCurrentUserFromUID = (callback) => {
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const { uid, givenPhotoURL } = auth.currentUser;
+
+  db.collection("user-profiles")
+    .doc(uid)
+    .get()
+    .then((userProfile) =>
+      callback({
+        id: uid,
+        ...((givenPhotoURL && { photoURL: givenPhotoURL }) || null),
+        ...userProfile.data(),
+      })
+    )
     .catch((e) => console.log(e));
 };

@@ -154,10 +154,6 @@ const CategorySection = ({ categories }) => {
 
 const renderItem = ({ item, navigation }) => {
   const { title, description, price, imageUrl, vendor, id } = item;
-  let userId;
-  getUserFromUID(vendor, (user) => {
-    userId = user.uid;
-  });
   return (
     <TouchableOpacity
       onPress={() => {

@@ -25,7 +25,7 @@ function DTIRegistrationNextScreen ({navigation}) {
                         </Text>
                         <Layout>
                         <Text style={styles.rowTextBold}>
-                            Check if your propsective business name is available
+                            Check if your prospective business name is available
                         </Text>
                         <Text style={styles.rowText}>
                             Go to the Business Name Search page of the BNRS website and type the keywords of your preferred trade name.

@@ -2,10 +2,9 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 export const vendorApply = (
-  certImage,
-  idImage,
-  certDetails,
   shopDetails,
+  validIdImage,
+  certImage,
   callback
 ) => {
   const db = firebase.firestore();
@@ -22,39 +21,36 @@ export const vendorApply = (
   let certImageUrl;
 
   idImageRef
-    .put(idImage)
+    .put(validIdImage)
     .then(() => {
-      idImageRef.getDownloadURL().then((url) => (idImageUrl = url));
-    })
-    .then(() => {
-      certImageRef.put(certImage).then(() => {
-        idImageRef.getDownloadURL().then((url) => (idImageUrl = url));
-      });
-    })
-    .then(() => {
-      const vendorDetails = {
-        ...shopDetails,
-      };
-
-      db.collection("vendor-profiles")
-        .doc(currentUserUID)
-        .set(vendorDetails)
-        .then(() => console.log("Created Profile"));
-    })
-    .then(() => {
-      const appDetails = {
-        ...certDetails,
-        idImage: idImageUrl,
-        certImage: certImageUrl,
-      };
-
-      db.collection("vendor-applications")
-        .doc(currentUserUID)
-        .set(appDetails)
-        .then((application) => {
-          callback(application);
+      idImageRef
+        .getDownloadURL()
+        .then((url) => {
+          idImageUrl = url;
         })
-        .catch((e) => console.log(e));
+        .then(() => {
+          certImageRef.put(certImage).then(() => {
+            certImageRef
+              .getDownloadURL()
+              .then((url) => {
+                certImageUrl = url;
+              })
+              .then(() => {
+                const vendorDetails = {
+                  ...shopDetails,
+                  validID: idImageUrl,
+                  DTICert: certImageUrl,
+                  isApproved: false,
+                };
+
+                db.collection("vendor-profiles")
+                  .doc(currentUserUID)
+                  .set(vendorDetails)
+                  .then(() => callback())
+              });
+            ;
+          });
+        })
     })
     .catch((e) => console.log(e));
 };
@@ -68,10 +64,11 @@ export const vendorApplyStatus = (callback) => {
     .doc(currentUserUID)
     .get()
     .then((vendor) => {
-      if (vendor.approved) {
-        callback(vendor);
+      if (vendor.exists) {
+        callback(vendor.data().isApproved ? "approved" : "pending");
       } else {
-        callback(false);
+        // Vendor hasn't applied
+        callback("none");
       }
     });
 };

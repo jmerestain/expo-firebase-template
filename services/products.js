@@ -92,7 +92,7 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
 
   productImageRef
     .put(image)
-    .then((snapshot) => {
+    .then(() => {
       productImageRef
         .getDownloadURL()
         .then((url) => {
@@ -103,7 +103,7 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
             ...product,
             created_at: firebase.firestore.Timestamp.fromDate(new Date()),
             imageId,
-            imageUrl: imageUrl,
+            imageUrl,
           };
           db.collection("products")
             .add(productData)
