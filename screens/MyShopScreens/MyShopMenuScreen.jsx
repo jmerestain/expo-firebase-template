@@ -26,23 +26,9 @@ import { getShopDetails } from "../../services/vendor";
 
 const MyShopStack = createStackNavigator();
 
-const MyShopStackNavigation = () => (
-  <MyShopStack.Navigator
-    screenOptions={{
-      headerStyle: { backgroundColor: "rgb(138,18,20)" },
-    }}
-  >
-    <MyShopStack.Screen name="View My Shop" component={OrdersScreen} />
-    <MyShopStack.Screen name="View DTI Certificate" component={OrdersScreen} />
-    <MyShopStack.Screen name="Contact Support" component={OrdersScreen} />
-    <MyShopStack.Screen name="Shop Settings" component={OrdersScreen} />
-    <MyShopStack.Screen name="OrderProcess" component={OrderProcess} />
-  </MyShopStack.Navigator>
-);
-
-function MyShopScreen({ navigation }) {
+const MyShopScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [shopDetails, setShopDetails] = useState({});
+  const [shopDetails, setShopDetails] = useState({ shop: {} });
 
   useEffect(() => {
     getShopDetails(setShopDetails);
@@ -73,7 +59,7 @@ function MyShopScreen({ navigation }) {
               marginVertical: 12,
             }}
           >
-            {shopDetails.name}
+            {shopDetails.shop.name}
           </Text>
         </Layout>
       </Layout>
@@ -233,8 +219,8 @@ function MyShopScreen({ navigation }) {
           <Layout style={styles.centeredView}>
             <Layout style={styles.modalView}>
               <Image
-                style={{ resizeMode: "contain" }}
-                source={require("../../assets/DTI_Registration.png")}
+                style={{ resizeMode: "contain", width: 240, height: 344 }}
+                source={{ uri: shopDetails.DTICert }}
               />
               <Button
                 appearance="outline"
@@ -249,7 +235,7 @@ function MyShopScreen({ navigation }) {
       </Layout>
     </Layout>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

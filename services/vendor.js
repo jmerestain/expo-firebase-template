@@ -64,8 +64,9 @@ export const getShopDetails = (callback) => {
     .doc(currentUserUID)
     .get()
     .then((vendor) => {
-      callback(vendor.data().shop);
-    });
+      callback(vendor.data());
+    })
+    .catch((e) => console.log(e));
 };
 
 export const vendorApplyStatus = (callback) => {
