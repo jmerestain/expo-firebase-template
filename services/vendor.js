@@ -55,6 +55,19 @@ export const vendorApply = (
     .catch((e) => console.log(e));
 };
 
+export const getShopDetails = (callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("vendor-profiles")
+    .doc(currentUserUID)
+    .get()
+    .then((vendor) => {
+      callback(vendor.data().shop);
+    });
+};
+
 export const vendorApplyStatus = (callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();

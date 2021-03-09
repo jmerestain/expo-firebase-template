@@ -52,28 +52,42 @@ export const getProductsFromCategory = (categoryId, callback) => {
     });
 };
 
-export const getStoreFromUID = (uid, callback) => {
-  const db = firebase.firestore();
-  db.collection("stores")
-    .where("uid", "==", uid)
-    .get()
-    .then((store) => callback(store))
-    .catch((e) => console.log(e));
-};
-
 // Get products by vendor ID
 export const getProductsFromUID = (uid, callback) => {
   const db = firebase.firestore();
+  
   db.collection("products")
     .where("vendor", "==", uid)
-    .get()
-    .then((products) => callback(products))
-    .catch((e) => console.log(e));
+    .onSnapshot((querySnapshot) => {
+      var products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      callback(products);
+    });
+};
+
+// Get products of current vendor
+export const getProductsCurrentVendor = (callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const uid = auth.currentUser.uid;
+  
+  db.collection("products")
+    .where("vendor", "==", uid)
+    .onSnapshot((querySnapshot) => {
+      var products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      callback(products);
+    });
 };
 
 // Get product by its ID
 export const getProductByID = (id, callback) => {
   const db = firebase.firestore();
+  
   db.collection("products")
     .doc(id)
     .get()
