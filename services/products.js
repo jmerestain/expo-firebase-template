@@ -67,6 +67,22 @@ export const getProductsFromUID = (uid, callback) => {
     });
 };
 
+// Get products by vendor ID (limited)
+export const getProductsLimitedFromUID = (uid, limit, callback) => {
+  const db = firebase.firestore();
+  
+  db.collection("products")
+    .where("vendor", "==", uid)
+    .limit(limit)
+    .onSnapshot((querySnapshot) => {
+      var products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      callback(products);
+    });
+};
+
 // Get products of current vendor
 export const getProductsCurrentVendor = (callback) => {
   const db = firebase.firestore();

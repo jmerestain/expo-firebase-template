@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Layout, Text, List, Card, Spinner, Icon } from "@ui-kitten/components";
 import { getUserFromUID } from "../../services/users";
 import { getCatalogue, getCategories } from "../../services/products";
+import { getShopDetailsByManyUID } from "../../services/vendor";
 import { checkAuthenticated } from "../../services/auth";
 import { useNavigation } from "@react-navigation/native";
 // Components
@@ -59,8 +60,25 @@ const HomeComponent = ({ user, navigation }) => {
   const [homeProducts, setHomeProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const vendorsCallBack = (vendors, products) => {
+    const finalProducts = products.map((product) => {
+      const vendorName = vendors.find((vendor) => vendor.id == product.vendor)
+        .name;
+      return { ...product, vendor: vendorName };
+    });
+
+    setHomeProducts(finalProducts);
+  }
+
+  const homeProductsCallback = (products) => {
+    getShopDetailsByManyUID(
+      products.map((product) => product.vendor),
+      (vendors) => vendorsCallBack(vendors, products)
+    );
+  };
+
   useEffect(() => {
-    getCatalogue(setHomeProducts);
+    getCatalogue(homeProductsCallback);
   }, []);
 
   useEffect(() => {
@@ -86,7 +104,7 @@ const HomeComponent = ({ user, navigation }) => {
         {homeProducts.length != 0 ? (
           <List
             data={homeProducts}
-            renderItem={(props) => renderItem({navigation, ...props})}
+            renderItem={(props) => renderItem({ navigation, ...props })}
             extraData={homeProducts}
             horizontal={true}
             style={{ backgroundColor: "transparent" }}
@@ -154,6 +172,7 @@ const CategorySection = ({ categories }) => {
 
 const renderItem = ({ item, navigation }) => {
   const { title, description, price, imageUrl, vendor, id } = item;
+
   return (
     <TouchableOpacity
       onPress={() => {

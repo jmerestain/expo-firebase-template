@@ -1,13 +1,40 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const newOrder = (productId, callback) => {
+export const getOrder = (id, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("orders")
+    .doc(id)
+    .get()
+    .then((order) => callback({ id: order.id, ...order.data() }))
+    .catch((e) => console.log(e));
+};
+
+export const getOrdersCurrentUser = (callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("orders")
+    .where("user", "==", currentUserUID)
+    .onSnapshot((querySnapshot) => {
+      var orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+      callback(orders);
+    });
+};
+
+export const newOrder = (productDetails, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
   const order = {
-    productId,
+    product: productDetails,
+    quantity: 1,
     user: currentUserUID,
     status: 1,
   };
@@ -15,9 +42,7 @@ export const newOrder = (productId, callback) => {
   db.collection("orders")
     .add(order)
     .then((orderRef) => {
-      orderRef
-        .set({ id: orderRef.id }, { merge: true })
-        .then((order) => callback(order));
+      callback(orderRef.id)
     })
     .catch((e) => console.log(e));
 };

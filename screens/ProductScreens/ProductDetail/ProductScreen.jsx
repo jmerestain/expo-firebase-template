@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Image, SectionList, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  SectionList,
+  Dimensions,
+} from "react-native";
 import { Rating } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -17,7 +23,12 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
-import { getProductByID } from "../../../services/products";
+import {
+  getProductByID,
+  getProductsLimitedFromUID,
+} from "../../../services/products";
+import { getShopDetailsByUID } from "../../../services/vendor";
+import { newOrder } from "../../../services/orders";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -33,95 +44,11 @@ const data = new Array(8).fill({
   dateReviewed: "01/11/21",
 });
 
-const renderItem = ({ item, index }) => (
-  <Layout style={styles.container}>
-    <Image
-      style={{ resizeMode: "contain" }}
-      source={require("../../../assets/Product.png")}
-    />
-    <Rating
-      type="custom"
-      rating={item.rating}
-      style={{ paddingVertical: 12, position: "absolute", right: 10 }}
-      ratingColor="rgb(210,145,91)"
-      tintColor="rgb(0, 0, 0)"
-      imageSize={20}
-    />
-    <Layout style={styles.inner}>
-      <Layout style={styles.containerList}>
-        <Layout style={styles.innerList}>
-          <Layout style={styles.textList}>
-            <Text
-              category="h6"
-              style={{
-                alignContent: "center",
-                marginVertical: 6,
-                marginLeft: 16,
-              }}
-            >
-              {item.product}
-            </Text>
-            <Text
-              style={{
-                alignContent: "center",
-                marginVertical: 1,
-                marginLeft: 16,
-                color: "rgb(128, 128, 128)",
-              }}
-            >
-              {item.shop}
-            </Text>
-          </Layout>
-        </Layout>
-        <Layout>
-          <Text
-            category="h6"
-            style={{
-              alignContent: "center",
-              marginVertical: 6,
-              marginRight: 16,
-            }}
-          >
-            {item.price}
-          </Text>
-        </Layout>
-      </Layout>
-      <Divider />
-      <Text
-        category="s1"
-        style={{ alignContent: "center", marginTop: 12, marginLeft: 16 }}
-      >
-        Product Details
-      </Text>
-      <Text
-        style={{
-          alignContent: "center",
-          marginVertical: 6,
-          marginHorizontal: 16,
-        }}
-      >
-        Stock: {item.quantity}
-      </Text>
-      <Text
-        style={{
-          alignContent: "center",
-          marginVertical: 2,
-          marginBottom: 16,
-          marginHorizontal: 16,
-        }}
-      >
-        {item.productDetails}
-      </Text>
-      <Divider />
-    </Layout>
-  </Layout>
-);
-
 const renderItemMore = ({ item, index }) => (
   <Layout style={styles.item}>
     <Image
-      style={{ resizeMode: "contain" }}
-      source={require("../../Rectangle_164.png")}
+      style={{ resizeMode: "cover", height: 160, width: 160 }}
+      source={{ uri: item.imageUrl }}
     />
     <Layout style={{ alignSelf: "flex-start" }}>
       <Text
@@ -132,9 +59,9 @@ const renderItemMore = ({ item, index }) => (
           marginBottom: 4,
         }}
       >
-        {item.product}
+        {item.title}
       </Text>
-      <Text>{item.price}</Text>
+      <Text>P{item.price}</Text>
     </Layout>
   </Layout>
 );
@@ -193,10 +120,28 @@ const renderItemRatings = ({ item, index }) => (
 function ProductScreen({ route, navigation }) {
   const deviceWidth = Dimensions.get("window").width;
   const [product, setProduct] = useState({});
+  const [vendor, setVendor] = useState({});
+  const [moreProducts, setMoreProducts] = useState({});
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
   }, []);
+
+  useEffect(() => {
+    if (product.vendor) {
+      getShopDetailsByUID(product.vendor, setVendor);
+      getProductsLimitedFromUID(product.vendor, 6, setMoreProducts);
+    }
+  }, [product]);
+
+  const addToCartOnPress = () => {
+    const addToCartCallback = () =>
+      navigation.navigate("Orders");
+    
+    const { title, price, id } = product;
+
+    newOrder({ title, price, vendor: vendor.name, id }, addToCartCallback);
+  };
 
   return (
     <ScrollView>
@@ -227,7 +172,7 @@ function ProductScreen({ route, navigation }) {
                     marginLeft: 16,
                   }}
                 >
-                  {product.id}
+                  {product.title}
                 </Text>
                 <Text
                   style={{
@@ -237,7 +182,7 @@ function ProductScreen({ route, navigation }) {
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  {product.vendor}
+                  {vendor.name}
                 </Text>
               </Layout>
             </Layout>
@@ -285,13 +230,19 @@ function ProductScreen({ route, navigation }) {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text category="h6" style={{ marginTop: 10 }}>
-              More from {product.vendor}
+              More from {vendor.name}
             </Text>
             <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
               View Shop >
             </Button>
           </Layout>
-          <List data={data} numColumns={2} renderItem={renderItemMore} />
+
+          <List
+            data={moreProducts}
+            numColumns={2}
+            renderItem={renderItemMore}
+          />
+
           <Divider />
           <Layout
             style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -327,7 +278,11 @@ function ProductScreen({ route, navigation }) {
           >
             Contact Seller
           </Button>
-          <Button size="large" style={{ width: "48%", marginHorizontal: 4 }}>
+          <Button
+            size="large"
+            style={{ width: "48%", marginHorizontal: 4 }}
+            onPress={addToCartOnPress}
+          >
             Add to Cart
           </Button>
         </Layout>
@@ -353,7 +308,7 @@ const styles = StyleSheet.create({
   },
   textList: {
     marginBottom: 12,
-    width: "60%",
+    width: "65%",
   },
   inner: {
     paddingVertical: 12,

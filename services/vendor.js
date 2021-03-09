@@ -1,12 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const vendorApply = (
-  shopDetails,
-  validIdImage,
-  certImage,
-  callback
-) => {
+export const vendorApply = (shopDetails, validIdImage, certImage, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const storage = firebase.storage().ref();
@@ -46,11 +41,10 @@ export const vendorApply = (
                 db.collection("vendor-profiles")
                   .doc(currentUserUID)
                   .set(vendorDetails)
-                  .then(() => callback())
+                  .then(() => callback());
               });
-            ;
           });
-        })
+        });
     })
     .catch((e) => console.log(e));
 };
@@ -65,6 +59,33 @@ export const getShopDetails = (callback) => {
     .get()
     .then((vendor) => {
       callback(vendor.data());
+    })
+    .catch((e) => console.log(e));
+};
+
+export const getShopDetailsByUID = (uid, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("vendor-profiles")
+    .doc(uid)
+    .get()
+    .then((vendor) => {
+      callback(vendor.data().shop);
+    })
+    .catch((e) => console.log(e));
+};
+
+export const getShopDetailsByManyUID = (uids, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("vendor-profiles")
+    .where(firebase.firestore.FieldPath.documentId(), "in", uids)
+    .get()
+    .then((vendors) =>
+      vendors.docs.map((vendor) => ({ id: vendor.id, ...vendor.data().shop }))
+    )
+    .then((vendors) => {
+      callback(vendors);
     })
     .catch((e) => console.log(e));
 };

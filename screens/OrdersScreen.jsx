@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -17,6 +17,7 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import OrdersIndividualScreen from "./OrdersIndividualScreen";
+import { getOrdersCurrentUser } from "../services/orders";
 
 const OStack = createStackNavigator();
 
@@ -27,7 +28,7 @@ const OrdersScreenNavigator = () => (
     }}
   >
     <OStack.Screen name="All Orders" component={OrdersScreen} />
-    <OStack.Screen name="Orders" component={OrdersIndividualScreen} />
+    <OStack.Screen name="Individual Order" component={OrdersIndividualScreen} />
   </OStack.Navigator>
 );
 
@@ -42,12 +43,12 @@ const data = new Array(8).fill({
   status: "To ship",
 });
 
-const renderItem = ({ item, index }) => (
+const renderItem = ({ item, index, navigation }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.header}>
         <Text category="h6" style={styles.headerText}>
-          {item.shop}
+          {item.product.vendor}
         </Text>
       </Layout>
       <Layout style={styles.containerList}>
@@ -71,7 +72,7 @@ const renderItem = ({ item, index }) => (
                 category="h6"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
-                {item.product}
+                {item.product.title}
               </Text>
               <Text
                 category="s2"
@@ -81,7 +82,7 @@ const renderItem = ({ item, index }) => (
                   color: "rgb(128, 128, 128)",
                 }}
               >
-                {item.price}
+                P{item.product.price}
               </Text>
               <Layout
                 style={{
@@ -108,7 +109,7 @@ const renderItem = ({ item, index }) => (
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  Subtotal: {item.subtotal}
+                  Subtotal: P{item.product.price * item.quantity}
                 </Text>
               </Layout>
             </Layout>
@@ -123,7 +124,14 @@ const renderItem = ({ item, index }) => (
             marginVertical: 12,
           }}
         >
-          <Button size="medium">View Order</Button>
+          <Button
+            size="medium"
+            onPress={() =>
+              navigation.navigate("Individual Order", { orderId: item.id })
+            }
+          >
+            View Order
+          </Button>
           <Layout>
             <Text
               category="s1"
@@ -134,7 +142,7 @@ const renderItem = ({ item, index }) => (
                 marginRight: 18,
               }}
             >
-              Order Total: {item.total}
+              Order Total: {item.product.price * item.quantity}
             </Text>
             <Text
               category="s1"
@@ -169,6 +177,12 @@ function OrdersScreen({ navigation }) {
 }
 
 const DeliverAddress = ({ navigation }) => {
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    getOrdersCurrentUser(setOrders);
+  }, []);
+
   return (
     <ScrollView>
       <Layout>
@@ -176,7 +190,10 @@ const DeliverAddress = ({ navigation }) => {
           <Layout style={[styles.settingsCard]}>
             <Layout style={styles.inner}>
               <Layout style={{ justifyContent: "flex-start" }}>
-                <List data={data} renderItem={renderItem} />
+                <List
+                  data={orders}
+                  renderItem={(props) => renderItem({ navigation, ...props })}
+                />
               </Layout>
             </Layout>
           </Layout>
