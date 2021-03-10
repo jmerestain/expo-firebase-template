@@ -140,7 +140,7 @@ function ProductScreen({ route, navigation }) {
     
     const { title, price, id } = product;
 
-    newOrder({ title, price, vendor: vendor.name, id }, addToCartCallback);
+    newOrder({ title, price, vendor: vendor.name, vendorId: vendor.id, id }, addToCartCallback);
   };
 
   return (

@@ -18,6 +18,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
+import _ from "lodash";
 
 const OStack = createStackNavigator();
 
@@ -32,89 +33,85 @@ const OrdersScreenNavigator = () => (
   </OStack.Navigator>
 );
 
-const data = new Array(8).fill({
-  product: "Maybelline Lipstick",
-  quantity: "3",
-  modeOfPayment: "Gcash",
-  price: "P150",
-  subtotal: "P450",
-  total: "P900",
-  shop: "Mary's Makeup",
-  status: "To ship",
-});
+const renderIndivItem = ({ item }) => (
+  <Layout style={styles.innerList}>
+    <Avatar
+      rounded
+      size="giant"
+      source={require("../screens/avatar-icon.png")}
+      style={{ marginHorizontal: 20, alignSelf: "center" }}
+    />
+    <Layout style={styles.textList}>
+      <Layout
+        style={{
+          paddingHorizontal: 8,
+          shadowRadius: 1,
+          borderColor: "rgb(220,220,220)",
+          marginVertical: 8,
+        }}
+      >
+        <Text
+          category="h6"
+          style={{ alignContent: "center", marginVertical: 6 }}
+        >
+          {item.product.title}
+        </Text>
+        <Text
+          category="s2"
+          style={{
+            alignContent: "center",
+            marginVertical: 3,
+            color: "rgb(128, 128, 128)",
+          }}
+        >
+          P{item.product.price}
+        </Text>
+        <Layout
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            category="s2"
+            style={{
+              alignContent: "center",
+              marginVertical: 3,
+              color: "rgb(128, 128, 128)",
+            }}
+          >
+            x{item.quantity}
+          </Text>
+          <Text
+            category="s2"
+            style={{
+              alignContent: "center",
+              marginVertical: 3,
+              color: "rgb(128, 128, 128)",
+            }}
+          >
+            Subtotal: P{item.product.price * item.quantity}
+          </Text>
+        </Layout>
+      </Layout>
+    </Layout>
+  </Layout>
+);
 
-const renderItem = ({ item, index, navigation }) => (
+const renderVendorItem = ({ item, index, navigation }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.header}>
         <Text category="h6" style={styles.headerText}>
-          {item.product.vendor}
+          {item.vendor}
         </Text>
       </Layout>
       <Layout style={styles.containerList}>
-        <Layout style={styles.innerList}>
-          <Avatar
-            rounded
-            size="giant"
-            source={require("../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
-          />
-          <Layout style={styles.textList}>
-            <Layout
-              style={{
-                paddingHorizontal: 8,
-                shadowRadius: 1,
-                borderColor: "rgb(220,220,220)",
-                marginVertical: 8,
-              }}
-            >
-              <Text
-                category="h6"
-                style={{ alignContent: "center", marginVertical: 6 }}
-              >
-                {item.product.title}
-              </Text>
-              <Text
-                category="s2"
-                style={{
-                  alignContent: "center",
-                  marginVertical: 3,
-                  color: "rgb(128, 128, 128)",
-                }}
-              >
-                P{item.product.price}
-              </Text>
-              <Layout
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  category="s2"
-                  style={{
-                    alignContent: "center",
-                    marginVertical: 3,
-                    color: "rgb(128, 128, 128)",
-                  }}
-                >
-                  x{item.quantity}
-                </Text>
-                <Text
-                  category="s2"
-                  style={{
-                    alignContent: "center",
-                    marginVertical: 3,
-                    color: "rgb(128, 128, 128)",
-                  }}
-                >
-                  Subtotal: P{item.product.price * item.quantity}
-                </Text>
-              </Layout>
-            </Layout>
-          </Layout>
-        </Layout>
+        <List
+          data={item.orders}
+          renderItem={renderIndivItem}
+        />
         <Divider />
         <Layout
           style={{
@@ -127,7 +124,7 @@ const renderItem = ({ item, index, navigation }) => (
           <Button
             size="medium"
             onPress={() =>
-              navigation.navigate("Individual Order", { orderId: item.id })
+              navigation.navigate("Individual Order", { vendorId: item.vendorId })
             }
           >
             View Order
@@ -142,7 +139,7 @@ const renderItem = ({ item, index, navigation }) => (
                 marginRight: 18,
               }}
             >
-              Order Total: {item.product.price * item.quantity}
+              Order Total: P{item.totalPrice}
             </Text>
             <Text
               category="s1"
@@ -179,8 +176,19 @@ function OrdersScreen({ navigation }) {
 const DeliverAddress = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
 
+  const groupOrdersByVendor = (orders) => {
+    let groupedOrders = _.groupBy(orders, (order) => order.product.vendor);
+    groupedOrders = Object.entries(groupedOrders).map(([key, val]) => ({
+      orders: val,
+      vendor: key,
+      vendorId: val[0].product.vendorId,
+      totalPrice: val.reduce((acc, curr) => acc + (curr.product.price * curr.quantity), 0)
+    }));
+    setOrders(groupedOrders);
+  };
+
   useEffect(() => {
-    getOrdersCurrentUser(setOrders);
+    getOrdersCurrentUser(groupOrdersByVendor);
   }, []);
 
   return (
@@ -192,7 +200,9 @@ const DeliverAddress = ({ navigation }) => {
               <Layout style={{ justifyContent: "flex-start" }}>
                 <List
                   data={orders}
-                  renderItem={(props) => renderItem({ navigation, ...props })}
+                  renderItem={(props) =>
+                    renderVendorItem({ navigation, ...props })
+                  }
                 />
               </Layout>
             </Layout>

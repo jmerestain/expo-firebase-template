@@ -27,6 +27,23 @@ export const getOrdersCurrentUser = (callback) => {
     });
 };
 
+export const getOrdersCurrentUserPerVendor = (vendor, callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("orders")
+    .where("user", "==", currentUserUID)
+    .where("product.vendorId", "==", vendor)
+    .onSnapshot((querySnapshot) => {
+      var orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+      callback(orders);
+    });
+};
+
 export const newOrder = (productDetails, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();

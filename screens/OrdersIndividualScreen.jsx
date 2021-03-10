@@ -16,15 +16,8 @@ import {
   Avatar,
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
-import { getOrder } from "../services/orders";
-
-const data = new Array(8).fill({
-  product: "Maybelline Lipstick",
-  quantity: "3",
-  modeOfPayment: "Gcash",
-  price: "P150",
-  subtotal: "P450",
-});
+import { getOrdersCurrentUserPerVendor } from "../services/orders";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const renderItem = ({ item, index }) => (
   <Layout style={styles.container}>
@@ -49,7 +42,7 @@ const renderItem = ({ item, index }) => (
                 category="h6"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
-                {item.product}
+                {item.product.title}
               </Text>
               <Text
                 category="s2"
@@ -59,7 +52,7 @@ const renderItem = ({ item, index }) => (
                   color: "rgb(128, 128, 128)",
                 }}
               >
-                {item.price}
+                P{item.product.price}
               </Text>
               <Layout
                 style={{
@@ -86,7 +79,7 @@ const renderItem = ({ item, index }) => (
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  Subtotal: {item.subtotal}
+                  Subtotal: P{item.product.price * item.quantity}
                 </Text>
               </Layout>
             </Layout>
@@ -112,16 +105,37 @@ function OrdersIndividualScreen({ route, navigation }) {
 }
 
 const DeliverAddress = ({ route, navigation }) => {
-  const [order, setOrder] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    getOrder(route.params.orderId, setOrder);
+    getOrdersCurrentUserPerVendor(route.params.vendorId, setOrders);
   }, []);
 
-  console.log(order);
+  const totalPrice = orders.reduce(
+    (acc, curr) => acc + curr.product.price * curr.quantity,
+    0
+  );
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || deliveryDate;
+    setShow(Platform.OS === "ios");
+    setDeliveryDate(currentDate);
+  };
 
   return (
     <ScrollView>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={deliveryDate}
+          mode="date"
+          is24Hour={true}
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
       <Layout>
         <TouchableOpacity
           onPress={() => {
@@ -191,7 +205,7 @@ const DeliverAddress = ({ route, navigation }) => {
           <Layout style={[styles.settingsCard]}>
             <Layout style={styles.inner}>
               <Layout style={{ justifyContent: "flex-start" }}>
-                <List data={data} renderItem={renderItem} />
+                <List data={orders} renderItem={renderItem} />
               </Layout>
             </Layout>
             <Layout>
@@ -200,7 +214,7 @@ const DeliverAddress = ({ route, navigation }) => {
                   Shipping Options
                 </Text>
               </Layout>
-              <Layout
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -219,7 +233,7 @@ const DeliverAddress = ({ route, navigation }) => {
                     style={{ height: 26, width: 26 }}
                   />
                 </Layout>
-              </Layout>
+              </Layout> */}
               <Divider />
               <Layout
                 style={{
@@ -232,18 +246,23 @@ const DeliverAddress = ({ route, navigation }) => {
                 }}
               >
                 <Text category="s1">Delivery Date</Text>
-                <Layout style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
-                    Select date
-                  </Text>
-                  <Icon
-                    name="chevron-right"
-                    fill="#8A1214"
-                    style={{ height: 26, width: 26 }}
-                  />
-                </Layout>
+                <TouchableOpacity onPress={() => setShow(true)}>
+                  <Layout
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
+                      Select date
+                    </Text>
+                    <Icon
+                      name="chevron-right"
+                      fill="#8A1214"
+                      style={{ height: 26, width: 26 }}
+                    />
+                  </Layout>
+                </TouchableOpacity>
               </Layout>
               <Divider />
+
               <Layout
                 style={{
                   flex: 1,
@@ -262,7 +281,8 @@ const DeliverAddress = ({ route, navigation }) => {
                 </Layout>
               </Layout>
               <Divider />
-              <Layout
+
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -282,7 +302,8 @@ const DeliverAddress = ({ route, navigation }) => {
                   />
                 </Layout>
               </Layout>
-              <Divider />
+              <Divider /> */}
+
               <Layout
                 style={{
                   flex: 1,
@@ -304,7 +325,7 @@ const DeliverAddress = ({ route, navigation }) => {
                 </Layout>
               </Layout>
               <Divider />
-              <Layout
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -319,11 +340,11 @@ const DeliverAddress = ({ route, navigation }) => {
                 </Text>
                 <Layout style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
-                    P900
+                    P{totalPrice}
                   </Text>
                 </Layout>
-              </Layout>
-              <Layout
+              </Layout> */}
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -342,8 +363,8 @@ const DeliverAddress = ({ route, navigation }) => {
                     P50
                   </Text>
                 </Layout>
-              </Layout>
-              <Layout
+              </Layout> */}
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -362,7 +383,7 @@ const DeliverAddress = ({ route, navigation }) => {
                     P50
                   </Text>
                 </Layout>
-              </Layout>
+              </Layout> */}
               <Divider />
               <Layout
                 style={{
@@ -376,7 +397,7 @@ const DeliverAddress = ({ route, navigation }) => {
               >
                 <Text category="s1">Order Total</Text>
                 <Layout style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text category="s1">P950</Text>
+                  <Text category="s1">P{totalPrice}</Text>
                 </Layout>
               </Layout>
               <Divider />
