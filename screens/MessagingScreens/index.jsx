@@ -15,7 +15,7 @@ const MessageNavigator = () => {
             }
         }}>
             <MessageNav.Screen name="Inbox" component={Inbox} 
-            options={showHeader} />
+            options={noHeader} />
         </MessageNav.Navigator>        
     )
 }

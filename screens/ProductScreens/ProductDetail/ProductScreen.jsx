@@ -29,6 +29,7 @@ import {
 } from "../../../services/products";
 import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
+import { startChat, getInbox, readChatroom } from "../../../services/messages";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -274,6 +275,17 @@ function ProductScreen({ route, navigation }) {
               width: "48%",
               marginHorizontal: 4,
               backgroundColor: "rgb(87,11,13)",
+            }}
+            onPress={() => {
+              // getInbox(true, (result) => {console.log(result)})
+              // getInbox(false, (result) => {console.log(result)})
+              // readChatroom(
+              //   "VKArrRNFLQbAaqrmiuE3nwuSOHZ2+VKArrRNFLQbAaqrmiuE3nwuSOHZ2+personal",
+              //   (result) => {
+              //     console.log(result);
+              //   }
+              // );
+              // startChat(product.vendor, vendor.name, "Hi everyone!", false, (result) => {console.log(result)})
             }}
           >
             Contact Seller

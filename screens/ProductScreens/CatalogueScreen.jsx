@@ -8,6 +8,7 @@ import { getShopDetailsByManyUID } from "../../services/vendor";
 import { checkAuthenticated } from "../../services/auth";
 import { useNavigation } from "@react-navigation/native";
 // Components
+import MessagingScreen from "../MessagingScreens";
 import Category from "./Category/Category";
 import ProductScreen from "./ProductDetail/ProductScreen";
 import DashHeader from "../../components/headers/DashHeader";
@@ -50,6 +51,13 @@ const CatalogueNavigator = () => {
         component={ProductScreen}
         options={({ route }) => ({
           headerTitle: route.params.title,
+        })}
+      />
+      <CStack.Screen
+        name="Inbox"
+        component={MessagingScreen}
+        options={() => ({
+          headerShown: true
         })}
       />
     </CStack.Navigator>
