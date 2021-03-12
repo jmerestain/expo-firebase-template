@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const createUser = (email, password, setMessage, navigation) => {
+export const createUser = (email, password, setMessage, callback) => {
   firebase
     .auth()
     .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -11,7 +11,7 @@ export const createUser = (email, password, setMessage, navigation) => {
         .createUserWithEmailAndPassword(email, password)
         .then((user) => {
           setMessage("Registered user!");
-          navigation.navigate("Registration Details", { uid: user.uid });
+          callback(user.uid);
         })
         .catch((error) => {
           const errorCode = error.code;
