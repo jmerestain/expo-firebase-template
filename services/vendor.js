@@ -70,7 +70,7 @@ export const getShopDetailsByUID = (uid, callback) => {
     .doc(uid)
     .get()
     .then((vendor) => {
-      callback(vendor.data().shop);
+      callback({...vendor.data().shop, id: vendor.id});
     })
     .catch((e) => console.log(e));
 };

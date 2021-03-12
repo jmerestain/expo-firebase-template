@@ -16,6 +16,7 @@ import {
   Avatar,
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
+import { getCurrentUserFromUID } from "../services/users";
 import { getOrdersCurrentUserPerVendor } from "../services/orders";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -106,11 +107,16 @@ function OrdersIndividualScreen({ route, navigation }) {
 
 const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
+  const [profile, setProfile] = useState([]);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     getOrdersCurrentUserPerVendor(route.params.vendorId, setOrders);
+  }, []);
+
+  useEffect(() => {
+    getCurrentUserFromUID(setProfile);
   }, []);
 
   const totalPrice = orders.reduce(
@@ -126,16 +132,6 @@ const DeliverAddress = ({ route, navigation }) => {
 
   return (
     <ScrollView>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={deliveryDate}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={onDateChange}
-        />
-      )}
       <Layout>
         <TouchableOpacity
           onPress={() => {
@@ -173,7 +169,7 @@ const DeliverAddress = ({ route, navigation }) => {
                     <Text category="h6" style={{ fontWeight: "bold" }}>
                       Delivery Address
                     </Text>
-                    <Text category="p2">Jong Ong | 0998 186 7756</Text>
+                    <Text category="p2">{profile.firstName} {profile.lastName} | 0998 186 7756</Text>
                     <Text
                       category="label"
                       style={{
@@ -250,9 +246,23 @@ const DeliverAddress = ({ route, navigation }) => {
                   <Layout
                     style={{ flexDirection: "row", alignItems: "center" }}
                   >
-                    <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
-                      Select date
-                    </Text>
+                    {show && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={deliveryDate}
+                        mode="date"
+                        is24Hour={true}
+                        minimumDate={new Date()}
+                        display="default"
+                        onChange={onDateChange}
+                        style={{ width: 80 }}
+                      />
+                    )}
+                    {!show && (
+                      <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
+                        Select date
+                      </Text>
+                    )}
                     <Icon
                       name="chevron-right"
                       fill="#8A1214"
@@ -304,7 +314,7 @@ const DeliverAddress = ({ route, navigation }) => {
               </Layout>
               <Divider /> */}
 
-              <Layout
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -324,7 +334,7 @@ const DeliverAddress = ({ route, navigation }) => {
                   />
                 </Layout>
               </Layout>
-              <Divider />
+              <Divider /> */}
               {/* <Layout
                 style={{
                   flex: 1,

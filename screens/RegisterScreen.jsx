@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { Layout, Input, Button, Text } from "@ui-kitten/components";
-import { createUser } from "../services/users";
+import { Layout, Input, Button, Text, Divider } from "@ui-kitten/components";
+import { createUser, createUserProfile } from "../services/users";
 import PopUpMessage from "../components/PopUpMessage";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -11,6 +11,11 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [message, setMessage] = useState("");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [address, setAddress] = useState("");
 
   return (
     <ScrollView>
@@ -59,6 +64,52 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={(value) => setConfirmPass(value)}
           placeholder="Retype Password"
           secureTextEntry={true}
+          style={{ paddingHorizontal: 16, marginBottom: 28 }}
+        />
+        <Divider />
+        <Text
+          category="h6"
+          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+        >
+          First Name
+        </Text>
+        <Input
+          onChangeText={(value) => setFirstName(value)}
+          placeholder="First Name"
+          style={{ paddingHorizontal: 16 }}
+        />
+        <Text
+          category="h6"
+          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+        >
+          Last Name
+        </Text>
+        <Input
+          onChangeText={(value) => setLastName(value)}
+          placeholder="Last Name"
+          style={{ paddingHorizontal: 16 }}
+        />
+        <Text
+          category="h6"
+          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+        >
+          Contact Number
+        </Text>
+        <Input
+          onChangeText={(value) => setContactNumber(value)}
+          placeholder="+63 *** *** **** "
+          keyboardType="phone-pad"
+          style={{ paddingHorizontal: 16 }}
+        />
+        <Text
+          category="h6"
+          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+        >
+          Address
+        </Text>
+        <Input
+          onChangeText={(value) => setAddress(value)}
+          placeholder="Shipping Address"
           style={{ paddingHorizontal: 16 }}
         />
         <Button
@@ -68,11 +119,23 @@ const RegisterScreen = ({ navigation }) => {
               confirmPass == password &&
               email != "" &&
               username != "" &&
-              password != ""
+              password != "" &&
+              firstName != "" &&
+              lastName != "" &&
+              contactNumber != "" &&
+              address != ""
             ) {
-              createUser(email, password, setMessage, (userId) =>
-                navigation.navigate("Registration Details", { uid: userId })
-              );
+              createUser(email, password, setMessage, (uid) => {
+                createUserProfile(
+                  {
+                    firstName,
+                    lastName,
+                    contactNumber,
+                    address,
+                  },
+                  navigation
+                );
+              });
             } else {
               setMessage("Credentials provided is not valid");
             }

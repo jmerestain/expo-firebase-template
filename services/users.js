@@ -33,12 +33,12 @@ export const createUserProfile = (userDetails, navigation) => {
   db.collection("user-profiles")
     .doc(currentUserUID)
     .set(userDetails)
-    .then(() => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "DashNav" }], // Designated main page
-      });
-    })
+    // .then(() => {
+    //   navigation.reset({
+    //     index: 0,
+    //     routes: [{ name: "DashNav" }], // Designated main page
+    //   });
+    // })
     .catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);
