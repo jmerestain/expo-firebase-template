@@ -279,6 +279,7 @@ function ProductScreen({ route, navigation }) {
               backgroundColor: "rgb(87,11,13)",
             }}
             onPress={() => {
+              navigation.navigate("Chat")
               // getInbox(true, (result) => {console.log(result)})
               // getInbox(false, (result) => {console.log(result)})
               // readChatroom(

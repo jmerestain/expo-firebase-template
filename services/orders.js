@@ -69,7 +69,7 @@ const updateOrder = (orderId, status, callback) => {
 
   db.collection("orders")
     .doc(orderId)
-    .set({ status: status }, { merge: true })
+    .update({ status: status }, { merge: true })
     .then((order) => callback(order))
     .catch((e) => console.log(e));
 };

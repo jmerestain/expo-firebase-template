@@ -109,7 +109,6 @@ const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState([]);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
-  const [show, setShow] = useState(false);
 
   useEffect(() => {
     getOrdersCurrentUserPerVendor(route.params.vendorId, setOrders);
@@ -126,7 +125,6 @@ const DeliverAddress = ({ route, navigation }) => {
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || deliveryDate;
-    setShow(Platform.OS === "ios");
     setDeliveryDate(currentDate);
   };
 
@@ -169,7 +167,7 @@ const DeliverAddress = ({ route, navigation }) => {
                     <Text category="h6" style={{ fontWeight: "bold" }}>
                       Delivery Address
                     </Text>
-                    <Text category="p2">{profile.firstName} {profile.lastName} | 0998 186 7756</Text>
+                    <Text category="p2">{profile.firstName} {profile.lastName} | {profile.contactNumber}</Text>
                     <Text
                       category="label"
                       style={{
@@ -178,8 +176,7 @@ const DeliverAddress = ({ route, navigation }) => {
                         flexWrap: "wrap",
                       }}
                     >
-                      15 Round Robin Drive a daijwfioa jiowjfoa jifaiowf joiawjf
-                      ioawiofj
+                      {profile.address}
                     </Text>
                   </Layout>
                 </Layout>
@@ -246,23 +243,16 @@ const DeliverAddress = ({ route, navigation }) => {
                   <Layout
                     style={{ flexDirection: "row", alignItems: "center" }}
                   >
-                    {show && (
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={deliveryDate}
-                        mode="date"
-                        is24Hour={true}
-                        minimumDate={new Date()}
-                        display="default"
-                        onChange={onDateChange}
-                        style={{ width: 80 }}
-                      />
-                    )}
-                    {!show && (
-                      <Text category="p2" style={{ color: "rgb(189,189,189)" }}>
-                        Select date
-                      </Text>
-                    )}
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={deliveryDate}
+                      mode="date"
+                      is24Hour={true}
+                      minimumDate={new Date()}
+                      display="default"
+                      onChange={onDateChange}
+                      style={{ width: 80 }}
+                    />
                     <Icon
                       name="chevron-right"
                       fill="#8A1214"
