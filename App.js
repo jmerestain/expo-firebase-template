@@ -17,12 +17,12 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import RegisterScreenNext from './screens/RegisterScreenNext';
-import CatalogueNavigator from './screens/CatalogueScreen';
+import CatalogueNavigator from './screens/ProductScreens/CatalogueScreen';
 import VendorNavigator from './screens/VendorScreens';
 import OrdersScreenNavigator from './screens/OrdersScreen';
 import ForumNavigator from './screens/ForumScreens';
 // Firebase
-import { initFirebase } from './services/firebase';
+import { initFirebase } from './services';
 // Lodash
 import _ from 'lodash';
 // Navigator

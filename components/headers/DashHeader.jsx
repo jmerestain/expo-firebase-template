@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Input, Icon, TopNavigation, Layout } from '@ui-kitten/components';
-import { signOutUser } from '../../services/firebase';
+import { signOutUser } from '../../services/auth';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 
@@ -19,12 +19,12 @@ const SignOutButton = ({navigation}) => (
 
 const MessagesButton = ({navigation}) => (
     <TouchableOpacity onPress={() => {
-        navigation.navigate("Orders")
+        navigation.navigate("Inbox")
     }}>
         <Icon
             style={styles.icon}
             fill='white'
-            name='shopping-cart-outline'
+            name='message-circle-outline'
         />
     </TouchableOpacity>
 )
@@ -47,7 +47,7 @@ const DashHeader = () => {
             <TopNavigation
                 style={styles.container}
                 accessoryLeft={SignOutButton}
-                accessoryRight={MessagesButton}
+                accessoryRight={(props) => <MessagesButton {...props} navigation={navigation} />}
                 title={() => <SearchBar setSearch={setSearch} />}
                 alignment='start'
             />
@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '80%',
-        marginHorizontal: 20,
+        marginLeft: "auto",
+        marginRight: "auto",
     }
 })
 

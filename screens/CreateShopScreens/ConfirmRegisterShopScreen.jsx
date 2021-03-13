@@ -22,6 +22,7 @@ function ConfirmRegisterShopScreen ({navigation}) {
                     </Text>
                     <Button appearance='primary' size='large'
                     onPress={() => {
+                        navigation.navigate("Menu")
                     }}>
                         Back to Home
                         

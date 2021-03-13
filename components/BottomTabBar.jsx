@@ -1,8 +1,8 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { Layout, Text, Divider, Icon } from '@ui-kitten/components';
+import React from "react";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { Layout, Text, Divider, Icon } from "@ui-kitten/components";
 
-function BottomTabBar ({ state, descriptors, navigation }) {
+function BottomTabBar({ state, descriptors, navigation }) {
   return (
     <Layout style={styles.tabBar}>
       {state.routes.map((route, index) => {
@@ -19,19 +19,21 @@ function BottomTabBar ({ state, descriptors, navigation }) {
 
         // Getting Icon Name for TabBarIcon
 
-        if (label === 'Dashboard') {
-            iconName = 'home-outline';
-        } else if (label === 'Orders') {
-            iconName = 'shopping-bag-outline';
-        } else if (label === 'Menu') {
-            iconName = 'menu-outline';
+        if (label === "Dashboard") {
+          iconName = "home-outline";
+        } else if (label === "Orders") {
+          iconName = "shopping-bag-outline";
+        } else if (label === "Menu") {
+          iconName = "menu-outline";
+        } else if (label === "Forum") {
+          iconName = "people-outline";
         } else {
-            iconName = 'question-mark-outline';
+          iconName = "question-mark-outline";
         }
 
         const onPress = () => {
           const event = navigation.emit({
-            type: 'tabPress',
+            type: "tabPress",
             target: route.key,
           });
 
@@ -42,31 +44,42 @@ function BottomTabBar ({ state, descriptors, navigation }) {
 
         const onLongPress = () => {
           navigation.emit({
-            type: 'tabLongPress',
+            type: "tabLongPress",
             target: route.key,
           });
         };
 
         return (
-            <TouchableOpacity
-                key={label}
-                accessibilityRole="button"
-                accessibilityStates={isFocused ? ['selected'] : []}
-                accessibilityLabel={options.tabBarAccessibilityLabel}
-                testID={options.tabBarTestID}
-                onPress={onPress}
-                onLongPress={onLongPress}
-                style={{ flex: 1, alignItems: "center", flexDirection: 'column' }}
+          <TouchableOpacity
+            key={label}
+            accessibilityRole="button"
+            accessibilityStates={isFocused ? ["selected"] : []}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{ flex: 1, alignItems: "center", flexDirection: "column" }}
+          >
+            <Layout
+              style={{
+                backgroundColor: isFocused ? "#8A1214" : "#BDBDBD",
+                height: 2,
+                width: "100%",
+                alignSelf: "flex-start",
+              }}
+            />
+            <Icon
+              name={iconName}
+              fill={isFocused ? "#8A1214" : "#BDBDBD"}
+              style={{ height: 30, width: 30 }}
+            />
+            <Text
+              category="c2"
+              style={{ color: isFocused ? "#8A1214" : "#BDBDBD" }}
             >
-                <Layout style={{backgroundColor: isFocused ? '#8A1214' : '#BDBDBD', height: 2, width: '100%', alignSelf: 'flex-start'}} />
-                <Icon name={iconName} fill={isFocused ? '#8A1214' : '#BDBDBD' } style={{height: 30, width: 30}} />
-                <Text
-                    category='c2'
-                    style={{ color: isFocused ? '#8A1214' : '#BDBDBD' }}
-                >
-                    {label}
-                </Text>
-            </TouchableOpacity>
+              {label}
+            </Text>
+          </TouchableOpacity>
         );
       })}
     </Layout>
@@ -74,12 +87,12 @@ function BottomTabBar ({ state, descriptors, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    tabBar: { 
-        flexDirection: 'row',
-        height: 50,
-        justifyContent: "center",
-        alignItems: "center" ,
-    },
-})
+  tabBar: {
+    flexDirection: "row",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default BottomTabBar;
