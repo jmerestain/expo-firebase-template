@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Components
 
 import ManageProductsScreen from './ManageProductsScreen';
-import NewItemScreen from './NewItemScreen';
+import NewItemScreen from '../VendorScreens/NewItemScreen';
 
 const ManageProducts = createStackNavigator();
 const noHeader = {headerShown: false};

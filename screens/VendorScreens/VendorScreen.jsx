@@ -82,7 +82,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
         >
           Settings
         </Button>
-        <Button
+        {/* <Button
           size="large"
           onPress={() => {
             navigation.navigate("Vendor Application");
@@ -120,7 +120,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
           }}
         >
           Product Screen Sample
-        </Button>
+        </Button> */}
       </Layout>
     </Layout>
   );
