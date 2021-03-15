@@ -17,7 +17,11 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getCurrentUserFromUID } from "../services/users";
-import { getOrdersCurrentUserPerVendor } from "../services/orders";
+import {
+  getOrdersCurrentUserPerVendor,
+  updateMultipleOrderStatus,
+} from "../services/orders";
+import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const renderItem = ({ item, index }) => (
@@ -111,7 +115,11 @@ const DeliverAddress = ({ route, navigation }) => {
   const [deliveryDate, setDeliveryDate] = useState(new Date());
 
   useEffect(() => {
-    getOrdersCurrentUserPerVendor(route.params.vendorId, setOrders);
+    getOrdersCurrentUserPerVendor(
+      ORDER_IN_CART,
+      route.params.vendorId,
+      setOrders
+    );
   }, []);
 
   useEffect(() => {
@@ -128,13 +136,24 @@ const DeliverAddress = ({ route, navigation }) => {
     setDeliveryDate(currentDate);
   };
 
+  const placeOrderCallback = (event) => {
+    const navigateCallback = () => navigation.navigate("Menu");
+
+    const orderIds = orders.map((order) => order.id);
+    updateMultipleOrderStatus(
+      orderIds,
+      { status: ORDER_PENDING, deliveryDate },
+      navigateCallback
+    );
+  };
+
   return (
     <ScrollView>
       <Layout>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Settings");
-          }}
+        // onPress={() => {
+        //   navigation.navigate("Settings");
+        // }}
         >
           <Layout style={[styles.deliverAddress]}>
             <Layout style={styles.daInner}>
@@ -167,7 +186,10 @@ const DeliverAddress = ({ route, navigation }) => {
                     <Text category="h6" style={{ fontWeight: "bold" }}>
                       Delivery Address
                     </Text>
-                    <Text category="p2">{profile.firstName} {profile.lastName} | {profile.contactNumber}</Text>
+                    <Text category="p2">
+                      {profile.firstName} {profile.lastName} |{" "}
+                      {profile.contactNumber}
+                    </Text>
                     <Text
                       category="label"
                       style={{
@@ -405,6 +427,7 @@ const DeliverAddress = ({ route, navigation }) => {
             <Button
               size="large"
               style={{ marginHorizontal: 24, marginTop: 24 }}
+              onPress={placeOrderCallback}
             >
               Place Order
             </Button>

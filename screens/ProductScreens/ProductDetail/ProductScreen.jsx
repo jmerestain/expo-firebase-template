@@ -29,6 +29,7 @@ import {
 } from "../../../services/products";
 import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
+import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat, getInbox, readChatroom } from "../../../services/messages";
 
 const data = new Array(8).fill({
@@ -120,12 +121,17 @@ const renderItemRatings = ({ item, index }) => (
 
 function ProductScreen({ route, navigation }) {
   const deviceWidth = Dimensions.get("window").width;
+  const [profile, setProfile] = useState({});
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
   const [moreProducts, setMoreProducts] = useState({});
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
+  }, []);
+
+  useEffect(() => {
+    getCurrentUserFromUID(setProfile);
   }, []);
 
   useEffect(() => {
@@ -136,14 +142,16 @@ function ProductScreen({ route, navigation }) {
   }, [product]);
 
   const addToCartOnPress = () => {
-    const addToCartCallback = () =>
-      navigation.navigate("Orders");
-    
+    const addToCartCallback = () => navigation.navigate("Orders");
+
     const { title, price, id } = product;
+    const userName = profile.firstName + " " + profile.lastName;
 
-    console.log(vendor);
-
-    newOrder({ title, price, vendor: vendor.name, vendorId: vendor.id, id }, addToCartCallback);
+    newOrder(
+      { title, price, vendor: vendor.name, vendorId: vendor.id, id },
+      userName,
+      addToCartCallback
+    );
   };
 
   return (
@@ -279,7 +287,7 @@ function ProductScreen({ route, navigation }) {
               backgroundColor: "rgb(87,11,13)",
             }}
             onPress={() => {
-              navigation.navigate("Chat")
+              navigation.navigate("Chat");
               // getInbox(true, (result) => {console.log(result)})
               // getInbox(false, (result) => {console.log(result)})
               // readChatroom(

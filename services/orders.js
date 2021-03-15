@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
+import { ORDER_IN_CART } from "../screens/orderStatuses";
 
 export const getOrder = (id, callback) => {
   const db = firebase.firestore();
@@ -11,13 +12,14 @@ export const getOrder = (id, callback) => {
     .catch((e) => console.log(e));
 };
 
-export const getOrdersCurrentUser = (callback) => {
+export const getOrdersCurrentUser = (status, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
   db.collection("orders")
     .where("user", "==", currentUserUID)
+    .where("status", "==", status)
     .onSnapshot((querySnapshot) => {
       var orders = [];
       querySnapshot.forEach((doc) => {
@@ -27,12 +29,13 @@ export const getOrdersCurrentUser = (callback) => {
     });
 };
 
-export const getOrdersCurrentUserPerVendor = (vendor, callback) => {
+export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
   db.collection("orders")
+    .where("status", "==", status)
     .where("user", "==", currentUserUID)
     .where("product.vendorId", "==", vendor)
     .onSnapshot((querySnapshot) => {
@@ -44,7 +47,24 @@ export const getOrdersCurrentUserPerVendor = (vendor, callback) => {
     });
 };
 
-export const newOrder = (productDetails, callback) => {
+export const getOrdersUnderCurrentVendor = (status, callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("orders")
+    .where("status", "==", status)
+    .where("product.vendorId", "==", currentUserUID)
+    .onSnapshot((querySnapshot) => {
+      var orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+      callback(orders);
+    });
+};
+
+export const newOrder = (productDetails, userName, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
@@ -53,7 +73,8 @@ export const newOrder = (productDetails, callback) => {
     product: productDetails,
     quantity: 1,
     user: currentUserUID,
-    status: 1,
+    userName,
+    status: ORDER_IN_CART,
   };
 
   db.collection("orders")
@@ -64,13 +85,31 @@ export const newOrder = (productDetails, callback) => {
     .catch((e) => console.log(e));
 };
 
-const updateOrder = (orderId, status, callback) => {
+export const updateOrderStatus = (orderId, status, callback) => {
   const db = firebase.firestore();
 
   db.collection("orders")
     .doc(orderId)
     .update({ status: status }, { merge: true })
     .then((order) => callback(order))
+    .catch((e) => console.log(e));
+};
+
+export const updateMultipleOrderStatus = (orderIds, orderDetails, callback) => {
+  const db = firebase.firestore();
+
+  const batch = db.batch()
+
+  orderIds.forEach(id => {
+    const orderRef = db.collection("orders").doc(id);
+    batch.update(orderRef, orderDetails);
+  })
+
+  batch
+    .commit()
+    .then(() => {
+      callback();
+    })
     .catch((e) => console.log(e));
 };
 
