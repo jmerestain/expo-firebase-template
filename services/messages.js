@@ -32,45 +32,48 @@ export const startChat = (toUID, toName, content, isVendorChat, callback) => {
       .doc(chatroomId)
       .set({ recipientName: toName, recipient: currentUserUID, isVendorChat }),
   ]).then(() => {
-    chatOwnersRef.set({ contacts: [toUID, currentUserUID] });
-    sendMessage(toUID, content, chatroomId, callback);
+    // chatOwnersRef.set({ contacts: [toUID, currentUserUID] });
+    // sendMessage(toUID, content, chatroomId, callback);
   });
 };
 
-export const sendMessage = (toUID, content, chatroomId, callback) => {
+export const sendMessage = (messageDetails, chatroomId, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
 
-  const timestamp = Date.now();
+  const { createdAt, text, user } = messageDetails;
 
-  const personalMessage = {
-    from: currentUserUID,
-    to: toUID,
-    content,
-    timestamp,
-  };
+  const batch = db.batch();
 
-  Promise.all([
-    db
-      .collection("chat-rooms")
-      .doc(chatroomId)
-      .collection("messages")
-      .add(personalMessage)
-      .then((result) => callback({ ...personalMessage, id: result.id })),
-    db
-      .collection("chat-owners")
-      .doc(currentUserUID)
-      .collection("chatrooms")
-      .doc(chatroomId)
-      .update({ content, timestamp }),
-    db
-      .collection("chat-owners")
-      .doc(toUID)
-      .collection("chatrooms")
-      .doc(chatroomId)
-      .update({ content, timestamp }),
-  ]);
+  const chatRoomRef = db
+    .collection("chat-rooms")
+    .doc(chatroomId)
+    .collection("messages")
+    .doc();
+  batch.set(chatRoomRef, messageDetails);
+
+  const chatOwnerCurrentRef = db
+    .collection("chat-owners")
+    .doc(currentUserUID)
+    .collection("chatrooms")
+    .doc(chatroomId);
+  batch.update(chatOwnerCurrentRef, { text, createdAt });
+
+  const chatOwnerOtherRef = db
+    .collection("chat-owners")
+    .doc(user._id)
+    .collection("chatrooms")
+    .doc(chatroomId);
+  batch.update(chatOwnerOtherRef, { text, createdAt });
+
+  batch
+    .commit()
+    .then((results) => {
+      // console.log(results);
+      callback(results);
+    })
+    .catch((e) => console.log(e));
 };
 
 export const readChatroom = (chatroomId, callback) => {
@@ -79,13 +82,20 @@ export const readChatroom = (chatroomId, callback) => {
   db.collection("chat-rooms")
     .doc(chatroomId)
     .collection("messages")
-    .orderBy("timestamp", "desc")
+    .orderBy("createdAt", "desc")
     .limit(20)
     .onSnapshot((querySnapshot) => {
       var messages = [];
       querySnapshot.forEach((doc) => {
-        messages.push({ id: doc.id, ...doc.data() });
+        const data = doc.data();
+        console.log(data.createdAt.toDate());
+        messages.push({
+          ...data,
+          id: doc.id,
+          createdAt: data.createdAt.toDate(),
+        });
       });
+      console.log(messages);
       callback(messages);
     });
 };

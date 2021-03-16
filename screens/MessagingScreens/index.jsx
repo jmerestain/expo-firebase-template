@@ -16,10 +16,14 @@ const MessageNavigator = () => {
           backgroundColor: "rgb(138,18,20)",
         },
       }}
-      initialRouteName="Chat"
+      initialRouteName="My Inbox"
     >
-      <MessageNav.Screen name="Inbox" component={Inbox} options={noHeader} />
-      <MessageNav.Screen name="Chat" component={Chat} options={noHeader} />
+      <MessageNav.Screen name="My Inbox" component={Inbox} options={showHeader} />
+      <MessageNav.Screen
+        name="Chat"
+        component={Chat}
+        options={({ route }) => ({ title: route.params.recipient, ...showHeader })}
+      />
     </MessageNav.Navigator>
   );
 };
