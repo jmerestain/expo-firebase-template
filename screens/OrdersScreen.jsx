@@ -19,6 +19,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
 import _ from "lodash";
+import { ORDER_IN_CART } from "./orderStatuses"
 
 const OStack = createStackNavigator();
 
@@ -28,18 +29,16 @@ const OrdersScreenNavigator = () => (
       headerStyle: { backgroundColor: "rgb(138,18,20)" },
     }}
   >
-    <OStack.Screen name="All Orders" component={OrdersScreen} />
+    <OStack.Screen name="Pending Orders" component={OrdersScreen} />
     <OStack.Screen name="Individual Order" component={OrdersIndividualScreen} />
   </OStack.Navigator>
 );
 
 const renderIndivItem = ({ item }) => (
   <Layout style={styles.innerList}>
-    <Avatar
-      rounded
-      size="giant"
-      source={require("../screens/avatar-icon.png")}
-      style={{ marginHorizontal: 20, alignSelf: "center" }}
+    <Image
+      style={{ resizeMode: "cover", height: 80, width: '20%' }}
+      source={{ uri: item.imageUrl }}
     />
     <Layout style={styles.textList}>
       <Layout
@@ -73,6 +72,7 @@ const renderIndivItem = ({ item }) => (
             justifyContent: "space-between",
           }}
         >
+          <Layout>
           <Text
             category="s2"
             style={{
@@ -83,18 +83,22 @@ const renderIndivItem = ({ item }) => (
           >
             x{item.quantity}
           </Text>
+          </Layout>
+          <Layout style={{alignItems:"flex-end"}}>
           <Text
             category="s2"
             style={{
-              alignContent: "center",
+              alignContent: "flex-end",
               marginVertical: 3,
               color: "rgb(128, 128, 128)",
             }}
           >
             Subtotal: P{item.product.price * item.quantity}
           </Text>
+          </Layout>
         </Layout>
       </Layout>
+      <Divider />
     </Layout>
   </Layout>
 );
@@ -188,7 +192,7 @@ const DeliverAddress = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getOrdersCurrentUser(groupOrdersByVendor);
+    getOrdersCurrentUser(ORDER_IN_CART, groupOrdersByVendor);
   }, []);
 
   return (
@@ -240,10 +244,13 @@ const styles = StyleSheet.create({
   },
   innerList: {
     flexDirection: "row",
+    alignItems: "stretch",
+    justifyContent: "flex-start",
   },
   textList: {
     flexDirection: "column",
     marginBottom: 12,
+    width: '80%'
   },
   inner: {
     paddingVertical: 16,

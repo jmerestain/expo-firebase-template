@@ -101,7 +101,7 @@ const RegisterShopScreen = ({ navigation }) => {
             marginTop: 16,
           }}
         >
-          DTI Certification*
+          DTI Registration
         </Text>
         <ImagePickerComponent
           image={DTIcert}

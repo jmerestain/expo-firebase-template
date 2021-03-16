@@ -79,23 +79,6 @@ const GroupScreen = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           />
-          <Button
-            // onPress={() => {
-            //   // createGroup("Seller's Community", "A community of sellers", {});
-            //   createPost(
-            //     "aeYvOYnIeWvdECrisg1q",
-            //     {
-            //       body: "Hello everyone!",
-            //       postedAt: Date.now(),
-            //       postedBy: "Bea Santos",
-            //     },
-            //     {}
-            //   );
-            // }}
-            style={{ marginVertical: 24 }}
-          >
-            Sample Forum Post
-          </Button>
         </Layout>
       </Layout>
     </ScrollView>

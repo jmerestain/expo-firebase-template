@@ -48,12 +48,11 @@ export const createUserProfile = (userDetails, navigation) => {
 export const getUserProfile = (uid, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
-  const currentUserUID = auth.currentUser.uid;
   db.collection("user-profiles")
-    .doc(currentUserUID)
+    .doc(uid)
     .get()
     .then((userProfile) =>
-      callback({ id: currentUserUID, ...userProfile.data() })
+      callback({ id: uid, ...userProfile.data() })
     )
     .catch((error) => {
       const errorCode = error.code;

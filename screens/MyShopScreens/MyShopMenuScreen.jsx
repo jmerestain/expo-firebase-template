@@ -69,14 +69,13 @@ const MyShopScreen = ({ navigation }) => {
           <Layout style={styles.daInner}>
             <Layout style={styles.buttonContain}>
               <Layout>
-                <Button
-                  appearance="ghost"
-                  size="large"
-                  onPress={() => {
-                    navigation.navigate("Pending Orders");
-                  }}
-                >
-                  <TouchableOpacity style={styles.button}>
+                <Button appearance="ghost" size="large">
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      navigation.navigate("Pending Orders");
+                    }}
+                  >
                     <Icon
                       name="flip-2"
                       fill="#8A1214"
@@ -96,14 +95,13 @@ const MyShopScreen = ({ navigation }) => {
                 </Text>
               </Layout>
               <Layout>
-                <Button
-                  appearance="ghost"
-                  size="large"
-                  onPress={() => {
-                    navigation.navigate("Completed Orders");
-                  }}
-                >
-                  <TouchableOpacity style={styles.button}>
+                <Button appearance="ghost" size="large">
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      navigation.navigate("Completed Orders");
+                    }}
+                  >
                     <Icon
                       name="car-outline"
                       fill="#8A1214"

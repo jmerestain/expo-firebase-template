@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
-import { Rating } from "react-native-elements";
-import { NavigationContainer } from "@react-navigation/native";
 import {
   Layout,
   Text,
@@ -10,16 +8,20 @@ import {
   Divider,
   Input,
   Avatar,
-  Tab,
-  TabBar,
   List,
 } from "@ui-kitten/components";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { readPosts } from "../../services/forums";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
+
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
 
 const renderItemPosts = ({ item, index }) => (
   <Layout style={styles.item2}>
@@ -52,12 +54,10 @@ const renderItemPosts = ({ item, index }) => (
             {item.postedBy}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
-            {item.postedAt}
+            {item.postedAt && dateToString(item.postedAt.toDate())}
           </Text>
         </Layout>
       </Layout>
-      <Layout style={{ marginLeft: "25%" }}></Layout>
-      <Layout></Layout>
     </Layout>
     <Text style={{ marginBottom: 16 }}>{item.body}</Text>
     {/* <Image
@@ -71,26 +71,51 @@ const renderItemPosts = ({ item, index }) => (
 function PostsScreen({ navigation, route }) {
   const [posts, setPosts] = useState([]);
 
+  const groupId = route.params.groupId;
+
   useEffect(() => {
-    readPosts(route.params.groupId, setPosts);
+    readPosts(groupId, setPosts);
   }, []);
 
-  console.log(posts);
-
   return (
-    <ScrollView>
-      <Layout style={styles.container}>
+    <Layout style={styles.container}>
+      <Layout style={styles.field}>
         <Input
           onChangeText={(value) => setSearch(value)}
           placeholder="Search here"
-          style={{ paddingHorizontal: 16, paddingVertical: 12 }}
           accessoryLeft={SearchIcon}
+          style={{
+            marginHorizontal: 20,
+            marginTop: 12,
+            marginBottom: 8,
+          }}
         />
-        <Layout style={styles.inner}>
-          <List data={posts} renderItem={renderItemPosts} />
-        </Layout>
+        <Divider />
+        <List data={posts} renderItem={renderItemPosts} />
       </Layout>
-    </ScrollView>
+      <Layout
+        style={{
+          flex: 1,
+          minWidth: "100%",
+          elevation: 3,
+          borderColor: "rgb(250,250,250)",
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <Divider />
+        <Button
+          size="large"
+          onPress={() => {
+            navigation.navigate("Add New Post", { groupId });
+          }}
+          style={{ marginHorizontal: 20, marginVertical: 16 }}
+        >
+          + Add New Post
+        </Button>
+      </Layout>
+    </Layout>
   );
 }
 
@@ -100,43 +125,61 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
   },
+  avatar: {
+    alignItems: "center",
+    margin: 16,
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 35,
+    marginVertical: 20,
+  },
+  buttonGroup: {
+    alignSelf: "center",
+    marginVertical: 20,
+  },
+  userMessage: {
+    padding: 30,
+    elevation: 2,
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  loading: {
+    alignSelf: "center",
+  },
+  containerTop: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
   containerList: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     justifyContent: "space-between",
+    marginVertical: 8,
   },
   innerList: {
     flexDirection: "row",
   },
-  textList: {
-    marginBottom: 12,
-    width: "60%",
-  },
-  inner: {},
   item2: {
-    paddingBottom: 10,
-    paddingHorizontal: 24,
-    alignItems: "stretch",
-    flexDirection: "column",
+    paddingHorizontal: 25,
   },
-  item: {
-    width: "49%",
-    paddingVertical: 8,
-    paddingHorizontal: 6,
-    marginLeft: 3,
-    alignItems: "center",
+  textList: {
+    flexDirection: "column",
+    marginBottom: 12,
+  },
+  buttonContain: {
+    flex: 1,
+    flexDirection: "row",
+    minHeight: 80,
+    justifyContent: "space-around",
+    marginBottom: 32,
+  },
+  settingsCard: {
     flexDirection: "column",
     justifyContent: "flex-start",
-  },
-  button: {
-    margin: 2,
-    elevation: 5,
-    shadowColor: "rgb(255,255,255)",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    borderColor: "rgb(220,220,220)",
+    marginVertical: 8,
   },
 });
 
