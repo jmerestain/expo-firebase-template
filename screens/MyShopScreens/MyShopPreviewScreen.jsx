@@ -28,7 +28,7 @@ const MyShopPreviewNavigation = () => {
   return (
     <MyShopPreviewTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <MyShopPreviewTab.Screen name="Products" component={ShopProducts} />
-      <MyShopPreviewTab.Screen name="Reviews" component={ShopRatings} />
+      {/* <MyShopPreviewTab.Screen name="Reviews" component={ShopRatings} /> */}
     </MyShopPreviewTab.Navigator>
   );
 };
@@ -147,6 +147,15 @@ function PreviewMyShopScreen({ navigation }) {
           </Layout>
         </Layout>
         <MyShopPreviewNavigation />
+        <Button
+          size="large"
+          onPress={() => {
+            navigation.navigate("Add New Item");
+          }}
+          style={{ marginHorizontal: 20, marginVertical: 16 }}
+        >
+          + Add New Product
+        </Button>
       </Layout>
     </ScrollView>
   );

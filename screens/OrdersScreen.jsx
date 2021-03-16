@@ -19,6 +19,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
 import _ from "lodash";
+import { ORDER_IN_CART } from "./orderStatuses"
 
 const OStack = createStackNavigator();
 
@@ -28,7 +29,7 @@ const OrdersScreenNavigator = () => (
       headerStyle: { backgroundColor: "rgb(138,18,20)" },
     }}
   >
-    <OStack.Screen name="All Orders" component={OrdersScreen} />
+    <OStack.Screen name="Pending Orders" component={OrdersScreen} />
     <OStack.Screen name="Individual Order" component={OrdersIndividualScreen} />
   </OStack.Navigator>
 );
@@ -191,7 +192,7 @@ const DeliverAddress = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getOrdersCurrentUser(groupOrdersByVendor);
+    getOrdersCurrentUser(ORDER_IN_CART, groupOrdersByVendor);
   }, []);
 
   return (

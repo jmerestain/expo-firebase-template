@@ -65,3 +65,9 @@ export const authOnOpen = (navigation) => {
     }
   });
 };
+
+export const getUserID = (callback) => {
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+  callback(currentUserUID);
+}

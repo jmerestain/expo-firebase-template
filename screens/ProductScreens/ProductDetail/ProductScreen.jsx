@@ -29,7 +29,8 @@ import {
 } from "../../../services/products";
 import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
-import { startChat, getInbox, readChatroom } from "../../../services/messages";
+import { getCurrentUserFromUID } from "../../../services/users";
+import { startChat } from "../../../services/messages";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -120,6 +121,7 @@ const renderItemRatings = ({ item, index }) => (
 
 function ProductScreen({ route, navigation }) {
   const deviceWidth = Dimensions.get("window").width;
+  const [profile, setProfile] = useState({});
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
   const [moreProducts, setMoreProducts] = useState({});
@@ -129,21 +131,37 @@ function ProductScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
+    getCurrentUserFromUID(setProfile);
+  }, []);
+
+  useEffect(() => {
     if (product.vendor) {
       getShopDetailsByUID(product.vendor, setVendor);
       getProductsLimitedFromUID(product.vendor, 6, setMoreProducts);
     }
   }, [product]);
 
+  const contactSellerOnPress = () => {
+    const contactSellerCallback = (chatroomId) =>
+      navigation.navigate("Inbox", {
+        params: { chatId: chatroomId, recipient: vendor.name },
+        screen: "Chat",
+      });
+
+    startChat(vendor.id, vendor.name, true, contactSellerCallback);
+  };
+
   const addToCartOnPress = () => {
-    const addToCartCallback = () =>
-      navigation.navigate("Orders");
-    
+    const addToCartCallback = () => navigation.navigate("Orders");
+
     const { title, price, id } = product;
+    const userName = profile.firstName + " " + profile.lastName;
 
-    console.log(vendor);
-
-    newOrder({ title, price, vendor: vendor.name, vendorId: vendor.id, id }, addToCartCallback);
+    newOrder(
+      { title, price, vendor: vendor.name, vendorId: vendor.id, id },
+      userName,
+      addToCartCallback
+    );
   };
 
   return (
@@ -278,18 +296,7 @@ function ProductScreen({ route, navigation }) {
               marginHorizontal: 4,
               backgroundColor: "rgb(87,11,13)",
             }}
-            onPress={() => {
-              navigation.navigate("Chat")
-              // getInbox(true, (result) => {console.log(result)})
-              // getInbox(false, (result) => {console.log(result)})
-              // readChatroom(
-              //   "VKArrRNFLQbAaqrmiuE3nwuSOHZ2+VKArrRNFLQbAaqrmiuE3nwuSOHZ2+personal",
-              //   (result) => {
-              //     console.log(result);
-              //   }
-              // );
-              // startChat(product.vendor, vendor.name, "Hi everyone!", false, (result) => {console.log(result)})
-            }}
+            onPress={contactSellerOnPress}
           >
             Contact Seller
           </Button>

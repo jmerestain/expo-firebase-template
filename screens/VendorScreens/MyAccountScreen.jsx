@@ -35,8 +35,8 @@ function MyAccountScreen({ navigation }) {
   const [profile, setProfile] = useState({});
 
   useEffect(() => {
-    getCurrentUserFromUID(setProfile)
-  }, [])
+    getCurrentUserFromUID(setProfile);
+  }, []);
 
   return (
     <Layout style={styles.container}>
@@ -46,7 +46,11 @@ function MyAccountScreen({ navigation }) {
             rounded
             size="giant"
             shape="round"
-            source={profile.photoURL ? {uri: profile.photoURL } : require("../../screens/avatar-icon.png")}
+            source={
+              profile.photoURL
+                ? { uri: profile.photoURL }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{
               marginHorizontal: 50,
               marginTop: 24,
@@ -66,16 +70,18 @@ function MyAccountScreen({ navigation }) {
           >
             {profile.firstName} {profile.lastName}
           </Text>
-          {profile.description && <Text
-            category="s1"
-            style={{
-              alignSelf: "center",
-              alignContent: "center",
-              marginBottom: 12,
-            }}
-          >
-            {profile.description}
-          </Text>}
+          {profile.description && (
+            <Text
+              category="s1"
+              style={{
+                alignSelf: "center",
+                alignContent: "center",
+                marginBottom: 12,
+              }}
+            >
+              {profile.description}
+            </Text>
+          )}
         </Layout>
       </Layout>
       <AccountTabNavigation />
@@ -116,13 +122,15 @@ const PendingOrdersNav = ({ navigation }) => {
         <Layout style={styles.daInner}>
           <Layout style={styles.buttonContain}>
             <Layout>
-              <Button
-                appearance="ghost"
-                onPress={() => {
-                  navigation.navigate("Order Status");
-                }}
-              >
-                <TouchableOpacity style={styles.button}>
+              <Button appearance="ghost">
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigation.navigate("Order Status", {
+                      initialScreen: "To Process",
+                    });
+                  }}
+                >
                   <Icon
                     name="flip-2"
                     fill="#8A1214"
@@ -142,13 +150,13 @@ const PendingOrdersNav = ({ navigation }) => {
               </Text>
             </Layout>
             <Layout>
-              <Button
-                appearance="ghost"
-                onPress={() => {
-                  navigation.navigate("Order Status");
-                }}
-              >
-                <TouchableOpacity style={styles.button}>
+              <Button appearance="ghost">
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigation.navigate("Order Status", { initialScreen: "To Deliver" });
+                  }}
+                >
                   <Icon
                     name="car-outline"
                     fill="#8A1214"
@@ -168,13 +176,15 @@ const PendingOrdersNav = ({ navigation }) => {
               </Text>
             </Layout>
             <Layout>
-              <Button
-                appearance="ghost"
-                onPress={() => {
-                  navigation.navigate("Order Status");
-                }}
-              >
-                <TouchableOpacity style={styles.button}>
+              <Button appearance="ghost">
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigation.navigate("Order Status", {
+                      initialScreen: "To Receive",
+                    });
+                  }}
+                >
                   <Icon
                     name="archive-outline"
                     fill="#8A1214"
@@ -194,13 +204,15 @@ const PendingOrdersNav = ({ navigation }) => {
               </Text>
             </Layout>
             <Layout>
-              <Button
-                appearance="ghost"
-                onPress={() => {
-                  navigation.navigate("Order Status");
-                }}
-              >
-                <TouchableOpacity style={styles.button}>
+              <Button appearance="ghost">
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigation.navigate("Order Status", {
+                      initialScreen: "To Review",
+                    });
+                  }}
+                >
                   <Icon
                     name="checkmark-square-outline"
                     fill="#8A1214"
