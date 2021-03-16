@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { loginUser } from "../services/auth";
 import PopUpMessage from "../components/PopUpMessage";
+import LoadingModal from "../components/LoadingModal";
 import { Layout, Text, Input, Button } from "@ui-kitten/components";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("test@test.com");
   const [password, setPassword] = useState("jajaja113");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <Layout style={styles.container}>
+      <LoadingModal loading={loading} />
       <Text
         category="h6"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
@@ -37,10 +40,12 @@ const LoginScreen = ({ navigation }) => {
       <Button
         size="large"
         onPress={() => {
+          setLoading(true);
           if (email != "" && password != "") {
-            loginUser(email, password, setMessage, navigation);
+            loginUser(email, password, setMessage, navigation, () => setLoading(false));
           } else {
             setMessage("Credentials provided is not valid");
+            setLoading(false);
           }
         }}
         style={{ margin: 16 }}

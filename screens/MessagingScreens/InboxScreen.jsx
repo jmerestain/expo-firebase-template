@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -19,60 +19,70 @@ import { getInbox } from "../../services/messages";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
-const renderItem = ({ item, index }) => (
+const renderItem = ({ item, navigation }) => (
   <Layout style={styles.container}>
-    <Layout style={styles.inner}>
-      <Layout style={styles.containerList}>
-        <Layout style={styles.innerList}>
-          <Avatar
-            rounded
-            size="giant"
-            source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
-          />
-          <Layout style={styles.textList}>
-            <Text
-              category="h6"
-              style={{ alignContent: "center", marginVertical: 6 }}
-            >
-              {item.recipientName}
-            </Text>
-            <Layout
-              style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("Chat", {
+          chatId: item.id,
+          recipientId: item.recipient,
+          recipient: item.recipientName,
+        })
+      }
+    >
+      <Layout style={styles.inner}>
+        <Layout style={styles.containerList}>
+          <Layout style={styles.innerList}>
+            <Avatar
+              rounded
+              size="giant"
+              source={require("../../screens/avatar-icon.png")}
+              style={{ marginHorizontal: 20, alignSelf: "center" }}
+            />
+            <Layout style={styles.textList}>
               <Text
-                style={{
-                  alignContent: "center",
-                  marginVertical: 1,
-                  color: "rgb(128, 128, 128)",
-                }}
+                category="h6"
+                style={{ alignContent: "center", marginVertical: 6 }}
               >
-                {item.content}
+                {item.recipientName}
               </Text>
-              <Text
-                style={{
-                  alignContent: "center",
-                  marginVertical: 1,
-                  color: "rgb(128, 128, 128)",
-                }}
+              <Layout
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
               >
-                {item.timestamp}
-              </Text>
+                <Text
+                  style={{
+                    alignContent: "center",
+                    marginVertical: 1,
+                    color: "rgb(128, 128, 128)",
+                  }}
+                >
+                  {item.text}
+                </Text>
+                {/* <Text
+                  style={{
+                    alignContent: "center",
+                    marginVertical: 1,
+                    color: "rgb(128, 128, 128)",
+                  }}
+                >
+                  {item.createdAt.toString()}
+                </Text> */}
+              </Layout>
             </Layout>
           </Layout>
+          <Icon
+            name="more-horizontal"
+            fill="rgb(160,160,160)"
+            style={{
+              height: 26,
+              width: 26,
+              marginHorizontal: 16,
+              marginVertical: 4,
+            }}
+          />
         </Layout>
-        <Icon
-          name="more-horizontal"
-          fill="rgb(160,160,160)"
-          style={{
-            height: 26,
-            width: 26,
-            marginHorizontal: 16,
-            marginVertical: 4,
-          }}
-        />
       </Layout>
-    </Layout>
+    </TouchableOpacity>
     <Divider />
   </Layout>
 );
@@ -82,7 +92,9 @@ function InboxScreen({ navigation }) {
 
   useEffect(() => {
     getInbox(false, setInbox);
-  }, [])
+  }, []);
+
+  console.log(inbox);
 
   return (
     <Layout style={styles.container}>
@@ -92,7 +104,10 @@ function InboxScreen({ navigation }) {
         style={{ paddingHorizontal: 16, paddingVertical: 12 }}
         accessoryLeft={SearchIcon}
       />
-      <List data={inbox} renderItem={renderItem} />
+      <List
+        data={inbox}
+        renderItem={(props) => renderItem({ ...props, navigation })}
+      />
     </Layout>
   );
 }

@@ -17,8 +17,10 @@ import DTIRegistrationInfoScreen from "../CreateShopScreens/DTIRegistrationInfoS
 import DTIRegistrationNext from "../CreateShopScreens/DTIRegistrationNextScreen";
 import MyShopPreview from "../MyShopScreens/MyShopPreviewScreen";
 import ShopSettings from "../MyShopScreens/ShopSettingsScreen";
+//import SettingsDeliveryAddress from './SettingsDeliveryAddress';
 
 import { vendorApplyStatus } from "../../services/vendor";
+import NewItemScreen from "./NewItemScreen";
 
 const Vendor = createStackNavigator();
 const noHeader = { headerShown: false };
@@ -105,6 +107,11 @@ const VendorNavigator = () => {
       <Vendor.Screen
         name="Shop Settings"
         component={ShopSettings}
+        options={showHeader}
+      />
+      <Vendor.Screen
+        name="Add New Item"
+        component={NewItemScreen}
         options={showHeader}
       />
     </Vendor.Navigator>

@@ -60,6 +60,7 @@ const DashNavigator = () => (
     tabBar={props => <BottomTabBar {...props} /> }
   >
     <Tab.Screen name="Dashboard" component={CatalogueNavigator} options={{
+      headerShown: false,
     }} />
     <Tab.Screen name="Forum" component={ForumNavigator} options={{
     }} />

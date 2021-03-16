@@ -46,7 +46,7 @@ export const getProductsFromCategory = (categoryId, callback) => {
     .onSnapshot((querySnapshot) => {
       var products = [];
       querySnapshot.forEach((doc) => {
-        products.push({id: doc.id, ...doc.data()});
+        products.push({ id: doc.id, ...doc.data() });
       });
       callback(products);
     });
@@ -55,7 +55,7 @@ export const getProductsFromCategory = (categoryId, callback) => {
 // Get products by vendor ID
 export const getProductsFromUID = (uid, callback) => {
   const db = firebase.firestore();
-  
+
   db.collection("products")
     .where("vendor", "==", uid)
     .onSnapshot((querySnapshot) => {
@@ -70,7 +70,7 @@ export const getProductsFromUID = (uid, callback) => {
 // Get products by vendor ID (limited)
 export const getProductsLimitedFromUID = (uid, limit, callback) => {
   const db = firebase.firestore();
-  
+
   db.collection("products")
     .where("vendor", "==", uid)
     .limit(limit)
@@ -88,7 +88,7 @@ export const getProductsCurrentVendor = (callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const uid = auth.currentUser.uid;
-  
+
   db.collection("products")
     .where("vendor", "==", uid)
     .onSnapshot((querySnapshot) => {
@@ -103,11 +103,11 @@ export const getProductsCurrentVendor = (callback) => {
 // Get product by its ID
 export const getProductByID = (id, callback) => {
   const db = firebase.firestore();
-  
+
   db.collection("products")
     .doc(id)
     .get()
-    .then((product) => callback({id: product.id, ...product.data()}))
+    .then((product) => callback({ id: product.id, ...product.data() }))
     .catch((e) => console.log(e));
 };
 
@@ -152,4 +152,62 @@ export const postMyProduct = (product, image, setMessage, setVisible) => {
     .catch((e) => {
       setMessage(`Error: ${e}`);
     });
+};
+
+export const updateProduct = (
+  productId,
+  productDetails,
+  image,
+  setMessage,
+  setVisible
+) => {
+  const db = firebase.firestore();
+  const { title } = productDetails;
+
+  if (image) {
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const imageId = Date.now();
+    const productImageRef = storageRef.child(`product-images/${imageId}.jpg`);
+    let imageUrl;
+
+    productImageRef
+      .put(image)
+      .then(() => {
+        productImageRef
+          .getDownloadURL()
+          .then((url) => {
+            imageUrl = url;
+          })
+          .then(() => {
+            const productData = {
+              ...productDetails,
+              imageId,
+              imageUrl,
+            };
+            db.collection("products").doc(productId).update(productData);
+          })
+          .then(() => {
+            setMessage(`${title} successfully updated`);
+            setVisible(true);
+          })
+          .catch((e) => {
+            setMessage(`Error: ${e}`);
+          });
+      })
+      .catch((e) => {
+        setMessage(`Error: ${e}`);
+      });
+  } else {
+    db.collection("products")
+      .doc(productId)
+      .update(productDetails)
+      .then(() => {
+        setMessage(`${title} successfully updated`);
+        setVisible(true);
+      })
+      .catch((e) => {
+        setMessage(`Error: ${e}`);
+      });
+  }
 };

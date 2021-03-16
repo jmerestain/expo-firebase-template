@@ -13,14 +13,19 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Image, ScrollView } from "react-native";
 import { checkAuthenticated } from "../../services/auth";
-import { postMyProduct, getCategories } from "../../services/products";
+import {
+  postMyProduct,
+  getCategories,
+  getProductByID,
+  updateProduct,
+} from "../../services/products";
 
-const NewItemScreen = ({ navigation }) => {
+const NewItemScreen = ({ navigation, route }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-//   Selected categories of the product
+  //   Selected categories of the product
   const [category, setCategory] = useState([]);
   const [weight, setWeight] = useState("");
 
@@ -33,11 +38,40 @@ const NewItemScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
 
-//   List of ALL categories
+  //   List of ALL categories
   const [categories, setCategories] = useState([]);
+
+  const { isUpdating, productId } = route.params;
 
   useEffect(() => {
     checkAuthenticated(setUser, navigation);
+  }, []);
+
+  useEffect(() => {
+    if (isUpdating) {
+      const updateDetails = (product) => {
+        const {
+          imageUrl,
+          title,
+          description,
+          category,
+          price,
+          weight,
+          stock,
+        } = product;
+        setImage(imageUrl);
+        setTitle(title);
+        setDescription(description);
+        setCategory(category);
+        setPrice(price);
+        setWeight(weight);
+        setStock(stock);
+
+        setDisabled(false);
+      };
+
+      getProductByID(productId, updateDetails);
+    }
   }, []);
 
   useEffect(() => {
@@ -69,7 +103,7 @@ const NewItemScreen = ({ navigation }) => {
       image != null &&
       stock != "" &&
       category != [] &&
-      blob != null &&
+      // blob != null &&
       weight != ""
     ) {
       setDisabled(false);
@@ -109,7 +143,11 @@ const NewItemScreen = ({ navigation }) => {
         </Layout>
         <Layout style={styles.field}>
           <Text category="label">Categories</Text>
-          <CategoryComponent category={category} setCategory={setCategory} categories={categories} />
+          <CategoryComponent
+            category={category}
+            setCategory={setCategory}
+            categories={categories}
+          />
         </Layout>
         <Layout styles={styles.field}>
           <Text category="label">Price</Text>
@@ -153,11 +191,21 @@ const NewItemScreen = ({ navigation }) => {
                 weight,
                 vendor: user.uid,
               };
-              postMyProduct(productData, blob, setMessage, setVisible);
+              if (isUpdating) {
+                updateProduct(
+                  productId,
+                  productData,
+                  blob,
+                  setMessage,
+                  setVisible
+                );
+              } else {
+                postMyProduct(productData, blob, setMessage, setVisible);
+              }
               clearFields();
             }}
           >
-            Add New Product
+            {isUpdating ? "Update" : "Add New"} Product
           </Button>
         </Layout>
         <MessageComponent
@@ -189,7 +237,7 @@ const CategoryComponent = ({ category, setCategory, categories }) => {
   }, [selectedIndex]);
 
   return (
-    <Select 
+    <Select
       style={styles.select}
       size="medium"
       placeholder="Add Categories"

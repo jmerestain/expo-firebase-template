@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import GroupScreen from './GroupScreen';
 import PostsScreen from './PostsScreen';
+import AddNewPostScreen from './AddNewPostScreen';
 
 const Forum = createStackNavigator();
 const noHeader = {headerShown: false};
@@ -19,6 +20,8 @@ const ForumScreens = () => {
         <Forum.Screen name="Forums" component={GroupScreen} 
         options={showHeader} />
         <Forum.Screen name="Group" component={PostsScreen} 
+        options={showHeader}  />
+        <Forum.Screen name="Add New Post" component={AddNewPostScreen} 
         options={showHeader}  />
 
     </Forum.Navigator>
