@@ -15,7 +15,7 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getOrdersCurrentUser } from "../../services/orders";
+import { getOrdersCurrentUser, updateOrderStatus } from "../../services/orders";
 import {
   ORDER_TO_PAY,
   ORDER_TO_SHIP,
@@ -77,12 +77,18 @@ const renderItem = ({ item, index }) => (
             </Text>
           </Layout>
         </Layout>
-        <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
-                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
-                    <Button size='small' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
-                        Item Processed
-                    </Button>
-                </Layout>
+        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
+          <Icon
+            name="more-horizontal"
+            fill="rgb(160,160,160)"
+            style={{
+              height: 26,
+              width: 26,
+              marginHorizontal: 16,
+              marginVertical: 4,
+            }}
+          />
+        </Layout>
       </Layout>
     </Layout>
     <Divider />
@@ -160,16 +166,6 @@ const renderItemDeliver = ({ item, index }) => (
               marginVertical: 4,
             }}
           />
-          <Button
-            size="small"
-            style={{
-              alignSelf: "flex-end",
-              marginVertical: 8,
-              marginRight: 16,
-            }}
-          >
-            Item Delivered
-          </Button>
         </Layout>
       </Layout>
     </Layout>
@@ -249,6 +245,9 @@ const renderItemReceived = ({ item, index }) => (
               marginVertical: 8,
               marginRight: 16,
             }}
+            onPress={() => {
+              updateOrderStatus(item.id, ORDER_COMPLETED, () => {});
+            }}
           >
             Item Received
           </Button>
@@ -324,7 +323,7 @@ const renderItemRate = ({ item, index }) => (
               marginVertical: 4,
             }}
           />
-          <Button
+          {/* <Button
             size="small"
             style={{
               alignSelf: "flex-end",
@@ -333,7 +332,7 @@ const renderItemRate = ({ item, index }) => (
             }}
           >
             Rate Order
-          </Button>
+          </Button> */}
         </Layout>
       </Layout>
     </Layout>

@@ -15,11 +15,15 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getOrdersUnderCurrentVendor } from "../../services/orders";
 import {
+  getOrdersUnderCurrentVendor,
+  updateMultipleOrderStatus,
+  updateOrderStatus,
+} from "../../services/orders";
+import {
+  ORDER_PENDING,
   ORDER_TO_SHIP,
   ORDER_TO_RECEIVE,
-  ORDER_PENDING,
 } from "../orderStatuses";
 import _ from "lodash";
 
@@ -65,16 +69,36 @@ const renderItem = ({ item, index }) => (
             </Text>
           </Layout>
         </Layout>
-        <Icon
-          name="more-horizontal"
-          fill="rgb(160,160,160)"
-          style={{
-            height: 26,
-            width: 26,
-            marginHorizontal: 16,
-            marginVertical: 4,
-          }}
-        />
+        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
+          <Icon
+            name="more-horizontal"
+            fill="rgb(160,160,160)"
+            style={{
+              height: 26,
+              width: 26,
+              marginHorizontal: 16,
+              marginVertical: 4,
+            }}
+          />
+          <Button
+            size="small"
+            style={{
+              alignSelf: "flex-end",
+              marginVertical: 8,
+              marginRight: 16,
+            }}
+            onPress={() => {
+              const orderIds = item.orders.map((order) => order.id);
+              updateMultipleOrderStatus(
+                orderIds,
+                { status: ORDER_TO_SHIP },
+                () => {}
+              );
+            }}
+          >
+            Mark as Paid
+          </Button>
+        </Layout>
       </Layout>
     </Layout>
     <Divider />
@@ -159,16 +183,35 @@ const renderItem2 = ({ item, index }) => (
             </Layout>
           </Layout>
         </Layout>
-        <Icon
-          name="more-horizontal"
-          fill="rgb(160,160,160)"
-          style={{
-            height: 26,
-            width: 26,
-            marginHorizontal: 16,
-            marginVertical: 4,
-          }}
-        />
+        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
+          <Icon
+            name="more-horizontal"
+            fill="rgb(160,160,160)"
+            style={{
+              height: 26,
+              width: 26,
+              marginHorizontal: 16,
+              marginVertical: 4,
+            }}
+          />
+          <Button
+            size="small"
+            style={{
+              alignSelf: "flex-end",
+              marginVertical: 8,
+              marginRight: 16,
+            }}
+            onPress={() => {
+              updateOrderStatus(
+                item.id,
+                ORDER_TO_RECEIVE,
+                () => {}
+              );
+            }}
+          >
+            Mark as Delivered
+          </Button>
+        </Layout>
       </Layout>
     </Layout>
     <Divider />
@@ -253,16 +296,28 @@ const renderItem3 = ({ item, index }) => (
             </Layout>
           </Layout>
         </Layout>
-        <Icon
-          name="more-horizontal"
-          fill="rgb(160,160,160)"
-          style={{
-            height: 26,
-            width: 26,
-            marginHorizontal: 16,
-            marginVertical: 4,
-          }}
-        />
+        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
+          <Icon
+            name="more-horizontal"
+            fill="rgb(160,160,160)"
+            style={{
+              height: 26,
+              width: 26,
+              marginHorizontal: 16,
+              marginVertical: 4,
+            }}
+          />
+          <Button
+            size="small"
+            style={{
+              alignSelf: "flex-end",
+              marginVertical: 8,
+              marginRight: 16,
+            }}
+          >
+            Mark as Completed
+          </Button>
+        </Layout>
       </Layout>
     </Layout>
     <Divider />
