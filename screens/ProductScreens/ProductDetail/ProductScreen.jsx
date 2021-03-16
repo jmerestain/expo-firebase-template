@@ -236,7 +236,7 @@ function ProductScreen({ route, navigation }) {
               More from {vendor.name}
             </Text>
             <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
-              View Shop >
+              View Shop &gt;
             </Button>
           </Layout>
 
@@ -254,7 +254,7 @@ function ProductScreen({ route, navigation }) {
               Product Reviews
             </Text>
             <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
-              See All >
+              See All &gt;
             </Button>
           </Layout>
           <List data={data} renderItem={renderItemRatings} />
