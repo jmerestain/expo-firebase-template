@@ -17,10 +17,12 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getCurrentUserFromUID } from "../services/users";
+import { getShopDetailsByUID } from "../services/vendor";
 import {
   getOrdersCurrentUserPerVendor,
   updateMultipleOrderStatus,
 } from "../services/orders";
+import { startChat } from "../services/messages";
 import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -112,19 +114,24 @@ function OrdersIndividualScreen({ route, navigation }) {
 const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState([]);
+  const [vendor, setVendor] = useState({});
   const [deliveryDate, setDeliveryDate] = useState(new Date());
+  const vendorId = route.params.vendorId;
 
   useEffect(() => {
-    getOrdersCurrentUserPerVendor(
-      ORDER_IN_CART,
-      route.params.vendorId,
-      setOrders
-    );
+    getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
   }, []);
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
   }, []);
+
+  useEffect(() => {
+    getShopDetailsByUID(vendorId, setVendor);
+  }, []);
+
+  const vendorName = vendor.name;
+  const userName = profile.firstName + " " + profile.lastName;
 
   const totalPrice = orders.reduce(
     (acc, curr) => acc + curr.product.price * curr.quantity,
@@ -137,13 +144,21 @@ const DeliverAddress = ({ route, navigation }) => {
   };
 
   const placeOrderCallback = (event) => {
-    const navigateCallback = () => navigation.navigate("Menu");
+    const navigateCallback = (chatroomId) =>
+      navigation.navigate("Inbox", {
+        params: {
+          chatId: chatroomId,
+          recipient: vendor.name,
+          recipientId: vendor.id,
+        },
+        screen: "Chat",
+      });
 
     const orderIds = orders.map((order) => order.id);
     updateMultipleOrderStatus(
       orderIds,
       { status: ORDER_PENDING, deliveryDate },
-      navigateCallback
+      startChat(vendorId, vendorName, userName, true, navigateCallback)
     );
   };
 
@@ -285,7 +300,7 @@ const DeliverAddress = ({ route, navigation }) => {
               </Layout>
               <Divider />
 
-              <Layout
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -302,7 +317,7 @@ const DeliverAddress = ({ route, navigation }) => {
                   </Text>
                 </Layout>
               </Layout>
-              <Divider />
+              <Divider /> */}
 
               {/* <Layout
                 style={{

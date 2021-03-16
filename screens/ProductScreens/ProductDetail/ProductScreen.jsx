@@ -125,6 +125,7 @@ function ProductScreen({ route, navigation }) {
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
   const [moreProducts, setMoreProducts] = useState({});
+  const userName = profile.firstName + " " + profile.lastName;
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -144,18 +145,21 @@ function ProductScreen({ route, navigation }) {
   const contactSellerOnPress = () => {
     const contactSellerCallback = (chatroomId) =>
       navigation.navigate("Inbox", {
-        params: { chatId: chatroomId, recipient: vendor.name },
+        params: {
+          chatId: chatroomId,
+          recipient: vendor.name,
+          recipientId: vendor.id,
+        },
         screen: "Chat",
       });
 
-    startChat(vendor.id, vendor.name, true, contactSellerCallback);
+    startChat(vendor.id, vendor.name, userName, true, contactSellerCallback);
   };
 
   const addToCartOnPress = () => {
     const addToCartCallback = () => navigation.navigate("Orders");
 
     const { title, price, id } = product;
-    const userName = profile.firstName + " " + profile.lastName;
 
     newOrder(
       { title, price, vendor: vendor.name, vendorId: vendor.id, id },

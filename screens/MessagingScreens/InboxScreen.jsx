@@ -25,6 +25,7 @@ const renderItem = ({ item, navigation }) => (
       onPress={() =>
         navigation.navigate("Chat", {
           chatId: item.id,
+          recipientId: item.recipient,
           recipient: item.recipientName,
         })
       }

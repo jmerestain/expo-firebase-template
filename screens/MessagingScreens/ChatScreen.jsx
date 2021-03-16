@@ -80,7 +80,7 @@ const renderItem = ({ item, index }) => (
 function ChatScreen({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState([]);
-  const chatId = route.params.chatId;
+  const { chatId, recipientId } = route.params;
 
   useEffect(() => {
     readChatroom(chatId, setMessages);
@@ -92,7 +92,7 @@ function ChatScreen({ navigation, route }) {
 
   const onSend = (messages) => {
     messages.forEach((message) => {
-      sendMessage(message, chatId, () => {});
+      sendMessage(recipientId, message, chatId, () => {});
     });
   };
 

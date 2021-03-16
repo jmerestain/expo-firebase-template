@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const startChat = (toUID, toName, isVendorChat, callback) => {
+export const startChat = (toUID, toName, fromName, isVendorChat, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
@@ -35,8 +35,8 @@ export const startChat = (toUID, toName, isVendorChat, callback) => {
     .collection("chatrooms")
     .doc(chatroomId);
   batch.set(otherOwnerRef, {
-    recipientName: toName,
-    recipient: toUID,
+    recipientName: fromName,
+    recipient: currentUserUID,
     isVendorChat: false,
   });
 
@@ -53,7 +53,7 @@ export const startChat = (toUID, toName, isVendorChat, callback) => {
     .catch((e) => console.log(e));
 };
 
-export const sendMessage = (messageDetails, chatroomId, callback) => {
+export const sendMessage = (recipientId, messageDetails, chatroomId, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
@@ -78,7 +78,7 @@ export const sendMessage = (messageDetails, chatroomId, callback) => {
 
   const chatOwnerOtherRef = db
     .collection("chat-owners")
-    .doc(user._id)
+    .doc(recipientId)
     .collection("chatrooms")
     .doc(chatroomId);
   batch.update(chatOwnerOtherRef, { text, createdAt });

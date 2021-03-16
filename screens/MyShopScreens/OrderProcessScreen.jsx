@@ -22,6 +22,7 @@ import {
 } from "../../services/orders";
 import {
   ORDER_PENDING,
+  ORDER_TO_PAY,
   ORDER_TO_SHIP,
   ORDER_TO_RECEIVE,
 } from "../orderStatuses";
@@ -39,7 +40,7 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const renderItem = ({ item, index }) => (
+const renderItem = ({ item, index, isPending }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -91,12 +92,12 @@ const renderItem = ({ item, index }) => (
               const orderIds = item.orders.map((order) => order.id);
               updateMultipleOrderStatus(
                 orderIds,
-                { status: ORDER_TO_SHIP },
+                { status: isPending ? ORDER_TO_PAY : ORDER_TO_SHIP },
                 () => {}
               );
             }}
           >
-            Mark as Paid
+            {isPending ? "Confirm Order" : "Mark as Paid"}
           </Button>
         </Layout>
       </Layout>
@@ -202,11 +203,7 @@ const renderItem2 = ({ item, index }) => (
               marginRight: 16,
             }}
             onPress={() => {
-              updateOrderStatus(
-                item.id,
-                ORDER_TO_RECEIVE,
-                () => {}
-              );
+              updateOrderStatus(item.id, ORDER_TO_RECEIVE, () => {});
             }}
           >
             Mark as Delivered
@@ -325,22 +322,28 @@ const renderItem3 = ({ item, index }) => (
 );
 
 function OrderStatusScreen({ navigation }) {
+  const [pendingOrders, setPendingOrders] = useState([]);
   const [toPayOrders, setToPayOrders] = useState([]);
   const [toDeliverOrders, setToDeliverOrders] = useState([]);
   const [toReceiveOrders, setToReceiveOrders] = useState([]);
 
-  const groupOrdersByUser = (orders) => {
+  const groupOrdersByUser = (orders, callback) => {
     let groupedOrders = _.groupBy(orders, (order) => order.user);
     groupedOrders = Object.entries(groupedOrders).map(([key, val]) => ({
       orders: val,
       user: key,
       userName: val[0].userName,
     }));
-    setToPayOrders(groupedOrders);
+    callback(groupedOrders);
   };
 
   useEffect(() => {
-    getOrdersUnderCurrentVendor(ORDER_PENDING, groupOrdersByUser);
+    getOrdersUnderCurrentVendor(ORDER_PENDING, (orders) =>
+      groupOrdersByUser(orders, setPendingOrders)
+    );
+    getOrdersUnderCurrentVendor(ORDER_TO_PAY, (orders) =>
+      groupOrdersByUser(orders, setToPayOrders)
+    );
     getOrdersUnderCurrentVendor(ORDER_TO_SHIP, setToDeliverOrders);
     getOrdersUnderCurrentVendor(ORDER_TO_RECEIVE, setToReceiveOrders);
   }, []);
@@ -355,6 +358,7 @@ function OrderStatusScreen({ navigation }) {
       />
       <NavigationContainer independent="true">
         <MyShopStatusTabNavigation
+          pendingOrders={pendingOrders}
           toPayOrders={toPayOrders}
           toDeliverOrders={toDeliverOrders}
           toReceiveOrders={toReceiveOrders}
@@ -365,6 +369,7 @@ function OrderStatusScreen({ navigation }) {
 }
 
 const MyShopStatusTabNavigation = ({
+  pendingOrders,
   toPayOrders,
   toDeliverOrders,
   toReceiveOrders,
@@ -372,6 +377,9 @@ const MyShopStatusTabNavigation = ({
   return (
     <MyShopStatusTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <MyShopStatusTab.Screen name="Pending">
+        {(props) => <ToProcessNav {...props} data={pendingOrders} isPending />}
+      </MyShopStatusTab.Screen>
+      <MyShopStatusTab.Screen name="To Pay">
         {(props) => <ToProcessNav {...props} data={toPayOrders} />}
       </MyShopStatusTab.Screen>
       <MyShopStatusTab.Screen name="To Deliver">
@@ -384,12 +392,15 @@ const MyShopStatusTabNavigation = ({
   );
 };
 
-const ToProcessNav = ({ data }) => {
+const ToProcessNav = ({ data, isPending }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItem} />
+          <List
+            data={data}
+            renderItem={(props) => renderItem({ ...props, isPending })}
+          />
         </Layout>
       </Layout>
     </Layout>
@@ -426,6 +437,7 @@ const TopTabBar = ({ navigation, state }) => (
     onSelect={(index) => navigation.navigate(state.routeNames[index])}
   >
     <Tab title="Pending" />
+    <Tab title="To Pay" />
     <Tab title="To Deliver" />
     <Tab title="Shipping" />
   </TabBar>
