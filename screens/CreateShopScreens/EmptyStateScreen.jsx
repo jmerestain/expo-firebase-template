@@ -24,7 +24,7 @@ function EmptyStateScreen ({navigation}) {
                     onPress={() => {
                         navigation.navigate('Register Shop');
                     }}>
-                        Send DTI Certification
+                        Send DTI Registration
                     </Button>
                     <Button appearance='ghost' size='medium'
                     onPress={() => {

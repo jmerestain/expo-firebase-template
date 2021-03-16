@@ -82,7 +82,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
         >
           Settings
         </Button>
-        <Button
+        {/*<Button
           size="large"
           onPress={() => {
             navigation.navigate("Vendor Application");
@@ -90,8 +90,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
           style={{ marginHorizontal: 32, marginVertical: 8 }}
         >
           Vendor App
-        </Button>
-
+        </Button>*/}
         <Button
           size="large"
           onPress={() => {
@@ -107,7 +106,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
           Manage Products
         </Button>
 
-        <Button
+        {/*<Button
           size="large"
           onPress={() => {
             navigation.navigate("Product");
@@ -120,7 +119,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
           }}
         >
           Product Screen Sample
-        </Button>
+        </Button>*/}
       </Layout>
     </Layout>
   );

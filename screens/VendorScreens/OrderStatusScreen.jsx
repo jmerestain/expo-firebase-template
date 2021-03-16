@@ -46,7 +46,12 @@ const data = new Array(8).fill({
                     </Text>
                 </Layout>
                 </Layout>
-                <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
+                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                    <Button size='small' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
+                        Item Processed
+                    </Button>
+                </Layout>
             </Layout>
 
          </Layout>
@@ -83,7 +88,12 @@ const renderItemDeliver = ({ item, index }) => (
                     </Text>
                 </Layout>
                 </Layout>
-                <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
+                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
+                    <Button size='small' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
+                        Item Delivered
+                    </Button>
+                </Layout>
             </Layout>
 
          </Layout>

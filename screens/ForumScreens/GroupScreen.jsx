@@ -79,7 +79,7 @@ const GroupScreen = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           />
-          <Button
+          {/*<Button
             // onPress={() => {
             //   // createGroup("Seller's Community", "A community of sellers", {});
             //   createPost(
@@ -95,7 +95,7 @@ const GroupScreen = ({ navigation }) => {
             style={{ marginVertical: 24 }}
           >
             Sample Forum Post
-          </Button>
+          </Button>*/}
         </Layout>
       </Layout>
     </ScrollView>

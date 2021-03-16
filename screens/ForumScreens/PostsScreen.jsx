@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
-import { Rating } from "react-native-elements";
-import { NavigationContainer } from "@react-navigation/native";
 import {
   Layout,
   Text,
@@ -10,12 +8,8 @@ import {
   Divider,
   Input,
   Avatar,
-  Tab,
-  TabBar,
   List,
 } from "@ui-kitten/components";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { readPosts } from "../../services/forums";
 
@@ -27,7 +21,7 @@ const renderItemPosts = ({ item, index }) => (
       style={{
         flexDirection: "row",
         alignSelf: "stretch",
-        justifyContent: "space-between",
+        justifyContent: "space-between"
       }}
     >
       <Layout
@@ -56,8 +50,6 @@ const renderItemPosts = ({ item, index }) => (
           </Text>
         </Layout>
       </Layout>
-      <Layout style={{ marginLeft: "25%" }}></Layout>
-      <Layout></Layout>
     </Layout>
     <Text style={{ marginBottom: 16 }}>{item.body}</Text>
     {/* <Image
@@ -78,66 +70,95 @@ function PostsScreen({ navigation, route }) {
   console.log(posts);
 
   return (
-    <ScrollView>
-      <Layout style={styles.container}>
+    <Layout style={styles.container}>
+        <Layout style={styles.field}>
         <Input
-          onChangeText={(value) => setSearch(value)}
-          placeholder="Search here"
-          style={{ paddingHorizontal: 16, paddingVertical: 12 }}
-          accessoryLeft={SearchIcon}
+        onChangeText={value => setSearch(value)}
+        placeholder='Search here'
+        accessoryLeft={SearchIcon}
+        style={{
+          marginHorizontal: 20, marginTop: 12, marginBottom:8
+        }}
         />
-        <Layout style={styles.inner}>
-          <List data={posts} renderItem={renderItemPosts} />
+        <Divider/>
+        <List data={posts} renderItem={renderItemPosts} />
         </Layout>
-      </Layout>
-    </ScrollView>
-  );
+        <Layout style={{flex: 1, minWidth:'100%', elevation:3, borderColor: 'rgb(250,250,250)', position: 'absolute', left:0, bottom:0}}>
+        <Divider/>
+        <Button size='large'
+            onPress={() => {
+                navigation.navigate('Add New Item');
+            }}
+            style={{ marginHorizontal: 20, marginVertical: 16}}>
+                + Add New Post
+        </Button>
+        </Layout>
+    </Layout>
+)
 }
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
-  containerList: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-  },
-  innerList: {
-    flexDirection: "row",
-  },
-  textList: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+},
+avatar: {
+    alignItems: 'center',
+    margin: 16
+},
+text: {
+    textAlign: 'center',
+    fontSize: 35,
+    marginVertical: 20,
+},
+buttonGroup: {
+    alignSelf: 'center',
+    marginVertical: 20,
+},
+userMessage: {
+    padding: 30,
+    elevation: 2,
+    marginHorizontal: 20,
+    marginBottom: 20,
+},
+loading: {
+    alignSelf: 'center',
+},
+containerTop: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+},
+containerList: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginVertical:8
+},
+innerList: {
+    flexDirection: 'row',
+},
+item2: {
+    paddingHorizontal: 25
+},
+textList: {
+    flexDirection: 'column',
     marginBottom: 12,
-    width: "60%",
-  },
-  inner: {},
-  item2: {
-    paddingBottom: 10,
-    paddingHorizontal: 24,
-    alignItems: "stretch",
-    flexDirection: "column",
-  },
-  item: {
-    width: "49%",
-    paddingVertical: 8,
-    paddingHorizontal: 6,
-    marginLeft: 3,
-    alignItems: "center",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
-  button: {
-    margin: 2,
-    elevation: 5,
-    shadowColor: "rgb(255,255,255)",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    borderColor: "rgb(220,220,220)",
-  },
-});
+},
+buttonContain: {
+    flex: 1,
+    flexDirection: 'row',
+    minHeight: 80,
+    justifyContent: 'space-around',
+    marginBottom: 32
+},
+settingsCard: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginVertical: 8,
+},
+})
 
 export default PostsScreen;
