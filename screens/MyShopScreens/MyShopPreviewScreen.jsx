@@ -150,7 +150,7 @@ function PreviewMyShopScreen({ navigation }) {
         <Button
           size="large"
           onPress={() => {
-            navigation.navigate("Add New Item");
+            navigation.navigate("Add New Item", {isUpdating: false});
           }}
           style={{ marginHorizontal: 20, marginVertical: 16 }}
         >
