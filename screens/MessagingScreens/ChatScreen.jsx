@@ -91,9 +91,8 @@ function ChatScreen({ navigation, route }) {
   }, []);
 
   const onSend = (messages) => {
-    console.log(messages);
     messages.forEach((message) => {
-      sendMessage(message, chatId, (result) => console.log(result));
+      sendMessage(message, chatId, () => {});
     });
   };
 

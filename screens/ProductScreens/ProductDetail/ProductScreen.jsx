@@ -30,7 +30,7 @@ import {
 import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
-import { startChat, getInbox, readChatroom } from "../../../services/messages";
+import { startChat } from "../../../services/messages";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -140,6 +140,16 @@ function ProductScreen({ route, navigation }) {
       getProductsLimitedFromUID(product.vendor, 6, setMoreProducts);
     }
   }, [product]);
+
+  const contactSellerOnPress = () => {
+    const contactSellerCallback = (chatroomId) =>
+      navigation.navigate("Inbox", {
+        params: { chatId: chatroomId, recipient: vendor.name },
+        screen: "Chat",
+      });
+
+    startChat(vendor.id, vendor.name, true, contactSellerCallback);
+  };
 
   const addToCartOnPress = () => {
     const addToCartCallback = () => navigation.navigate("Orders");
@@ -286,18 +296,7 @@ function ProductScreen({ route, navigation }) {
               marginHorizontal: 4,
               backgroundColor: "rgb(87,11,13)",
             }}
-            onPress={() => {
-              navigation.navigate("Chat");
-              // getInbox(true, (result) => {console.log(result)})
-              // getInbox(false, (result) => {console.log(result)})
-              // readChatroom(
-              //   "VKArrRNFLQbAaqrmiuE3nwuSOHZ2+VKArrRNFLQbAaqrmiuE3nwuSOHZ2+personal",
-              //   (result) => {
-              //     console.log(result);
-              //   }
-              // );
-              // startChat(product.vendor, vendor.name, "Hi everyone!", false, (result) => {console.log(result)})
-            }}
+            onPress={contactSellerOnPress}
           >
             Contact Seller
           </Button>

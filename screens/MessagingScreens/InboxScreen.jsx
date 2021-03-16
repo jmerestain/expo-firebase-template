@@ -55,17 +55,17 @@ const renderItem = ({ item, navigation }) => (
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  {item.content}
+                  {item.text}
                 </Text>
-                <Text
+                {/* <Text
                   style={{
                     alignContent: "center",
                     marginVertical: 1,
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  {item.timestamp}
-                </Text>
+                  {item.createdAt.toString()}
+                </Text> */}
               </Layout>
             </Layout>
           </Layout>
@@ -92,6 +92,8 @@ function InboxScreen({ navigation }) {
   useEffect(() => {
     getInbox(false, setInbox);
   }, []);
+
+  console.log(inbox);
 
   return (
     <Layout style={styles.container}>
