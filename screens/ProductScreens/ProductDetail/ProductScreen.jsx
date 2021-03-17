@@ -31,6 +31,7 @@ import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
+import LoadingModal from "../../../components/LoadingModal";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -124,6 +125,7 @@ function ProductScreen({ route, navigation }) {
   const [profile, setProfile] = useState({});
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
+  const [loading, setLoading] = useState(false);
   const [moreProducts, setMoreProducts] = useState({});
   const userName = profile.firstName + " " + profile.lastName;
 
@@ -143,7 +145,9 @@ function ProductScreen({ route, navigation }) {
   }, [product]);
 
   const contactSellerOnPress = () => {
-    const contactSellerCallback = (chatroomId) =>
+    setLoading(true);
+    const contactSellerCallback = (chatroomId) => {
+      setLoading(false);
       navigation.navigate("Inbox", {
         params: {
           chatId: chatroomId,
@@ -152,12 +156,17 @@ function ProductScreen({ route, navigation }) {
         },
         screen: "Chat",
       });
+    };
 
     startChat(vendor.id, vendor.name, userName, true, contactSellerCallback);
   };
 
   const addToCartOnPress = () => {
-    const addToCartCallback = () => navigation.navigate("Orders");
+    setLoading(true);
+    const addToCartCallback = () => {
+      setLoading(false);
+      navigation.navigate("Orders");
+    };
 
     const { title, price, id } = product;
 
@@ -169,120 +178,134 @@ function ProductScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView>
-      <Layout style={styles.container}>
-        <Image
-          style={{ resizeMode: "contain", height: 200, width: deviceWidth }}
-          source={{ uri: product.imageUrl }}
-        />
-        {product.rating && (
-          <Rating
-            type="custom"
-            rating={product.rating}
-            style={{ paddingVertical: 12, position: "absolute", right: 10 }}
-            ratingColor="rgb(210,145,91)"
-            tintColor="rgb(0, 0, 0)"
-            imageSize={20}
+    <Layout style={{ display: "flex", flexDirection: "column" }}>
+      <ScrollView>
+        <LoadingModal loading={loading} />
+        <Layout style={styles.container}>
+          <Image
+            style={{ resizeMode: "contain", height: 200, width: deviceWidth }}
+            source={{ uri: product.imageUrl }}
           />
-        )}
-        <Layout style={styles.inner}>
-          <Layout style={styles.containerList}>
-            <Layout style={styles.innerList}>
-              <Layout style={styles.textList}>
+          {product.rating && (
+            <Rating
+              type="custom"
+              rating={product.rating}
+              style={{ paddingVertical: 12, position: "absolute", right: 10 }}
+              ratingColor="rgb(210,145,91)"
+              tintColor="rgb(0, 0, 0)"
+              imageSize={20}
+            />
+          )}
+          <Layout style={styles.inner}>
+            <Layout style={styles.containerList}>
+              <Layout style={styles.innerList}>
+                <Layout style={styles.textList}>
+                  <Text
+                    category="h6"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 6,
+                      marginLeft: 16,
+                    }}
+                  >
+                    {product.title}
+                  </Text>
+                  <Text
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 1,
+                      marginLeft: 16,
+                      color: "rgb(128, 128, 128)",
+                    }}
+                  >
+                    {vendor.name}
+                  </Text>
+                </Layout>
+              </Layout>
+              <Layout>
                 <Text
                   category="h6"
                   style={{
                     alignContent: "center",
                     marginVertical: 6,
-                    marginLeft: 16,
+                    marginRight: 16,
                   }}
                 >
-                  {product.title}
-                </Text>
-                <Text
-                  style={{
-                    alignContent: "center",
-                    marginVertical: 1,
-                    marginLeft: 16,
-                    color: "rgb(128, 128, 128)",
-                  }}
-                >
-                  {vendor.name}
+                  P{parseFloat(product.price).toFixed(2)}
                 </Text>
               </Layout>
             </Layout>
-            <Layout>
+            <Divider />
+            <Text
+              category="s1"
+              style={{ alignContent: "center", marginTop: 12, marginLeft: 16 }}
+            >
+              Product Details
+            </Text>
+            <Text
+              style={{
+                alignContent: "center",
+                marginVertical: 6,
+                marginHorizontal: 16,
+              }}
+            >
+              Stock: {product.stock}
+            </Text>
+            <Text
+              style={{
+                alignContent: "center",
+                marginVertical: 2,
+                marginBottom: 16,
+                marginHorizontal: 16,
+              }}
+            >
+              {product.description}
+            </Text>
+            <Divider />
+            <Layout
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text category="h6" style={{ marginTop: 10 }}>
+                More from {vendor.name}
+              </Text>
+              <Button
+                appearance="ghost"
+                size="medium"
+                style={{ marginLeft: 10 }}
+              >
+                View Shop &gt;
+              </Button>
+            </Layout>
+
+            <List
+              data={moreProducts}
+              numColumns={2}
+              renderItem={renderItemMore}
+            />
+
+            <Divider />
+            <Layout
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
               <Text
                 category="h6"
-                style={{
-                  alignContent: "center",
-                  marginVertical: 6,
-                  marginRight: 16,
-                }}
+                style={{ marginTop: 10, marginHorizontal: 12 }}
               >
-                P{parseFloat(product.price).toFixed(2)}
+                Product Reviews
               </Text>
+              <Button
+                appearance="ghost"
+                size="medium"
+                style={{ marginLeft: 10 }}
+              >
+                See All &gt;
+              </Button>
             </Layout>
+            <List data={data} renderItem={renderItemRatings} />
           </Layout>
-          <Divider />
-          <Text
-            category="s1"
-            style={{ alignContent: "center", marginTop: 12, marginLeft: 16 }}
-          >
-            Product Details
-          </Text>
-          <Text
-            style={{
-              alignContent: "center",
-              marginVertical: 6,
-              marginHorizontal: 16,
-            }}
-          >
-            Stock: {product.stock}
-          </Text>
-          <Text
-            style={{
-              alignContent: "center",
-              marginVertical: 2,
-              marginBottom: 16,
-              marginHorizontal: 16,
-            }}
-          >
-            {product.description}
-          </Text>
-          <Divider />
-          <Layout
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text category="h6" style={{ marginTop: 10 }}>
-              More from {vendor.name}
-            </Text>
-            <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
-              View Shop &gt;
-            </Button>
-          </Layout>
-
-          <List
-            data={moreProducts}
-            numColumns={2}
-            renderItem={renderItemMore}
-          />
-
-          <Divider />
-          <Layout
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text category="h6" style={{ marginTop: 10, marginHorizontal: 12 }}>
-              Product Reviews
-            </Text>
-            <Button appearance="ghost" size="medium" style={{ marginLeft: 10 }}>
-              See All &gt;
-            </Button>
-          </Layout>
-          <List data={data} renderItem={renderItemRatings} />
         </Layout>
-      </Layout>
-      <Layout style={{ position: "relative", flex: 1 }}>
+      </ScrollView>
+      <Layout style={{ position: "sticky", flex: 1 }}>
         <Layout
           style={{
             position: "absolute",
@@ -313,7 +336,7 @@ function ProductScreen({ route, navigation }) {
           </Button>
         </Layout>
       </Layout>
-    </ScrollView>
+    </Layout>
   );
 }
 
