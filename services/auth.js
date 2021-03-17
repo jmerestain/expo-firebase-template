@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const loginUser = (email, password, setMessage, navigation) => {
+export const loginUser = (email, password, setMessage, navigation, callback) => {
   firebase
     .auth()
     .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -16,6 +16,7 @@ export const loginUser = (email, password, setMessage, navigation) => {
             index: 0,
             routes: [{ name: "DashNav" }], // Designated main page
           });
+          callback();
         })
         .catch((error) => {
           const errorCode = error.code;

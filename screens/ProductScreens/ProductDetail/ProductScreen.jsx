@@ -31,6 +31,7 @@ import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
+import LoadingModal from "../../../components/LoadingModal";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -124,6 +125,7 @@ function ProductScreen({ route, navigation }) {
   const [profile, setProfile] = useState({});
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
+  const [loading, setLoading] = useState(false);
   const [moreProducts, setMoreProducts] = useState({});
   const userName = profile.firstName + " " + profile.lastName;
 
@@ -143,7 +145,9 @@ function ProductScreen({ route, navigation }) {
   }, [product]);
 
   const contactSellerOnPress = () => {
-    const contactSellerCallback = (chatroomId) =>
+    setLoading(true);
+    const contactSellerCallback = (chatroomId) => {
+      setLoading(false);
       navigation.navigate("Inbox", {
         params: {
           chatId: chatroomId,
@@ -152,12 +156,17 @@ function ProductScreen({ route, navigation }) {
         },
         screen: "Chat",
       });
+    };
 
     startChat(vendor.id, vendor.name, userName, true, contactSellerCallback);
   };
 
   const addToCartOnPress = () => {
-    const addToCartCallback = () => navigation.navigate("Orders");
+    setLoading(true);
+    const addToCartCallback = () => {
+      setLoading(false);
+      navigation.navigate("Orders");
+    };
 
     const { title, price, id } = product;
 
@@ -170,6 +179,7 @@ function ProductScreen({ route, navigation }) {
 
   return (
     <ScrollView>
+      <LoadingModal loading={loading} />
       <Layout style={styles.container}>
         <Image
           style={{ resizeMode: "contain", height: 200, width: deviceWidth }}
