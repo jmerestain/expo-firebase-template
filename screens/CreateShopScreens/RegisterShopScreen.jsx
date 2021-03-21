@@ -77,7 +77,7 @@ const RegisterShopScreen = ({ navigation }) => {
         </Text>
         <Input
           onChangeText={setContactNumber}
-          placeholder="Business Number"
+          placeholder="Phone Number"
           style={{ paddingHorizontal: 16 }}
         />
 

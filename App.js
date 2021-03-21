@@ -113,7 +113,9 @@ const styles = StyleSheet.create({
 const fetchFonts = async () => {
   return Font.loadAsync({
   'Quicksand-Regular': require('./assets/fonts/Quicksand-Medium.ttf'),
+  'Quicksand-Bold': require('./assets/fonts/Quicksand-Bold.ttf'),
   'NunitoSans-Regular': require('./assets/fonts/NunitoSans-Regular.ttf'),
+  'NunitoSans-Bold': require('./assets/fonts/NunitoSans-Bold.ttf'),
   });
 };
 

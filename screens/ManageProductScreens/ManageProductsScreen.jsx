@@ -27,19 +27,18 @@ const myProducts1 = new Array(8).fill({
                         style={{ marginHorizontal: 20,  alignSelf: 'center'}}
                  /> 
                 <Layout style={styles.textList}>
-                    <Text category='h6' style={{ alignContent: 'center', marginVertical: 6}}>
+                    <Text style={{ alignContent: 'center', marginTop: 8, marginBottom: 2, fontSize: 16, fontFamily:'NunitoSans-Bold'}}>
                         {item.product}
                     </Text>
-                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 2, color: 'rgb(128, 128, 128)'}}>
+                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 2, color: '#000000'}}>
                         {item.price}
                     </Text>
-                    <Text category='s2' style={{ alignContent: 'center', marginVertical: 2, color: 'rgb(128, 128, 128)'}}>
+                    <Text style={{ alignContent: 'center', marginVertical: 2, color: '#00000060', fontFamily:'NunitoSans-Regular', fontSize: 12}}>
                         {item.inventory}
                     </Text>
                 </Layout>
                 </Layout>
                 <Layout style={{alignContent: 'flex-end', alignItems: 'flex-end'}}>
-                    <Icon name='more-horizontal' fill='rgb(160,160,160)' style={{height: 26, width: 26, marginHorizontal: 16, marginVertical: 4}} />
                     <Button size='small' appearance='outline' style={{alignSelf: 'flex-end', marginVertical: 8, marginRight: 16}}>
                         Edit Product
                     </Button>

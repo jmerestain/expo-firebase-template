@@ -54,11 +54,11 @@ const OnboardingScreen = ({ setFirstTime }) => {
 
   return (
     <Layout style={styles.container}>
-      {screen == 1 ? <OScreen1 setScreen={setScreen} /> : null}
-      {screen == 2 ? <OScreen2 setScreen={setScreen} /> : null}
-      {screen == 3 ? <OScreen3 setScreen={setScreen} /> : null}
-      {screen == 4 ? <OScreen4 setScreen={setScreen} /> : null}
-      {screen == 5 ? <OScreen5 setScreen={setScreen} /> : null}
+      {screen == 1 ? <OScreen1 setScreen={setScreen} setFirstTime={setFirstTime}/> : null}
+      {screen == 2 ? <OScreen2 setScreen={setScreen} setFirstTime={setFirstTime} /> : null}
+      {screen == 3 ? <OScreen3 setScreen={setScreen} setFirstTime={setFirstTime} /> : null}
+      {screen == 4 ? <OScreen4 setScreen={setScreen} setFirstTime={setFirstTime} /> : null}
+      {screen == 5 ? <OScreen5 setScreen={setScreen} setFirstTime={setFirstTime} /> : null}
       {screen == 6 ? (
         <OScreen6 setScreen={setScreen} setFirstTime={setFirstTime} />
       ) : null}
@@ -66,7 +66,7 @@ const OnboardingScreen = ({ setFirstTime }) => {
   );
 };
 
-const OScreen1 = ({ setScreen }) => {
+const OScreen1 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -75,28 +75,37 @@ const OScreen1 = ({ setScreen }) => {
       />
       <Layout style={styles.onBoardText}>
         <Text>
-          <Text style={{ fontWeight: "bold" }} category="h6">
-            Bagong Inspirasyon at Likhang Nueva Ecija (BILI NE!){" "}
-          </Text>
-          <Text category="h6">
-            is an organization of micro-, small- and medium enterprises in Nueva
-            Ecija, Philippines.
+          <Text category="h5" style={{ fontFamily:"Quicksand-Regular", textAlign: "center", lineHeight: 32}}>
+          Welcome to the Survival Shop of the MSMEs of Nueva Ecija!{" "}
           </Text>
         </Text>
       </Layout>
-      <Button
-        style={[styles.onBoardButton, { marginBottom: 10 }]}
-        onPress={() => {
-          setScreen(2);
-        }}
-      >
-        Next
+      <Layout style={{paddingBottom:60}}>
+        <Button style={styles.onBoardText}
+          style={[styles.onBoardButton, { marginBottom: 10 }]}
+          onPress={() => {
+            setScreen(2);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          appearance="ghost"
+          style={styles.onBoardButton}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+        <Text style={{color:"#00000090"}}>
+          Skip
+        </Text>
       </Button>
+      </Layout>
     </Layout>
   );
 };
 
-const OScreen2 = ({ setScreen }) => {
+const OScreen2 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -104,40 +113,38 @@ const OScreen2 = ({ setScreen }) => {
         source={require("../assets/welcome/onboard2.png")}
       />
       <Layout style={styles.onBoardText}>
-        <Text category="h6">
-          This community of MSMEs have been sustaining their respective
-          operations, families, and communities by participating in trade fairs
-          organized by the Department of Trade and Industry (DTI) – Nueva Ecija.
+        <Text category="h6" style={{ fontFamily:"Quicksand-Regular", textAlign: "center", marginTop: -40, lineHeight: 28}}>
+        Bagong Inspirasyon at Likha ng Nueva Ecija (BILI NE!) is an association that leads in
+        promoting social entrepreneurship and diversified livelihood among NE’s agro-based
+        families.
         </Text>
       </Layout>
-      <Button
-        style={styles.onBoardButton}
-        onPress={() => {
-          setScreen(3);
-        }}
-      >
-        Next
+      <Layout style={{paddingBottom:60}}>
+        <Button style={styles.onBoardText}
+          style={[styles.onBoardButton, { marginBottom: 10 }]}
+          onPress={() => {
+            setScreen(3);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          appearance="ghost"
+          style={styles.onBoardButton}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+        <Text style={{color:"#00000090"}}>
+          Skip
+        </Text>
       </Button>
-      <Button
-        style={[
-          styles.onBoardButton,
-          {
-            marginVertical: 10,
-          },
-        ]}
-        size="small"
-        appearance="outline"
-        onPress={() => {
-          setScreen((value) => value - 1);
-        }}
-      >
-        Back
-      </Button>
+      </Layout>
     </Layout>
   );
 };
 
-const OScreen3 = ({ setScreen }) => {
+const OScreen3 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -145,40 +152,37 @@ const OScreen3 = ({ setScreen }) => {
         source={require("../assets/welcome/onboard3.png")}
       />
       <Layout style={styles.onBoardText}>
-        <Text category="h6">
-          Nueva Ecija boasts to be the only province in Central Luzon that
-          produces a diverse range of products – agricultural produce,
-          manufactured food, household essentials, etc.
+      <Text category="h6" style={{ fontFamily:"Quicksand-Regular", textAlign: "center", lineHeight: 28}}>
+          Help revive MSMEs, and contain the spread of the COVID19 by doing your
+          pamamalengke, as a buyer and/or seller, in this app.
         </Text>
       </Layout>
-      <Button
-        style={styles.onBoardButton}
-        onPress={() => {
-          setScreen(4);
-        }}
-      >
-        Next
+      <Layout style={{paddingBottom:60}}>
+        <Button style={styles.onBoardText}
+          style={[styles.onBoardButton, { marginBottom: 10 }]}
+          onPress={() => {
+            setScreen(4);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          appearance="ghost"
+          style={styles.onBoardButton}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+        <Text style={{color:"#00000090"}}>
+          Skip
+        </Text>
       </Button>
-      <Button
-        style={[
-          styles.onBoardButton,
-          {
-            marginVertical: 10,
-          },
-        ]}
-        size="small"
-        appearance="outline"
-        onPress={() => {
-          setScreen((value) => value - 1);
-        }}
-      >
-        Back
-      </Button>
+      </Layout>
     </Layout>
   );
 };
 
-const OScreen4 = ({ setScreen }) => {
+const OScreen4 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -187,43 +191,38 @@ const OScreen4 = ({ setScreen }) => {
       />
       <Layout style={styles.onBoardText}>
         <Text>
-          <Text category="h6" style={{ fontWeight: "bold" }}>
-            BILI NE!{" "}
-          </Text>
-          <Text category="h6">
-            is an app that seeks to connects the whole Nueva Ecijan community
-            and beyond.{" "}
+          <Text category="h6" style={{ fontFamily:"Quicksand-Regular", textAlign: "center", lineHeight: 28}}>
+          This app envisions to bridge NE’s farmers, craftsmen, manufacturers, couriers, and
+          consumers to help build sustainable communities.{" "}
           </Text>
         </Text>
       </Layout>
-      <Button
-        style={styles.onBoardButton}
-        onPress={() => {
-          setScreen(5);
-        }}
-      >
-        Next
+      <Layout style={{paddingBottom:60}}>
+        <Button style={styles.onBoardText}
+          style={[styles.onBoardButton, { marginBottom: 10 }]}
+          onPress={() => {
+            setScreen(5);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          appearance="ghost"
+          style={styles.onBoardButton}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+        <Text style={{color:"#00000090"}}>
+          Skip
+        </Text>
       </Button>
-      <Button
-        style={[
-          styles.onBoardButton,
-          {
-            marginVertical: 10,
-          },
-        ]}
-        size="small"
-        appearance="outline"
-        onPress={() => {
-          setScreen((value) => value - 1);
-        }}
-      >
-        Back
-      </Button>
+      </Layout>
     </Layout>
   );
 };
 
-const OScreen5 = ({ setScreen }) => {
+const OScreen5 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -231,41 +230,37 @@ const OScreen5 = ({ setScreen }) => {
         source={require("../assets/welcome/onboard5.png")}
       />
       <Layout style={styles.onBoardText}>
-        <Text category="h6">
-          The online e-commerce platform envisions to bridge its local farmers,
-          craftsmen, manufacturers, couriers, and consumers, to cultivate a
-          sustainable, self-sufficient lifestyle inside the province’s
-          eco-system.
+      <Text category="h6" style={{ fontFamily:"Quicksand-Regular", textAlign: "center", lineHeight: 28}}>
+        Special note: The app is a work in progress but be assured we are doing our best to
+        serve the NE communities only the best.
         </Text>
       </Layout>
-      <Button
-        style={styles.onBoardButton}
-        onPress={() => {
-          setScreen(6);
-        }}
-      >
-        Next
+      <Layout style={{paddingBottom:60}}>
+        <Button style={styles.onBoardText}
+          style={[styles.onBoardButton, { marginBottom: 10 }]}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          appearance="ghost"
+          style={styles.onBoardButton}
+          onPress={() => {
+            setFirstTime(false);
+          }}
+        >
+        <Text style={{color:"#00000090"}}>
+          Skip
+        </Text>
       </Button>
-      <Button
-        style={[
-          styles.onBoardButton,
-          {
-            marginVertical: 10,
-          },
-        ]}
-        size="small"
-        appearance="outline"
-        onPress={() => {
-          setScreen((value) => value - 1);
-        }}
-      >
-        Back
-      </Button>
+      </Layout>
     </Layout>
   );
 };
 
-const OScreen6 = ({ setFirstTime, setScreen }) => {
+{/*const OScreen6 = ({ setFirstTime, setScreen }) => {
   return (
     <Layout style={styles.onBoardScreen}>
       <Image
@@ -303,7 +298,7 @@ const OScreen6 = ({ setFirstTime, setScreen }) => {
       </Button>
     </Layout>
   );
-};
+};*/}
 
 const AuthOptions = ({ navigation }) => {
   return (
@@ -352,11 +347,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    marginHorizontal: 20,
+    paddingHorizontal: 40,
   },
   onBoardText: {
     flex: 2,
-    marginVertical: 30,
+    marginVertical: 15,
   },
   onBoardImage: {
     flex: 4,
@@ -365,8 +360,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   onBoardButton: {
-    alignSelf: "center",
-    width: 224,
+    alignSelf: "stretch",
   },
   authButton: {
     marginBottom: 10,

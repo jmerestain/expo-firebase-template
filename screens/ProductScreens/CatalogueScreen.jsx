@@ -159,7 +159,7 @@ const CategoryEntry = ({ category }) => {
         <Image source={imageSource} style={styles.icon} />
         <Text
           category="label"
-          style={{ textAlign: "center", fontWeight: "bold" }}
+          style={{ textAlign: "center", fontWeight: "bold", fontFamily: "NunitoSans-Bold" }}
         >
           {title}
         </Text>
@@ -192,11 +192,11 @@ const renderItem = ({ item, navigation }) => {
     >
       <Layout style={styles.pickForYou}>
         <Image source={{ uri: imageUrl }} style={{ width: 160, height: 120 }} />
-        <Text category="s1" style={{ fontWeight: "bold", marginBottom: 5 }}>
+        <Text category="s1" style={{ fontWeight: "bold", marginVertical: 6, fontFamily: "NunitoSans-Bold", color: '#000' }}>
           {title}
         </Text>
-        <Text category="label">PHP {price}</Text>
-        <Text category="label">{vendor}</Text>
+        <Text category="s2">P{price}</Text>
+        <Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{vendor}</Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -244,8 +244,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   categoryImage: {
-    backgroundColor: "#BDBDBD",
-    height: 120,
+    backgroundColor: "#FFF",
+    height: 240,
+    resizeMode: "contain", 
     alignSelf: "center",
     paddingHorizontal: 20,
   },
@@ -253,8 +254,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
-    width: 90,
+    padding: 8,
+    width: 120,
     marginBottom: 10,
   },
   categorySection: {
@@ -264,6 +265,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 44,
     height: 44,
+    marginBottom: 12 
   },
   pickForYou: {
     flex: 1,

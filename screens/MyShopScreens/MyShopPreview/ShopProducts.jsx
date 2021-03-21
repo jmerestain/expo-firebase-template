@@ -46,11 +46,16 @@ const renderItemProducts = ({ item }) => (
           fontWeight: "bold",
           marginTop: 8,
           marginBottom: 4,
+          marginLeft: 12
         }}
       >
         {item.title}
       </Text>
-      <Text>P{item.price}</Text>
+      <Text
+        style={{
+          marginLeft: 12
+        }}
+      >P{item.price}</Text>
     </Layout>
   </Layout>
 );
@@ -62,8 +67,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   item: {
-    width: "48%",
-    marginBottom: 10,
+    width: "50%",
+    paddingVertical: 12,
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "flex-start",
