@@ -124,7 +124,15 @@ const NewItemScreen = ({ navigation, route }) => {
           setBlob={setBlob}
         />
         <Layout styles={styles.field}>
-          <Text category="label">Product Title</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Product Title
+          </Text>
           <Input
             onChangeText={(value) => setTitle(value)}
             placeholder="Set Product Title"
@@ -132,7 +140,15 @@ const NewItemScreen = ({ navigation, route }) => {
           />
         </Layout>
         <Layout styles={styles.field}>
-          <Text category="label">Description</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Description
+          </Text>
           <Input
             multiline={true}
             textStyle={{ minHeight: 64 }}
@@ -142,7 +158,16 @@ const NewItemScreen = ({ navigation, route }) => {
           />
         </Layout>
         <Layout style={styles.field}>
-          <Text category="label">Categories</Text>
+          <Text
+            category="label"
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginBottom: 4,
+            }}
+          >
+            Categories
+          </Text>
           <CategoryComponent
             category={category}
             setCategory={setCategory}
@@ -150,31 +175,61 @@ const NewItemScreen = ({ navigation, route }) => {
           />
         </Layout>
         <Layout styles={styles.field}>
-          <Text category="label">Price</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Price
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setPrice(value)}
-            accessoryLeft={() => <Text category="label">PHP</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>php</Text>
+            )}
             value={price}
           />
         </Layout>
         <Layout styles={styles.field}>
-          <Text category="label">Weight</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Weight
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setWeight(value)}
-            accessoryLeft={() => <Text category="label">kg/pc</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>kg/pc</Text>
+            )}
             placeholder="20"
             value={weight}
           />
         </Layout>
         <Layout styles={styles.field}>
-          <Text category="label">Stock Quantity</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Stock Quantity
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setStock(value)}
             placeholder="10"
-            accessoryLeft={() => <Text category="label">pc(s)</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>pc(s)</Text>
+            )}
             value={stock}
           />
         </Layout>
@@ -257,13 +312,14 @@ const MessageComponent = ({ message, visible, setVisible, setMessage }) => {
       <Card disabled={true}>
         <Text>{message}</Text>
         <Button
+          style={{ marginTop: 12 }}
           onPress={() => {
             console.log(visible);
             setVisible(false);
             setMessage(null);
           }}
         >
-          Dismiss
+          Done
         </Button>
       </Card>
     </Modal>

@@ -89,6 +89,7 @@ const MyShopScreen = ({ navigation }) => {
                     fontWeight: "bold",
                     color: "rgb(138,18,20)",
                     alignSelf: "center",
+                    fontSize: 11,
                   }}
                 >
                   Pending Orders
@@ -115,6 +116,7 @@ const MyShopScreen = ({ navigation }) => {
                     fontWeight: "bold",
                     color: "rgb(138,18,20)",
                     alignSelf: "center",
+                    fontSize: 11,
                   }}
                 >
                   Completed Orders

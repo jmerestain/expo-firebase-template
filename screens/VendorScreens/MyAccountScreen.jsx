@@ -144,6 +144,7 @@ const PendingOrdersNav = ({ navigation }) => {
                   fontWeight: "bold",
                   color: "rgb(138,18,20)",
                   alignSelf: "center",
+                  fontSize: 11,
                 }}
               >
                 To Process
@@ -170,6 +171,7 @@ const PendingOrdersNav = ({ navigation }) => {
                   fontWeight: "bold",
                   color: "rgb(138,18,20)",
                   alignSelf: "center",
+                  fontSize: 11,
                 }}
               >
                 To Deliver
@@ -198,6 +200,7 @@ const PendingOrdersNav = ({ navigation }) => {
                   fontWeight: "bold",
                   color: "rgb(138,18,20)",
                   alignSelf: "center",
+                  fontSize: 11,
                 }}
               >
                 To Receive
@@ -226,6 +229,7 @@ const PendingOrdersNav = ({ navigation }) => {
                   fontWeight: "bold",
                   color: "rgb(138,18,20)",
                   alignSelf: "center",
+                  fontSize: 11,
                 }}
               >
                 To Review

@@ -29,8 +29,13 @@ const RenderItem = ({ item, navigation }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
-              style={{ alignContent: "center", marginVertical: 6 }}
+              style={{
+                alignContent: "center",
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
+              }}
             >
               {item.title}
             </Text>
@@ -39,7 +44,7 @@ const RenderItem = ({ item, navigation }) => (
               style={{
                 alignContent: "center",
                 marginVertical: 2,
-                color: "rgb(128, 128, 128)",
+                color: "#000000",
               }}
             >
               P{item.price}
@@ -49,7 +54,9 @@ const RenderItem = ({ item, navigation }) => (
               style={{
                 alignContent: "center",
                 marginVertical: 2,
-                color: "rgb(128, 128, 128)",
+                color: "#00000060",
+                fontFamily: "NunitoSans-Regular",
+                fontSize: 12,
               }}
             >
               {item.stock} left
@@ -57,16 +64,6 @@ const RenderItem = ({ item, navigation }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
           <Button
             size="small"
             appearance="outline"

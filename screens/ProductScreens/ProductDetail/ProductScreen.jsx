@@ -50,21 +50,20 @@ const data = new Array(8).fill({
 const renderItemMore = ({ item, index }) => (
   <Layout style={styles.item}>
     <Image
-      style={{ resizeMode: "cover", height: 160, width: 160 }}
+      style={{ resizeMode: "cover", height: 160, width: 170 }}
       source={{ uri: item.imageUrl }}
     />
-    <Layout style={{ alignSelf: "flex-start" }}>
+    <Layout style={{ alignSelf: "flex-start", marginHorizontal: 10 }}>
       <Text
+        category="s1"
         style={{
-          fontSize: 16,
-          fontWeight: "bold",
           marginTop: 8,
           marginBottom: 4,
         }}
       >
         {item.title}
       </Text>
-      <Text>P{item.price}</Text>
+      <Text category="s2" style={{color: "#00000080"}}>P{item.price}</Text>
     </Layout>
   </Layout>
 );
@@ -113,7 +112,6 @@ const renderItemRatings = ({ item, index }) => (
           imageSize={20}
         />
       </Layout>
-      <Layout></Layout>
     </Layout>
     <Text style={{ marginBottom: 16 }}>{item.review}</Text>
     <Divider />
@@ -247,6 +245,7 @@ function ProductScreen({ route, navigation }) {
                 alignContent: "center",
                 marginVertical: 6,
                 marginHorizontal: 16,
+                color: "#00000070",
               }}
             >
               Stock: {product.stock}
@@ -265,13 +264,13 @@ function ProductScreen({ route, navigation }) {
             <Layout
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text category="h6" style={{ marginTop: 10 }}>
+              <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
                 More from {vendor.name}
               </Text>
               <Button
                 appearance="ghost"
                 size="medium"
-                style={{ marginLeft: 10 }}
+                style={{ marginTop: 6 }}
               >
                 View Shop &gt;
               </Button>
@@ -288,15 +287,15 @@ function ProductScreen({ route, navigation }) {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text
-                category="h6"
-                style={{ marginTop: 10, marginHorizontal: 12 }}
+                category="s1"
+                style={{ marginTop: 18, marginLeft: 18 }}
               >
                 Product Reviews
               </Text>
               <Button
                 appearance="ghost"
                 size="medium"
-                style={{ marginLeft: 10 }}
+                style={{ marginTop: 6 }}
               >
                 See All &gt;
               </Button>

@@ -40,8 +40,13 @@ const renderItem = ({ item, index }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
-              style={{ alignContent: "center", marginVertical: 6 }}
+              style={{
+                alignContent: "center",
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
+              }}
             >
               {item.product.title}
             </Text>
@@ -49,8 +54,8 @@ const renderItem = ({ item, index }) => (
               category="s2"
               style={{
                 alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
+                marginVertical: 2,
+                color: "#000000",
               }}
             >
               P{item.product.price}
@@ -58,6 +63,7 @@ const renderItem = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -68,6 +74,7 @@ const renderItem = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -76,18 +83,6 @@ const renderItem = ({ item, index }) => (
               {item.product.vendor}
             </Text>
           </Layout>
-        </Layout>
-        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
         </Layout>
       </Layout>
     </Layout>
@@ -108,8 +103,13 @@ const renderItemDeliver = ({ item, index }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
-              style={{ alignContent: "center", marginVertical: 6 }}
+              style={{
+                alignContent: "center",
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
+              }}
             >
               {item.product.title}
             </Text>
@@ -117,8 +117,8 @@ const renderItemDeliver = ({ item, index }) => (
               category="s2"
               style={{
                 alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
+                marginVertical: 2,
+                color: "#000000",
               }}
             >
               P{item.product.price}
@@ -126,6 +126,7 @@ const renderItemDeliver = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -136,6 +137,7 @@ const renderItemDeliver = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -146,26 +148,15 @@ const renderItemDeliver = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
               }}
             >
-              Expected delivery by {item.deliverDate}
+              Expected delivery by {item.deliveryDate}
             </Text>
           </Layout>
-        </Layout>
-        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
         </Layout>
       </Layout>
     </Layout>
@@ -186,11 +177,12 @@ const renderItemReceived = ({ item, index }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
               style={{
                 alignContent: "center",
-                marginVertical: 6,
-                maxWidth: 200,
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
               }}
             >
               {item.product.title}
@@ -199,8 +191,8 @@ const renderItemReceived = ({ item, index }) => (
               category="s2"
               style={{
                 alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
+                marginVertical: 2,
+                color: "#000000",
               }}
             >
               P{item.product.price}
@@ -208,6 +200,7 @@ const renderItemReceived = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -218,6 +211,7 @@ const renderItemReceived = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -228,16 +222,6 @@ const renderItemReceived = ({ item, index }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
           <Button
             size="small"
             style={{
@@ -271,11 +255,12 @@ const renderItemRate = ({ item, index }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
               style={{
                 alignContent: "center",
-                marginVertical: 6,
-                maxWidth: 200,
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
               }}
             >
               {item.product.title}
@@ -284,8 +269,8 @@ const renderItemRate = ({ item, index }) => (
               category="s2"
               style={{
                 alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
+                marginVertical: 2,
+                color: "#000000",
               }}
             >
               P{item.product.price}
@@ -293,6 +278,7 @@ const renderItemRate = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -303,6 +289,7 @@ const renderItemRate = ({ item, index }) => (
             <Text
               category="s2"
               style={{
+                fontFamily: "NunitoSans-Regular",
                 alignContent: "center",
                 marginVertical: 1,
                 color: "rgb(128, 128, 128)",
@@ -313,17 +300,7 @@ const renderItemRate = ({ item, index }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
-          {/* <Button
+          <Button
             size="small"
             style={{
               alignSelf: "flex-end",
@@ -332,7 +309,7 @@ const renderItemRate = ({ item, index }) => (
             }}
           >
             Rate Order
-          </Button> */}
+          </Button>
         </Layout>
       </Layout>
     </Layout>
