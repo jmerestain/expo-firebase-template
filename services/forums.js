@@ -101,26 +101,25 @@ export const joinGroup = (groupId, callback) => {
 //     .catch((e) => console.log(e));
 // };
 
-export const createPost = (groupId, post, callback) => {
+export const createPost = (groupId, post, postedBy, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
+  const postedAt = new Date();
 
   db.collection("groups")
     .doc(groupId)
     .collection("posts")
-    .add({ ...post, user: currentUserUID })
+    .add({ body: post, postedBy, postedAt, user: currentUserUID })
     .then((postRef) => {
-      console.log(postRef.id);
-      // callback(postRef.get());
+      // console.log(postRef.id);
+      callback();
     })
     .catch((e) => console.log(e));
 };
 
 export const readPosts = (groupId, callback) => {
   const db = firebase.firestore();
-
-  console.log("Group: " + groupId);
 
   db.collection("groups")
     .doc(groupId)

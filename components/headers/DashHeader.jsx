@@ -19,7 +19,7 @@ const SignOutButton = ({navigation}) => (
 
 const MessagesButton = ({navigation}) => (
     <TouchableOpacity onPress={() => {
-        navigation.navigate("Inbox")
+        navigation.push("Inbox")
     }}>
         <Icon
             style={styles.icon}

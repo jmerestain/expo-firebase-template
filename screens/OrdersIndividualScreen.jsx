@@ -17,7 +17,13 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getCurrentUserFromUID } from "../services/users";
-import { getOrdersCurrentUserPerVendor } from "../services/orders";
+import { getShopDetailsByUID } from "../services/vendor";
+import {
+  getOrdersCurrentUserPerVendor,
+  updateMultipleOrderStatus,
+} from "../services/orders";
+import { startChat } from "../services/messages";
+import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const renderItem = ({ item, index }) => (
@@ -108,15 +114,24 @@ function OrdersIndividualScreen({ route, navigation }) {
 const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState([]);
+  const [vendor, setVendor] = useState({});
   const [deliveryDate, setDeliveryDate] = useState(new Date());
+  const vendorId = route.params.vendorId;
 
   useEffect(() => {
-    getOrdersCurrentUserPerVendor(route.params.vendorId, setOrders);
+    getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
   }, []);
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
   }, []);
+
+  useEffect(() => {
+    getShopDetailsByUID(vendorId, setVendor);
+  }, []);
+
+  const vendorName = vendor.name;
+  const userName = profile.firstName + " " + profile.lastName;
 
   const totalPrice = orders.reduce(
     (acc, curr) => acc + curr.product.price * curr.quantity,
@@ -128,13 +143,32 @@ const DeliverAddress = ({ route, navigation }) => {
     setDeliveryDate(currentDate);
   };
 
+  const placeOrderCallback = (event) => {
+    const navigateCallback = (chatroomId) =>
+      navigation.navigate("Inbox", {
+        params: {
+          chatId: chatroomId,
+          recipient: vendor.name,
+          recipientId: vendor.id,
+        },
+        screen: "Chat",
+      });
+
+    const orderIds = orders.map((order) => order.id);
+    updateMultipleOrderStatus(
+      orderIds,
+      { status: ORDER_PENDING, deliveryDate },
+      startChat(vendorId, vendorName, userName, true, navigateCallback)
+    );
+  };
+
   return (
     <ScrollView>
       <Layout>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Settings");
-          }}
+        // onPress={() => {
+        //   navigation.navigate("Settings");
+        // }}
         >
           <Layout style={[styles.deliverAddress]}>
             <Layout style={styles.daInner}>
@@ -167,7 +201,10 @@ const DeliverAddress = ({ route, navigation }) => {
                     <Text category="h6" style={{ fontWeight: "bold" }}>
                       Delivery Address
                     </Text>
-                    <Text category="p2">{profile.firstName} {profile.lastName} | {profile.contactNumber}</Text>
+                    <Text category="p2">
+                      {profile.firstName} {profile.lastName} |{" "}
+                      {profile.contactNumber}
+                    </Text>
                     <Text
                       category="label"
                       style={{
@@ -263,7 +300,7 @@ const DeliverAddress = ({ route, navigation }) => {
               </Layout>
               <Divider />
 
-              <Layout
+              {/* <Layout
                 style={{
                   flex: 1,
                   flexDirection: "row",
@@ -280,7 +317,7 @@ const DeliverAddress = ({ route, navigation }) => {
                   </Text>
                 </Layout>
               </Layout>
-              <Divider />
+              <Divider /> */}
 
               {/* <Layout
                 style={{
@@ -405,6 +442,7 @@ const DeliverAddress = ({ route, navigation }) => {
             <Button
               size="large"
               style={{ marginHorizontal: 24, marginTop: 24 }}
+              onPress={placeOrderCallback}
             >
               Place Order
             </Button>

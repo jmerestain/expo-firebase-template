@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -13,9 +13,9 @@ import {
   TabBar,
   List,
 } from "@ui-kitten/components";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getInbox } from "../../services/messages";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { readChatroom, sendMessage } from "../../services/messages";
+import { getUserID } from "../../services/auth";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
@@ -77,57 +77,46 @@ const renderItem = ({ item, index }) => (
   </Layout>
 );
 
-function InboxScreen({ navigation }) {
-  const [inbox, setInbox] = useState([]);
+function ChatScreen({ navigation, route }) {
+  const [messages, setMessages] = useState([]);
+  const [userId, setUserId] = useState([]);
+  const { chatId, recipientId } = route.params;
 
   useEffect(() => {
-    getInbox(false, setInbox);
-  }, [])
+    readChatroom(chatId, setMessages);
+  }, []);
+
+  useEffect(() => {
+    getUserID(setUserId);
+  }, []);
+
+  const onSend = (messages) => {
+    messages.forEach((message) => {
+      sendMessage(recipientId, message, chatId, () => {});
+    });
+  };
+
+  const renderBubble = (props) => (
+    <Bubble
+      {...props}
+      wrapperStyle={{
+        right: {
+          backgroundColor: "#8A1214",
+        },
+      }}
+    />
+  );
 
   return (
-    <Layout style={styles.container}>
-      <Input
-        onChangeText={(value) => setSearch(value)}
-        placeholder="Search here"
-        style={{ paddingHorizontal: 16, paddingVertical: 12 }}
-        accessoryLeft={SearchIcon}
-      />
-      <List data={inbox} renderItem={renderItem} />
-    </Layout>
+    <GiftedChat
+      messages={messages}
+      renderBubble={renderBubble}
+      onSend={(messages) => onSend(messages)}
+      user={{
+        _id: userId,
+      }}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
-  containerList: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-  },
-  innerList: {
-    flexDirection: "row",
-  },
-  textList: {
-    flexDirection: "column",
-    marginBottom: 12,
-  },
-  inner: {
-    paddingVertical: 12,
-  },
-  button: {
-    margin: 2,
-    elevation: 5,
-    shadowColor: "rgb(255,255,255)",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    borderColor: "rgb(220,220,220)",
-  },
-});
-
-export default InboxScreen;
+export default ChatScreen;

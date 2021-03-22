@@ -13,14 +13,19 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Image, ScrollView } from "react-native";
 import { checkAuthenticated } from "../../services/auth";
-import { postMyProduct, getCategories } from "../../services/products";
+import {
+  postMyProduct,
+  getCategories,
+  getProductByID,
+  updateProduct,
+} from "../../services/products";
 
-const NewItemScreen = ({ navigation }) => {
+const NewItemScreen = ({ navigation, route }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-//   Selected categories of the product
+  //   Selected categories of the product
   const [category, setCategory] = useState([]);
   const [weight, setWeight] = useState("");
 
@@ -33,11 +38,40 @@ const NewItemScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
 
-//   List of ALL categories
+  //   List of ALL categories
   const [categories, setCategories] = useState([]);
+
+  const { isUpdating, productId } = route.params;
 
   useEffect(() => {
     checkAuthenticated(setUser, navigation);
+  }, []);
+
+  useEffect(() => {
+    if (isUpdating) {
+      const updateDetails = (product) => {
+        const {
+          imageUrl,
+          title,
+          description,
+          category,
+          price,
+          weight,
+          stock,
+        } = product;
+        setImage(imageUrl);
+        setTitle(title);
+        setDescription(description);
+        setCategory(category);
+        setPrice(price);
+        setWeight(weight);
+        setStock(stock);
+
+        setDisabled(false);
+      };
+
+      getProductByID(productId, updateDetails);
+    }
   }, []);
 
   useEffect(() => {
@@ -69,7 +103,7 @@ const NewItemScreen = ({ navigation }) => {
       image != null &&
       stock != "" &&
       category != [] &&
-      blob != null &&
+      // blob != null &&
       weight != ""
     ) {
       setDisabled(false);
@@ -90,7 +124,15 @@ const NewItemScreen = ({ navigation }) => {
           setBlob={setBlob}
         />
         <Layout styles={styles.field}>
-          <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginVertical: 4}}>Product Title</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Product Title
+          </Text>
           <Input
             onChangeText={(value) => setTitle(value)}
             placeholder="Set Product Title"
@@ -98,7 +140,15 @@ const NewItemScreen = ({ navigation }) => {
           />
         </Layout>
         <Layout styles={styles.field}>
-        <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginVertical: 4}}>Description</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Description
+          </Text>
           <Input
             multiline={true}
             textStyle={{ minHeight: 64 }}
@@ -108,35 +158,78 @@ const NewItemScreen = ({ navigation }) => {
           />
         </Layout>
         <Layout style={styles.field}>
-        <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginBottom: 4}}>Categories</Text>
-          <CategoryComponent category={category} setCategory={setCategory} categories={categories} />
+          <Text
+            category="label"
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginBottom: 4,
+            }}
+          >
+            Categories
+          </Text>
+          <CategoryComponent
+            category={category}
+            setCategory={setCategory}
+            categories={categories}
+          />
         </Layout>
         <Layout styles={styles.field}>
-        <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginVertical: 4}}>Price</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Price
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setPrice(value)}
-            accessoryLeft={() => <Text style={{fontFamily:"NunitoSans-Bold"}}>php</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>php</Text>
+            )}
             value={price}
           />
         </Layout>
         <Layout styles={styles.field}>
-        <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginVertical: 4}}>Weight</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Weight
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setWeight(value)}
-            accessoryLeft={() => <Text style={{fontFamily:"NunitoSans-Bold"}}>kg/pc</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>kg/pc</Text>
+            )}
             placeholder="20"
             value={weight}
           />
         </Layout>
         <Layout styles={styles.field}>
-        <Text style={{fontSize:12, fontFamily:"NunitoSans-Bold", marginVertical: 4}}>Stock Quantity</Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "NunitoSans-Bold",
+              marginVertical: 4,
+            }}
+          >
+            Stock Quantity
+          </Text>
           <Input
             keyboardType="decimal-pad"
             onChangeText={(value) => setStock(value)}
             placeholder="10"
-            accessoryLeft={() => <Text style={{fontFamily:"NunitoSans-Bold"}}>pc(s)</Text>}
+            accessoryLeft={() => (
+              <Text style={{ fontFamily: "NunitoSans-Bold" }}>pc(s)</Text>
+            )}
             value={stock}
           />
         </Layout>
@@ -153,11 +246,21 @@ const NewItemScreen = ({ navigation }) => {
                 weight,
                 vendor: user.uid,
               };
-              postMyProduct(productData, blob, setMessage, setVisible);
+              if (isUpdating) {
+                updateProduct(
+                  productId,
+                  productData,
+                  blob,
+                  setMessage,
+                  setVisible
+                );
+              } else {
+                postMyProduct(productData, blob, setMessage, setVisible);
+              }
               clearFields();
             }}
           >
-            Add New Product
+            {isUpdating ? "Update" : "Add New"} Product
           </Button>
         </Layout>
         <MessageComponent
@@ -189,7 +292,7 @@ const CategoryComponent = ({ category, setCategory, categories }) => {
   }, [selectedIndex]);
 
   return (
-    <Select 
+    <Select
       style={styles.select}
       size="medium"
       placeholder="Add Categories"
@@ -209,7 +312,7 @@ const MessageComponent = ({ message, visible, setVisible, setMessage }) => {
       <Card disabled={true}>
         <Text>{message}</Text>
         <Button
-          style={{marginTop: 12}}
+          style={{ marginTop: 12 }}
           onPress={() => {
             console.log(visible);
             setVisible(false);

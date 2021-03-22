@@ -57,7 +57,8 @@ const CatalogueNavigator = () => {
         name="Inbox"
         component={MessagingScreen}
         options={() => ({
-          headerShown: true
+          headerShown: true,
+          title: "My Inbox"
         })}
       />
     </CStack.Navigator>

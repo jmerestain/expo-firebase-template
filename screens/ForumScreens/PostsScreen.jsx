@@ -15,13 +15,21 @@ import { readPosts } from "../../services/forums";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
+
 const renderItemPosts = ({ item, index }) => (
   <Layout style={styles.item2}>
     <Layout
       style={{
         flexDirection: "row",
         alignSelf: "stretch",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}
     >
       <Layout
@@ -46,7 +54,7 @@ const renderItemPosts = ({ item, index }) => (
             {item.postedBy}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
-            {item.postedAt}
+            {item.postedAt && dateToString(item.postedAt.toDate())}
           </Text>
         </Layout>
       </Layout>
@@ -63,102 +71,116 @@ const renderItemPosts = ({ item, index }) => (
 function PostsScreen({ navigation, route }) {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    readPosts(route.params.groupId, setPosts);
-  }, []);
+  const groupId = route.params.groupId;
 
-  console.log(posts);
+  useEffect(() => {
+    readPosts(groupId, setPosts);
+  }, []);
 
   return (
     <Layout style={styles.container}>
-        <Layout style={styles.field}>
+      <Layout style={styles.field}>
         <Input
-        onChangeText={value => setSearch(value)}
-        placeholder='Search here'
-        accessoryLeft={SearchIcon}
-        style={{
-          marginHorizontal: 20, marginTop: 12, marginBottom:8
-        }}
+          onChangeText={(value) => setSearch(value)}
+          placeholder="Search here"
+          accessoryLeft={SearchIcon}
+          style={{
+            marginHorizontal: 20,
+            marginTop: 12,
+            marginBottom: 8,
+          }}
         />
-        <Divider/>
+        <Divider />
         <List data={posts} renderItem={renderItemPosts} />
-        </Layout>
-        <Layout style={{flex: 1, minWidth:'100%', elevation:3, borderColor: 'rgb(250,250,250)', position: 'absolute', left:0, bottom:0}}>
-        <Divider/>
-        <Button size='large'
-            onPress={() => {
-                navigation.navigate('Add New Item');
-            }}
-            style={{ marginHorizontal: 20, marginVertical: 16}}>
-                + Add New Post
+      </Layout>
+      <Layout
+        style={{
+          flex: 1,
+          minWidth: "100%",
+          elevation: 3,
+          borderColor: "rgb(250,250,250)",
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <Divider />
+        <Button
+          size="large"
+          onPress={() => {
+            navigation.navigate("Add New Post", { groupId });
+          }}
+          style={{ marginHorizontal: 20, marginVertical: 16 }}
+        >
+          + Add New Post
         </Button>
-        </Layout>
+      </Layout>
     </Layout>
-)
+  );
 }
 
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-},
-avatar: {
-    alignItems: 'center',
-    margin: 16
-},
-text: {
-    textAlign: 'center',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+  avatar: {
+    alignItems: "center",
+    margin: 16,
+  },
+  text: {
+    textAlign: "center",
     fontSize: 35,
     marginVertical: 20,
-},
-buttonGroup: {
-    alignSelf: 'center',
+  },
+  buttonGroup: {
+    alignSelf: "center",
     marginVertical: 20,
-},
-userMessage: {
+  },
+  userMessage: {
     padding: 30,
     elevation: 2,
     marginHorizontal: 20,
     marginBottom: 20,
-},
-loading: {
-    alignSelf: 'center',
-},
-containerTop: {
+  },
+  loading: {
+    alignSelf: "center",
+  },
+  containerTop: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-},
-containerList: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginVertical:8
-},
-innerList: {
-    flexDirection: 'row',
-},
-item2: {
-    paddingHorizontal: 25
-},
-textList: {
-    flexDirection: 'column',
-    marginBottom: 12,
-},
-buttonContain: {
-    flex: 1,
-    flexDirection: 'row',
-    minHeight: 80,
-    justifyContent: 'space-around',
-    marginBottom: 32
-},
-settingsCard: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+  containerList: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
     marginVertical: 8,
-},
-})
+  },
+  innerList: {
+    flexDirection: "row",
+  },
+  item2: {
+    paddingHorizontal: 25,
+  },
+  textList: {
+    flexDirection: "column",
+    marginBottom: 12,
+  },
+  buttonContain: {
+    flex: 1,
+    flexDirection: "row",
+    minHeight: 80,
+    justifyContent: "space-around",
+    marginBottom: 32,
+  },
+  settingsCard: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    marginVertical: 8,
+  },
+});
 
 export default PostsScreen;
