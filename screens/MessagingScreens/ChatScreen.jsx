@@ -83,7 +83,10 @@ function ChatScreen({ navigation, route }) {
   const { chatId, recipientId } = route.params;
 
   useEffect(() => {
-    readChatroom(chatId, setMessages);
+    const chatroomListener = readChatroom(chatId, setMessages);
+    return function cleanup() {
+      chatroomListener();
+    }
   }, []);
 
   useEffect(() => {

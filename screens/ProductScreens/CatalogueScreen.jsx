@@ -96,7 +96,10 @@ const HomeComponent = ({ user, navigation }) => {
   };
 
   useEffect(() => {
-    getCatalogue(homeProductsCallback);
+    var unsubscribe = getCatalogue(homeProductsCallback);
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   useEffect(() => {

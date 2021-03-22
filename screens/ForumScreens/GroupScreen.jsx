@@ -49,7 +49,11 @@ const GroupScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    getGroups(setGroups);
+    var unsubscribe = getGroups(setGroups);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

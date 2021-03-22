@@ -91,7 +91,11 @@ function InboxScreen({ navigation }) {
   const [inbox, setInbox] = useState([]);
 
   useEffect(() => {
-    getInbox(false, setInbox);
+    const unsubscribe = getInbox(false, setInbox);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

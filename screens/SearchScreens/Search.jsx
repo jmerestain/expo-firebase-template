@@ -74,7 +74,11 @@ const Search = ({ navigation }) => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    getProductsCurrentVendor(setProducts);
+    var unsubscribe = getProductsCurrentVendor(setProducts);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

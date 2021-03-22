@@ -74,7 +74,11 @@ function PostsScreen({ navigation, route }) {
   const groupId = route.params.groupId;
 
   useEffect(() => {
-    readPosts(groupId, setPosts);
+    var unsubscribe = readPosts(groupId, setPosts);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

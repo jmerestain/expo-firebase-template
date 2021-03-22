@@ -324,10 +324,17 @@ function OrderStatusScreen({ navigation, route }) {
   const [toReviewOrders, setToReviewOrders] = useState([]);
 
   useEffect(() => {
-    getOrdersCurrentUser(ORDER_TO_PAY, setToProcessOrders);
-    getOrdersCurrentUser(ORDER_TO_SHIP, setToDeliverOrders);
-    getOrdersCurrentUser(ORDER_TO_RECEIVE, setToReceiveOrders);
-    getOrdersCurrentUser(ORDER_COMPLETED, setToReviewOrders);
+    const unsubscribeToPay = getOrdersCurrentUser(ORDER_TO_PAY, setToProcessOrders);
+    const unsubscribeToShip = getOrdersCurrentUser(ORDER_TO_SHIP, setToDeliverOrders);
+    const unsubscribeToReceive = getOrdersCurrentUser(ORDER_TO_RECEIVE, setToReceiveOrders);
+    const unsubscribeCompleted = getOrdersCurrentUser(ORDER_COMPLETED, setToReviewOrders);
+
+    return function cleanup() {
+      unsubscribeToPay();
+      unsubscribeToShip();
+      unsubscribeToReceive();
+      unsubscribeCompleted();
+    }
   }, []);
 
   return (

@@ -338,14 +338,21 @@ function OrderStatusScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getOrdersUnderCurrentVendor(ORDER_PENDING, (orders) =>
+    var unsubscribePending = getOrdersUnderCurrentVendor(ORDER_PENDING, (orders) =>
       groupOrdersByUser(orders, setPendingOrders)
     );
-    getOrdersUnderCurrentVendor(ORDER_TO_PAY, (orders) =>
+    var unsubscribeToPay = getOrdersUnderCurrentVendor(ORDER_TO_PAY, (orders) =>
       groupOrdersByUser(orders, setToPayOrders)
     );
-    getOrdersUnderCurrentVendor(ORDER_TO_SHIP, setToDeliverOrders);
-    getOrdersUnderCurrentVendor(ORDER_TO_RECEIVE, setToReceiveOrders);
+    var unsubscribeToShip = getOrdersUnderCurrentVendor(ORDER_TO_SHIP, setToDeliverOrders);
+    var unsubscribeToReceive = getOrdersUnderCurrentVendor(ORDER_TO_RECEIVE, setToReceiveOrders);
+
+    return function cleanup() {
+      unsubscribePending();
+      unsubscribeToPay();
+      unsubscribeToShip();
+      unsubscribeToReceive();
+    }
   }, []);
 
   return (

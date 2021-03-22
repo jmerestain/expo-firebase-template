@@ -9,7 +9,11 @@ const ProductsNav = () => {
   const [products, setProducts] = useState({});
 
   useEffect(() => {
-    getProductsCurrentVendor(setProducts);
+    var unsubscribe = getProductsCurrentVendor(setProducts);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

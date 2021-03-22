@@ -56,7 +56,14 @@ const Category = ({ route, navigation }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getProductsFromCategory(route.params.categoryId, setProducts);
+    var unsubscribe = getProductsFromCategory(
+      route.params.categoryId,
+      setProducts
+    );
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

@@ -138,7 +138,15 @@ function ProductScreen({ route, navigation }) {
   useEffect(() => {
     if (product.vendor) {
       getShopDetailsByUID(product.vendor, setVendor);
-      getProductsLimitedFromUID(product.vendor, 6, setMoreProducts);
+      var unsubscribe = getProductsLimitedFromUID(
+        product.vendor,
+        6,
+        setMoreProducts
+      );
+    }
+
+    return function cleanup() {
+      unsubscribe();
     }
   }, [product]);
 

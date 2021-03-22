@@ -105,7 +105,7 @@ export const sendMessage = (
 export const readChatroom = (chatroomId, callback) => {
   const db = firebase.firestore();
 
-  db.collection("chat-rooms")
+  var unsubscribe = db.collection("chat-rooms")
     .doc(chatroomId)
     .collection("messages")
     .orderBy("createdAt", "desc")
@@ -122,6 +122,8 @@ export const readChatroom = (chatroomId, callback) => {
       });
       callback(messages);
     });
+  
+    return unsubscribe;
 };
 
 export const getInbox = (isVendorInbox, callback) => {
@@ -129,7 +131,8 @@ export const getInbox = (isVendorInbox, callback) => {
   const auth = firebase.auth();
   const uid = auth.currentUser.uid;
 
-  db.collection("chat-owners")
+  var unsubscribe = db
+    .collection("chat-owners")
     .doc(uid)
     .collection("chatrooms")
     .where("isVendorChat", "==", isVendorInbox)
@@ -146,4 +149,6 @@ export const getInbox = (isVendorInbox, callback) => {
       });
       callback(chatrooms);
     });
+
+  return unsubscribe;
 };

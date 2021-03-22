@@ -152,7 +152,11 @@ const CompletedNav = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    getOrdersUnderCurrentVendor(ORDER_COMPLETED, setOrders);
+    var unsubscribe = getOrdersUnderCurrentVendor(ORDER_COMPLETED, setOrders);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   return (

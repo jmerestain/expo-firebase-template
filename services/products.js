@@ -3,8 +3,9 @@ import "firebase/firestore";
 
 export const getMyStore = (user, setProducts) => {
   const db = firebase.firestore();
+  var unsubscribe;
   if (user) {
-    db.collection("products")
+    unsubscribe = db.collection("products")
       .where("vendor", "==", user.uid)
       .onSnapshot((querySnapshot) => {
         setProducts([]);
@@ -12,12 +13,13 @@ export const getMyStore = (user, setProducts) => {
           setProducts((oldArray) => [...oldArray, doc.data()]);
         });
       });
-  }
+    }
+  return unsubscribe;
 };
 
 export const getCatalogue = (callback) => {
   const db = firebase.firestore();
-  db.collection("products")
+  var unsubscribe = db.collection("products")
     .limit(10)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -26,6 +28,8 @@ export const getCatalogue = (callback) => {
       });
       callback(products);
     });
+  
+  return unsubscribe;
 };
 
 export const getCategories = (callback) => {
@@ -41,7 +45,8 @@ export const getCategories = (callback) => {
 
 export const getProductsFromCategory = (categoryId, callback) => {
   const db = firebase.firestore();
-  db.collection("products")
+  var unsubscribe = db
+    .collection("products")
     .where("category", "array-contains", categoryId)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -50,13 +55,16 @@ export const getProductsFromCategory = (categoryId, callback) => {
       });
       callback(products);
     });
+
+  return unsubscribe;
 };
 
 // Get products by vendor ID
 export const getProductsFromUID = (uid, callback) => {
   const db = firebase.firestore();
 
-  db.collection("products")
+  var unsubscribe = db
+    .collection("products")
     .where("vendor", "==", uid)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -65,13 +73,16 @@ export const getProductsFromUID = (uid, callback) => {
       });
       callback(products);
     });
+
+  return unsubscribe;
 };
 
 // Get products by vendor ID (limited)
 export const getProductsLimitedFromUID = (uid, limit, callback) => {
   const db = firebase.firestore();
 
-  db.collection("products")
+  var unsubscribe = db
+    .collection("products")
     .where("vendor", "==", uid)
     .limit(limit)
     .onSnapshot((querySnapshot) => {
@@ -81,6 +92,8 @@ export const getProductsLimitedFromUID = (uid, limit, callback) => {
       });
       callback(products);
     });
+
+  return unsubscribe;
 };
 
 // Get products of current vendor
@@ -89,7 +102,8 @@ export const getProductsCurrentVendor = (callback) => {
   const auth = firebase.auth();
   const uid = auth.currentUser.uid;
 
-  db.collection("products")
+  var unsubscribe = db
+    .collection("products")
     .where("vendor", "==", uid)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -98,6 +112,8 @@ export const getProductsCurrentVendor = (callback) => {
       });
       callback(products);
     });
+
+  return unsubscribe;
 };
 
 // Get product by its ID

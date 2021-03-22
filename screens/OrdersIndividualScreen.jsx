@@ -128,7 +128,11 @@ const DeliverAddress = ({ route, navigation }) => {
   const vendorId = route.params.vendorId;
 
   useEffect(() => {
-    getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
+    const unsubscribe = getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   useEffect(() => {
