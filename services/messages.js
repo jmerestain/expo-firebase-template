@@ -53,10 +53,21 @@ export const startChat = (toUID, toName, fromName, isVendorChat, callback) => {
     .catch((e) => console.log(e));
 };
 
-export const sendMessage = (recipientId, messageDetails, chatroomId, callback) => {
+export const sendMessage = (
+  recipientId,
+  messageDetails,
+  chatroomId,
+  callback
+) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
+
+  if (!(user in messageDetails)) {
+    messageDetails.user = {
+      _id: currentUserUID,
+    };
+  }
 
   const { createdAt, text, user } = messageDetails;
 
@@ -86,7 +97,7 @@ export const sendMessage = (recipientId, messageDetails, chatroomId, callback) =
   batch
     .commit()
     .then(() => {
-      callback();
+      callback(chatroomId);
     })
     .catch((e) => console.log(e));
 };

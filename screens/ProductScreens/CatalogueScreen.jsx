@@ -34,28 +34,9 @@ const CatalogueNavigator = () => {
       <CStack.Screen
         name="Catalogue"
         component={CatalogueScreen}
-        options={({ navigation }) => ({
-          // headerShown: false,
-          header: ({ scene, previous, navigation }) => {
-            const { options } = scene.descriptor;
-            const title =
-              options.headerTitle !== undefined
-                ? options.headerTitle
-                : options.title !== undefined
-                ? options.title
-                : scene.route.name;
-
-            console.log(options);
-
-            return (
-              <DashHeader
-                title={title}
-                style={options.headerStyle}
-                headerShown={options.headerShown}
-                navigation={navigation}
-              />
-            );
-            // return <DashHeader {...props} navigation={navigation} />;
+        options={(props) => ({
+          header: ({ navigation }) => {
+            return <DashHeader {...props} navigation={navigation} />;
           },
         })}
       />
