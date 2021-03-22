@@ -15,11 +15,11 @@ import DashHeader from "../../components/headers/DashHeader";
 
 const artscrafts = require("../../assets/categories/artscrafts.png");
 const beautypersonalcare = require("../../assets/categories/beautypersonalcare.png");
-const farmgardening = require("../../assets/categories/farmgardening.png");
-const fashionwearables = require("../../assets/categories/fashionwearables.png");
+const freshproduce = require("../../assets/categories/freshproduce.png");
 const fooddrinks = require("../../assets/categories/fooddrinks.png");
-const healthwellness = require("../../assets/categories/healthwellness.png");
-const homeessentials = require("../../assets/categories/homeessentials.png");
+const beautyandwellness = require("../../assets/categories/beautyandwellness.png");
+const homestyle = require("../../assets/categories/homestyle.png");
+const wearables = require("../../assets/categories/wearables.png");
 
 const CatalogueNavigator = () => {
   const CStack = createStackNavigator();
@@ -128,27 +128,26 @@ const HomeComponent = ({ user, navigation }) => {
 };
 const CategoryEntry = ({ category }) => {
   const navigation = useNavigation();
-  let imageSource;
+  const { id, image_name, title } = category;
 
-  if (icon === "fooddrinks") {
+  let imageSource;
+  if (image_name === "fooddrinks") {
     imageSource = fooddrinks;
-  } else if (icon === "artscrafts") {
+  } else if (image_name === "artscrafts") {
     imageSource = artscrafts;
-  } else if (icon === "beautypersonalcare") {
+  } else if (image_name === "beautypersonalcare") {
     imageSource = beautypersonalcare;
-  } else if (icon === "farmgardening") {
-    imageSource = farmgardening;
-  } else if (icon === "fashionwearables") {
-    imageSource = fashionwearables;
-  } else if (icon === "healthwellness") {
-    imageSource = healthwellness;
-  } else if (icon === "homeessentials") {
-    imageSource = homeessentials;
+  } else if (image_name === "freshproduce") {
+    imageSource = freshproduce;
+  } else if (image_name === "wearables") {
+    imageSource = wearables;
+  } else if (image_name === "beautyandwellness") {
+    imageSource = beautyandwellness;
+  } else if (image_name === "homestyle") {
+    imageSource = homestyle;
   } else {
     imageSource = fooddrinks;
   }
-
-  const { id, icon, title } = category;
 
   return (
     <TouchableOpacity
