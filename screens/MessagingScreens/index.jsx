@@ -12,6 +12,7 @@ const MessageNavigator = () => {
   return (
     <MessageNav.Navigator
       screenOptions={{
+        // headerShown: true
         headerStyle: {
           backgroundColor: "rgb(138,18,20)",
         },

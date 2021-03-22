@@ -9,6 +9,7 @@ import { checkAuthenticated } from "../../services/auth";
 import { useNavigation } from "@react-navigation/native";
 // Components
 import MessagingScreen from "../MessagingScreens";
+import SearchScreen from "../SearchScreens/Search";
 import Category from "./Category/Category";
 import ProductScreen from "./ProductDetail/ProductScreen";
 import DashHeader from "../../components/headers/DashHeader";
@@ -25,6 +26,7 @@ const CatalogueNavigator = () => {
   const CStack = createStackNavigator();
   return (
     <CStack.Navigator
+      headerMode="screen"
       screenOptions={{
         headerStyle: { backgroundColor: "rgb(138,18,20)" },
       }}
@@ -32,12 +34,30 @@ const CatalogueNavigator = () => {
       <CStack.Screen
         name="Catalogue"
         component={CatalogueScreen}
-        options={{
-          headerShown: true,
-          header: (props) => {
-            return <DashHeader />;
+        options={({ navigation }) => ({
+          // headerShown: false,
+          header: ({ scene, previous, navigation }) => {
+            const { options } = scene.descriptor;
+            const title =
+              options.headerTitle !== undefined
+                ? options.headerTitle
+                : options.title !== undefined
+                ? options.title
+                : scene.route.name;
+
+            console.log(options);
+
+            return (
+              <DashHeader
+                title={title}
+                style={options.headerStyle}
+                headerShown={options.headerShown}
+                navigation={navigation}
+              />
+            );
+            // return <DashHeader {...props} navigation={navigation} />;
           },
-        }}
+        })}
       />
       <CStack.Screen
         name="Category"
@@ -56,9 +76,17 @@ const CatalogueNavigator = () => {
       <CStack.Screen
         name="Inbox"
         component={MessagingScreen}
+        options={{
+          headerShown: false,
+          title: "My Inbox",
+        }}
+      />
+      <CStack.Screen
+        name="Search"
+        component={SearchScreen}
         options={() => ({
           headerShown: true,
-          title: "My Inbox"
+          title: "Search",
         })}
       />
     </CStack.Navigator>
@@ -77,7 +105,7 @@ const HomeComponent = ({ user, navigation }) => {
     });
 
     setHomeProducts(finalProducts);
-  }
+  };
 
   const homeProductsCallback = (products) => {
     getShopDetailsByManyUID(
@@ -159,7 +187,11 @@ const CategoryEntry = ({ category }) => {
         <Image source={imageSource} style={styles.icon} />
         <Text
           category="label"
-          style={{ textAlign: "center", fontWeight: "bold", fontFamily: "NunitoSans-Bold" }}
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontFamily: "NunitoSans-Bold",
+          }}
         >
           {title}
         </Text>
@@ -192,11 +224,28 @@ const renderItem = ({ item, navigation }) => {
     >
       <Layout style={styles.pickForYou}>
         <Image source={{ uri: imageUrl }} style={{ width: 160, height: 120 }} />
-        <Text category="s1" style={{ fontWeight: "bold", marginVertical: 6, fontFamily: "NunitoSans-Bold", color: '#000' }}>
+        <Text
+          category="s1"
+          style={{
+            fontWeight: "bold",
+            marginVertical: 6,
+            fontFamily: "NunitoSans-Bold",
+            color: "#000",
+          }}
+        >
           {title}
         </Text>
         <Text category="s2">P{price}</Text>
-        <Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{vendor}</Text>
+        <Text
+          category="s2"
+          style={{
+            marginVertical: 4,
+            color: "#00000070",
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          {vendor}
+        </Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -246,7 +295,7 @@ const styles = StyleSheet.create({
   categoryImage: {
     backgroundColor: "#FFF",
     height: 240,
-    resizeMode: "contain", 
+    resizeMode: "contain",
     alignSelf: "center",
     paddingHorizontal: 20,
   },
@@ -265,7 +314,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 44,
     height: 44,
-    marginBottom: 12 
+    marginBottom: 12,
   },
   pickForYou: {
     flex: 1,

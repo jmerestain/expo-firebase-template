@@ -61,9 +61,9 @@ const LoginScreen = ({ navigation }) => {
         }}
       >
         {message == "" ? null : <PopUpMessage message={message} />}
-        OR
+        {/* OR */}
       </Text>
-      <Button
+      {/* <Button
         size="large"
         onPress={() => {}}
         style={{
@@ -90,7 +90,7 @@ const LoginScreen = ({ navigation }) => {
         }}
       >
         Login with Google
-      </Button>
+      </Button> */}
       <Layout
         style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
       >

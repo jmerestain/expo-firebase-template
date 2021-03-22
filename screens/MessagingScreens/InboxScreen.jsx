@@ -94,8 +94,6 @@ function InboxScreen({ navigation }) {
     getInbox(false, setInbox);
   }, []);
 
-  console.log(inbox);
-
   return (
     <Layout style={styles.container}>
       <Input
