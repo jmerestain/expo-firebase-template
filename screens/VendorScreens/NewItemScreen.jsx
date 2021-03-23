@@ -12,7 +12,7 @@ import {
 } from "@ui-kitten/components";
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Image, ScrollView } from "react-native";
-import { checkAuthenticated } from "../../services/auth";
+import { getShopDetails } from "../../services/vendor";
 import {
   postMyProduct,
   getCategories,
@@ -35,7 +35,7 @@ const NewItemScreen = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
-  const [user, setUser] = useState(null);
+  const [vendor, setVendor] = useState(null);
   const [message, setMessage] = useState(null);
 
   //   List of ALL categories
@@ -44,7 +44,7 @@ const NewItemScreen = ({ navigation, route }) => {
   const { isUpdating, productId } = route.params;
 
   useEffect(() => {
-    checkAuthenticated(setUser, navigation);
+    getShopDetails(setVendor);
   }, []);
 
   useEffect(() => {
@@ -244,7 +244,8 @@ const NewItemScreen = ({ navigation, route }) => {
                 price,
                 stock,
                 weight,
-                vendor: user.uid,
+                vendor: vendor.id,
+                vendorName: vendor.shop.name
               };
               if (isUpdating) {
                 updateProduct(

@@ -146,7 +146,9 @@ function ProductScreen({ route, navigation }) {
     }
 
     return function cleanup() {
-      unsubscribe();
+      if(unsubscribe) {
+        unsubscribe();
+      }
     }
   }, [product]);
 

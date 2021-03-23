@@ -46,7 +46,7 @@ const renderItem = ({ item, index, navigation }) => (
       <Text
         style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
       >
-        {item.shop}
+        {item.vendorName}
       </Text>
     </Layout>
   </Layout>
@@ -54,17 +54,39 @@ const renderItem = ({ item, index, navigation }) => (
 
 const Category = ({ route, navigation }) => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [query, setSearch] = useState("");
 
   useEffect(() => {
-    var unsubscribe = getProductsFromCategory(
+    var unsubscribe = () => {};
+    unsubscribe = getProductsFromCategory(
       route.params.categoryId,
       setProducts
     );
 
     return function cleanup() {
-      unsubscribe();
-    }
+      if(unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredProducts(
+      products.filter(
+        (product) =>
+          product.description.toLowerCase().includes(lowercaseQuery) ||
+          product.title.toLowerCase().includes(lowercaseQuery) ||
+          (product.vendorName &&
+            product.vendorName.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -79,7 +101,7 @@ const Category = ({ route, navigation }) => {
         />
         <List
           contentContainerStyle={styles.containerList}
-          data={products}
+          data={filteredProducts}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           renderItem={(props) => renderItem({...props, navigation})}

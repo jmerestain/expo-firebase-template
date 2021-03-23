@@ -55,7 +55,7 @@ export const getProductsFromCategory = (categoryId, callback) => {
       });
       callback(products);
     });
-
+  
   return unsubscribe;
 };
 

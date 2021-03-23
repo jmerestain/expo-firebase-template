@@ -98,7 +98,9 @@ const HomeComponent = ({ user, navigation }) => {
   useEffect(() => {
     var unsubscribe = getCatalogue(homeProductsCallback);
     return function cleanup() {
-      unsubscribe();
+      if(unsubscribe) {
+        unsubscribe();
+      }
     }
   }, []);
 
