@@ -89,15 +89,32 @@ const RenderItem = ({ item, navigation }) => (
 );
 
 const ManageProductsScreen = ({ navigation }) => {
-  const [products, setProducts] = useState({});
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [query, setSearch] = useState("");
 
   useEffect(() => {
     var unsubscribe = getProductsCurrentVendor(setProducts);
 
     return function cleanup() {
       unsubscribe();
-    }
+    };
   }, []);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredProducts(
+      products.filter(
+        (product) =>
+          product.description.toLowerCase().includes(lowercaseQuery) ||
+          product.title.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -114,7 +131,7 @@ const ManageProductsScreen = ({ navigation }) => {
         />
         <Divider />
         <List
-          data={products}
+          data={filteredProducts}
           renderItem={(props) => RenderItem({ ...props, navigation })}
           style={{ marginBottom: 145 }}
         />
