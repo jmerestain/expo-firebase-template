@@ -47,24 +47,35 @@ const data = new Array(8).fill({
   dateReviewed: "01/11/21",
 });
 
-const renderItemMore = ({ item, index }) => (
+const renderItemMore = ({ item, navigation, index }) => (
   <Layout style={styles.item}>
-    <Image
-      style={{ resizeMode: "cover", height: 160, width: 170 }}
-      source={{ uri: item.imageUrl }}
-    />
-    <Layout style={{ alignSelf: "flex-start", marginHorizontal: 10 }}>
-      <Text
-        category="s1"
-        style={{
-          marginTop: 8,
-          marginBottom: 4,
-        }}
-      >
-        {item.title}
-      </Text>
-      <Text category="s2" style={{color: "#00000080"}}>P{item.price}</Text>
-    </Layout>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push("Product", {
+          productId: item.id,
+          title: item.title,
+        });
+      }}
+    >
+      <Image
+        style={{ resizeMode: "cover", height: 160, width: 170 }}
+        source={{ uri: item.imageUrl }}
+      />
+      <Layout style={{ alignSelf: "flex-start", marginHorizontal: 10 }}>
+        <Text
+          category="s1"
+          style={{
+            marginTop: 8,
+            marginBottom: 4,
+          }}
+        >
+          {item.title}
+        </Text>
+        <Text category="s2" style={{ color: "#00000080" }}>
+          P{item.price}
+        </Text>
+      </Layout>
+    </TouchableOpacity>
   </Layout>
 );
 
@@ -289,7 +300,7 @@ function ProductScreen({ route, navigation }) {
             <List
               data={moreProducts}
               numColumns={2}
-              renderItem={renderItemMore}
+              renderItem={(props) => renderItemMore({...props, navigation})}
             />
 
             <Divider />
