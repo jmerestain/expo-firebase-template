@@ -47,6 +47,8 @@ const GroupScreen = ({ navigation }) => {
   );
 
   const [groups, setGroups] = useState([]);
+  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [query, setSearch] = useState("");
 
   useEffect(() => {
     var unsubscribe = getGroups(setGroups);
@@ -55,6 +57,21 @@ const GroupScreen = ({ navigation }) => {
       unsubscribe();
     }
   }, []);
+
+  useEffect(() => {
+    setFilteredGroups(groups);
+  }, [groups]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredGroups(
+      groups.filter(
+        (group) =>
+          group.description.toLowerCase().includes(lowercaseQuery) ||
+          group.name.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+  }, [query]);
 
   return (
     <ScrollView>
@@ -71,7 +88,7 @@ const GroupScreen = ({ navigation }) => {
           </Text>
           <List
             contentContainerStyle={styles.containerList}
-            data={groups}
+            data={filteredGroups}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             renderItem={renderItem}
