@@ -323,19 +323,89 @@ function OrderStatusScreen({ navigation, route }) {
   const [toReceiveOrders, setToReceiveOrders] = useState([]);
   const [toReviewOrders, setToReviewOrders] = useState([]);
 
+  const [filteredToProcessOrders, setFilteredToProcessOrders] = useState([]);
+  const [filteredToDeliverOrders, setFilteredToDeliverOrders] = useState([]);
+  const [filteredToReceiveOrders, setFilteredToReceiveOrders] = useState([]);
+  const [filteredToReviewOrders, setFilteredToReviewOrders] = useState([]);
+  const [query, setSearch] = useState("");
+
   useEffect(() => {
-    const unsubscribeToPay = getOrdersCurrentUser(ORDER_TO_PAY, setToProcessOrders);
-    const unsubscribeToShip = getOrdersCurrentUser(ORDER_TO_SHIP, setToDeliverOrders);
-    const unsubscribeToReceive = getOrdersCurrentUser(ORDER_TO_RECEIVE, setToReceiveOrders);
-    const unsubscribeCompleted = getOrdersCurrentUser(ORDER_COMPLETED, setToReviewOrders);
+    const unsubscribeToPay = getOrdersCurrentUser(
+      ORDER_TO_PAY,
+      setToProcessOrders
+    );
+    const unsubscribeToShip = getOrdersCurrentUser(
+      ORDER_TO_SHIP,
+      setToDeliverOrders
+    );
+    const unsubscribeToReceive = getOrdersCurrentUser(
+      ORDER_TO_RECEIVE,
+      setToReceiveOrders
+    );
+    const unsubscribeCompleted = getOrdersCurrentUser(
+      ORDER_COMPLETED,
+      setToReviewOrders
+    );
 
     return function cleanup() {
       unsubscribeToPay();
       unsubscribeToShip();
       unsubscribeToReceive();
       unsubscribeCompleted();
-    }
+    };
   }, []);
+
+  useEffect(() => {
+    setFilteredToProcessOrders(toProcessOrders);
+  }, [toProcessOrders]);
+
+  useEffect(() => {
+    setFilteredToDeliverOrders(toDeliverOrders);
+  }, [toDeliverOrders]);
+
+  useEffect(() => {
+    setFilteredToReceiveOrders(toReceiveOrders);
+  }, [toReceiveOrders]);
+
+  useEffect(() => {
+    setFilteredToReviewOrders(toReviewOrders);
+  }, [toReviewOrders]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredToProcessOrders(
+      toProcessOrders.filter(
+        (order) =>
+          order.product &&
+          (order.product.title.toLowerCase().includes(lowercaseQuery) ||
+            order.product.vendor.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+    setFilteredToDeliverOrders(
+      toDeliverOrders.filter(
+        (order) =>
+          order.product &&
+          (order.product.title.toLowerCase().includes(lowercaseQuery) ||
+            order.product.vendor.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+    setFilteredToReceiveOrders(
+      toReceiveOrders.filter(
+        (order) =>
+          order.product &&
+          (order.product.title.toLowerCase().includes(lowercaseQuery) ||
+            order.product.vendor.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+    setFilteredToReviewOrders(
+      toReviewOrders.filter(
+        (order) =>
+          order.product &&
+          (order.product.title.toLowerCase().includes(lowercaseQuery) ||
+            order.product.vendor.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -348,10 +418,10 @@ function OrderStatusScreen({ navigation, route }) {
       <NavigationContainer independent="true">
         <StatusTabNavigation
           route={route}
-          toProcessOrders={toProcessOrders}
-          toDeliverOrders={toDeliverOrders}
-          toReceiveOrders={toReceiveOrders}
-          toReviewOrders={toReviewOrders}
+          toProcessOrders={filteredToProcessOrders}
+          toDeliverOrders={filteredToDeliverOrders}
+          toReceiveOrders={filteredToReceiveOrders}
+          toReviewOrders={filteredToReviewOrders}
         />
       </NavigationContainer>
     </Layout>
