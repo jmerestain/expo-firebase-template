@@ -11,7 +11,7 @@ import {
   Icon,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-import { checkAuthenticated } from "../../services/auth";
+import { searchFromData } from "../../services/search";
 import { getProductsCurrentVendor } from "../../services/products";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
@@ -37,7 +37,11 @@ const RenderItem = ({ item, navigation }) => (
                 fontFamily: "NunitoSans-Bold",
               }}
             >
-              {item.title}
+              {item.type == "product"
+                ? item.title
+                : item.shop
+                ? item.shop.name
+                : ""}
             </Text>
             <Text
               category="s2"
@@ -47,20 +51,26 @@ const RenderItem = ({ item, navigation }) => (
                 color: "#000000",
               }}
             >
-              P{item.price}
+              {item.type == "product"
+                ? "P" + item.price
+                : item.shop
+                ? item.shop.owner
+                : ""}
             </Text>
-            <Text
-              category="s2"
-              style={{
-                alignContent: "center",
-                marginVertical: 2,
-                color: "#00000060",
-                fontFamily: "NunitoSans-Regular",
-                fontSize: 12,
-              }}
-            >
-              {item.stock} left
-            </Text>
+            {item.type == "product" && (
+              <Text
+                category="s2"
+                style={{
+                  alignContent: "center",
+                  marginVertical: 2,
+                  color: "#00000060",
+                  fontFamily: "NunitoSans-Regular",
+                  fontSize: 12,
+                }}
+              >
+                {item.stock} left
+              </Text>
+            )}
           </Layout>
         </Layout>
       </Layout>
@@ -69,23 +79,26 @@ const RenderItem = ({ item, navigation }) => (
   </Layout>
 );
 
-const Search = ({ navigation }) => {
-  const [products, setProducts] = useState({});
-  const [search, setSearch] = useState("");
+const Search = ({ navigation, route }) => {
+  const [results, setResults] = useState({});
+  const [query, setSearch] = useState("");
 
   useEffect(() => {
-    var unsubscribe = getProductsCurrentVendor(setProducts);
-
-    return function cleanup() {
-      unsubscribe();
+    if (route.params.query) {
+      setSearch(route.params.query);
+      searchFromData(route.params.query, setResults);
     }
   }, []);
+
+  console.log(results);
 
   return (
     <Layout style={styles.container}>
       <Layout style={styles.field}>
         <Input
           onChangeText={(value) => setSearch(value)}
+          defaultValue={query}
+          onSubmitEditing={() => searchFromData(query, setResults)}
           placeholder="Search here"
           accessoryLeft={SearchIcon}
           style={{
@@ -96,7 +109,7 @@ const Search = ({ navigation }) => {
         />
         <Divider />
         <List
-          data={products}
+          data={results}
           renderItem={(props) => RenderItem({ ...props, navigation })}
           style={{ marginBottom: 145 }}
         />
@@ -111,8 +124,7 @@ const Search = ({ navigation }) => {
           left: 0,
           bottom: 0,
         }}
-      >
-      </Layout>
+      ></Layout>
     </Layout>
   );
 };

@@ -25,7 +25,7 @@ const MessagesButton = ({ navigation }) => (
   </TouchableOpacity>
 );
 
-const SearchBar = ({ setSearch }) => (
+const SearchBar = ({ navigation }) => (
   <Layout
     style={{
       flexDirection: "row",
@@ -36,14 +36,14 @@ const SearchBar = ({ setSearch }) => (
     <Input
       style={styles.input}
       placeholder="Search..."
-      onChangeText={(value) => setSearch(value)}
+      onSubmitEditing={(e) =>
+        navigation.navigate("Search", { query: e.nativeEvent.text })
+      }
     />
   </Layout>
 );
 
 const DashHeader = ({ navigation }) => {
-  const [search, setSearch] = useState("");
-
   return (
     <TopNavigation
       style={styles.container}
@@ -51,7 +51,7 @@ const DashHeader = ({ navigation }) => {
       accessoryRight={(props) => (
         <MessagesButton {...props} navigation={navigation} />
       )}
-      title={() => <SearchBar setSearch={setSearch} />}
+      title={() => <SearchBar navigation={navigation} />}
       alignment="start"
     />
   );
