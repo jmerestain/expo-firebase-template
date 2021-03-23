@@ -71,16 +71,6 @@ const renderItem = ({ item, index, isPending }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
           <Button
             size="small"
             style={{
@@ -327,6 +317,12 @@ function OrderStatusScreen({ navigation }) {
   const [toDeliverOrders, setToDeliverOrders] = useState([]);
   const [toReceiveOrders, setToReceiveOrders] = useState([]);
 
+  const [filteredPendingOrders, setFilteredPendingOrders] = useState([]);
+  const [filteredToPayOrders, setFilteredToPayOrders] = useState([]);
+  const [filteredToDeliverOrders, setFilteredToDeliverOrders] = useState([]);
+  const [filteredToReceiveOrders, setFilteredToReceiveOrders] = useState([]);
+  const [query, setSearch] = useState("");
+
   const groupOrdersByUser = (orders, callback) => {
     let groupedOrders = _.groupBy(orders, (order) => order.user);
     groupedOrders = Object.entries(groupedOrders).map(([key, val]) => ({
@@ -338,22 +334,81 @@ function OrderStatusScreen({ navigation }) {
   };
 
   useEffect(() => {
-    var unsubscribePending = getOrdersUnderCurrentVendor(ORDER_PENDING, (orders) =>
-      groupOrdersByUser(orders, setPendingOrders)
+    var unsubscribePending = getOrdersUnderCurrentVendor(
+      ORDER_PENDING,
+      (orders) => groupOrdersByUser(orders, setPendingOrders)
     );
     var unsubscribeToPay = getOrdersUnderCurrentVendor(ORDER_TO_PAY, (orders) =>
       groupOrdersByUser(orders, setToPayOrders)
     );
-    var unsubscribeToShip = getOrdersUnderCurrentVendor(ORDER_TO_SHIP, setToDeliverOrders);
-    var unsubscribeToReceive = getOrdersUnderCurrentVendor(ORDER_TO_RECEIVE, setToReceiveOrders);
+    var unsubscribeToShip = getOrdersUnderCurrentVendor(
+      ORDER_TO_SHIP,
+      setToDeliverOrders
+    );
+    var unsubscribeToReceive = getOrdersUnderCurrentVendor(
+      ORDER_TO_RECEIVE,
+      setToReceiveOrders
+    );
 
     return function cleanup() {
       unsubscribePending();
       unsubscribeToPay();
       unsubscribeToShip();
       unsubscribeToReceive();
-    }
+    };
   }, []);
+
+  useEffect(() => {
+    setFilteredPendingOrders(pendingOrders);
+  }, [pendingOrders]);
+
+  useEffect(() => {
+    setFilteredToPayOrders(toPayOrders);
+  }, [toPayOrders]);
+
+  useEffect(() => {
+    setFilteredToDeliverOrders(toDeliverOrders);
+  }, [toDeliverOrders]);
+
+  useEffect(() => {
+    setFilteredToReceiveOrders(toReceiveOrders);
+  }, [toReceiveOrders]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredPendingOrders(
+      pendingOrders.filter(
+        (order) =>
+          (order.product &&
+            order.product.title.toLowerCase().includes(lowercaseQuery)) ||
+          order.userName.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+    setFilteredToPayOrders(
+      toPayOrders.filter(
+        (order) =>
+          (order.product &&
+            order.product.title.toLowerCase().includes(lowercaseQuery)) ||
+          order.userName.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+    setFilteredToDeliverOrders(
+      toDeliverOrders.filter(
+        (order) =>
+          (order.product &&
+            order.product.title.toLowerCase().includes(lowercaseQuery)) ||
+          order.userName.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+    setFilteredToReceiveOrders(
+      toReceiveOrders.filter(
+        (order) =>
+          (order.product &&
+            order.product.title.toLowerCase().includes(lowercaseQuery)) ||
+          order.userName.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -365,10 +420,10 @@ function OrderStatusScreen({ navigation }) {
       />
       <NavigationContainer independent="true">
         <MyShopStatusTabNavigation
-          pendingOrders={pendingOrders}
-          toPayOrders={toPayOrders}
-          toDeliverOrders={toDeliverOrders}
-          toReceiveOrders={toReceiveOrders}
+          pendingOrders={filteredPendingOrders}
+          toPayOrders={filteredToPayOrders}
+          toDeliverOrders={filteredToDeliverOrders}
+          toReceiveOrders={filteredToReceiveOrders}
         />
       </NavigationContainer>
     </Layout>
