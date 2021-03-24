@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Image, SectionList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -125,6 +125,34 @@ const renderItem4 = ({ item, index }) => (
 );
 
 function CompletedOrderScreen({ navigation }) {
+  const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [query, setSearch] = useState("");
+
+  useEffect(() => {
+    var unsubscribe = getOrdersUnderCurrentVendor(ORDER_COMPLETED, setOrders);
+
+    return function cleanup() {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    setFilteredOrders(orders);
+  }, [orders]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredOrders(
+      orders.filter(
+        (order) =>
+          (order.product &&
+            order.product.title.toLowerCase().includes(lowercaseQuery)) ||
+          order.userName.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+  }, [query]);
+
   return (
     <Layout style={styles.container}>
       <Input
@@ -134,27 +162,23 @@ function CompletedOrderScreen({ navigation }) {
         accessoryLeft={SearchIcon}
       />
       <NavigationContainer independent="true">
-        <MyShopStatusTabNavigation />
+        <MyShopStatusTabNavigation orders={filteredOrders} />
       </NavigationContainer>
     </Layout>
   );
 }
 
-const MyShopStatusTabNavigation = () => {
+const MyShopStatusTabNavigation = ({ orders }) => {
   return (
     <MyShopStatusTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
-      <MyShopStatusTab.Screen name="Completed" component={CompletedNav} />
+      <MyShopStatusTab.Screen name="Completed">
+        {(props) => <CompletedNav {...props} orders={orders} />}
+      </MyShopStatusTab.Screen>
     </MyShopStatusTab.Navigator>
   );
 };
 
-const CompletedNav = () => {
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    getOrdersUnderCurrentVendor(ORDER_COMPLETED, setOrders);
-  }, []);
-
+const CompletedNav = ({ orders }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>

@@ -9,22 +9,24 @@ import { checkAuthenticated } from "../../services/auth";
 import { useNavigation } from "@react-navigation/native";
 // Components
 import MessagingScreen from "../MessagingScreens";
+import SearchScreen from "../SearchScreens/Search";
 import Category from "./Category/Category";
 import ProductScreen from "./ProductDetail/ProductScreen";
 import DashHeader from "../../components/headers/DashHeader";
 
 const artscrafts = require("../../assets/categories/artscrafts.png");
 const beautypersonalcare = require("../../assets/categories/beautypersonalcare.png");
-const farmgardening = require("../../assets/categories/farmgardening.png");
-const fashionwearables = require("../../assets/categories/fashionwearables.png");
+const freshproduce = require("../../assets/categories/freshproduce.png");
 const fooddrinks = require("../../assets/categories/fooddrinks.png");
-const healthwellness = require("../../assets/categories/healthwellness.png");
-const homeessentials = require("../../assets/categories/homeessentials.png");
+const beautyandwellness = require("../../assets/categories/beautyandwellness.png");
+const homestyle = require("../../assets/categories/homestyle.png");
+const wearables = require("../../assets/categories/wearables.png");
 
 const CatalogueNavigator = () => {
   const CStack = createStackNavigator();
   return (
     <CStack.Navigator
+      headerMode="screen"
       screenOptions={{
         headerStyle: { backgroundColor: "rgb(138,18,20)" },
       }}
@@ -32,12 +34,11 @@ const CatalogueNavigator = () => {
       <CStack.Screen
         name="Catalogue"
         component={CatalogueScreen}
-        options={{
-          headerShown: true,
-          header: (props) => {
-            return <DashHeader />;
+        options={(props) => ({
+          header: ({ navigation }) => {
+            return <DashHeader {...props} navigation={navigation} />;
           },
-        }}
+        })}
       />
       <CStack.Screen
         name="Category"
@@ -56,9 +57,17 @@ const CatalogueNavigator = () => {
       <CStack.Screen
         name="Inbox"
         component={MessagingScreen}
+        options={{
+          headerShown: false,
+          title: "My Inbox",
+        }}
+      />
+      <CStack.Screen
+        name="Search"
+        component={SearchScreen}
         options={() => ({
           headerShown: true,
-          title: "My Inbox"
+          title: "Search",
         })}
       />
     </CStack.Navigator>
@@ -77,7 +86,7 @@ const HomeComponent = ({ user, navigation }) => {
     });
 
     setHomeProducts(finalProducts);
-  }
+  };
 
   const homeProductsCallback = (products) => {
     getShopDetailsByManyUID(
@@ -87,7 +96,12 @@ const HomeComponent = ({ user, navigation }) => {
   };
 
   useEffect(() => {
-    getCatalogue(homeProductsCallback);
+    var unsubscribe = getCatalogue(homeProductsCallback);
+    return function cleanup() {
+      if(unsubscribe) {
+        unsubscribe();
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -128,27 +142,26 @@ const HomeComponent = ({ user, navigation }) => {
 };
 const CategoryEntry = ({ category }) => {
   const navigation = useNavigation();
-  let imageSource;
+  const { id, image_name, title } = category;
 
-  if (icon === "fooddrinks") {
+  let imageSource;
+  if (image_name === "fooddrinks") {
     imageSource = fooddrinks;
-  } else if (icon === "artscrafts") {
+  } else if (image_name === "artscrafts") {
     imageSource = artscrafts;
-  } else if (icon === "beautypersonalcare") {
+  } else if (image_name === "beautypersonalcare") {
     imageSource = beautypersonalcare;
-  } else if (icon === "farmgardening") {
-    imageSource = farmgardening;
-  } else if (icon === "fashionwearables") {
-    imageSource = fashionwearables;
-  } else if (icon === "healthwellness") {
-    imageSource = healthwellness;
-  } else if (icon === "homeessentials") {
-    imageSource = homeessentials;
+  } else if (image_name === "freshproduce") {
+    imageSource = freshproduce;
+  } else if (image_name === "wearables") {
+    imageSource = wearables;
+  } else if (image_name === "beautyandwellness") {
+    imageSource = beautyandwellness;
+  } else if (image_name === "homestyle") {
+    imageSource = homestyle;
   } else {
     imageSource = fooddrinks;
   }
-
-  const { id, icon, title } = category;
 
   return (
     <TouchableOpacity
@@ -160,7 +173,11 @@ const CategoryEntry = ({ category }) => {
         <Image source={imageSource} style={styles.icon} />
         <Text
           category="label"
-          style={{ textAlign: "center", fontWeight: "bold", fontFamily: "NunitoSans-Bold" }}
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontFamily: "NunitoSans-Bold",
+          }}
         >
           {title}
         </Text>
@@ -193,11 +210,28 @@ const renderItem = ({ item, navigation }) => {
     >
       <Layout style={styles.pickForYou}>
         <Image source={{ uri: imageUrl }} style={{ width: 160, height: 120 }} />
-        <Text category="s1" style={{ fontWeight: "bold", marginVertical: 6, fontFamily: "NunitoSans-Bold", color: '#000' }}>
+        <Text
+          category="s1"
+          style={{
+            fontWeight: "bold",
+            marginVertical: 6,
+            fontFamily: "NunitoSans-Bold",
+            color: "#000",
+          }}
+        >
           {title}
         </Text>
         <Text category="s2">P{price}</Text>
-        <Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{vendor}</Text>
+        <Text
+          category="s2"
+          style={{
+            marginVertical: 4,
+            color: "#00000070",
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          {vendor}
+        </Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -247,7 +281,7 @@ const styles = StyleSheet.create({
   categoryImage: {
     backgroundColor: "#FFF",
     height: 240,
-    resizeMode: "contain", 
+    resizeMode: "contain",
     alignSelf: "center",
     paddingHorizontal: 20,
   },
@@ -266,7 +300,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 44,
     height: 44,
-    marginBottom: 12 
+    marginBottom: 12,
   },
   pickForYou: {
     flex: 1,

@@ -22,9 +22,17 @@ import {
   getOrdersCurrentUserPerVendor,
   updateMultipleOrderStatus,
 } from "../services/orders";
-import { startChat } from "../services/messages";
+import { sendMessage, startChat } from "../services/messages";
 import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
+
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
 
 const renderItem = ({ item, index }) => (
   <Layout style={styles.container}>
@@ -115,11 +123,16 @@ const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState([]);
   const [vendor, setVendor] = useState({});
+  const [modeOfPayment, setModeOfPayment] = useState("");
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const vendorId = route.params.vendorId;
 
   useEffect(() => {
-    getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
+    const unsubscribe = getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
 
   useEffect(() => {
@@ -154,11 +167,26 @@ const DeliverAddress = ({ route, navigation }) => {
         screen: "Chat",
       });
 
+    const sendMessageCallback = (chatroomId) => {
+      const messageDetails = {
+        _id: orders.join("+"),
+        createdAt: new Date(),
+        text: `Hi, I placed an order! Here are the details:\n\nOrder Summary:\n${orders.reduce(
+          (acc, curr) => acc + `${curr.product.title}, x${curr.quantity}\n`,
+          ""
+        )}\nDelivery Date: ${dateToString(deliveryDate)}\nMode of Payment: ${
+          modeOfPayment || "COD"
+        }
+        `,
+      };
+      sendMessage(vendorId, messageDetails, chatroomId, navigateCallback);
+    };
+
     const orderIds = orders.map((order) => order.id);
     updateMultipleOrderStatus(
       orderIds,
       { status: ORDER_PENDING, deliveryDate },
-      startChat(vendorId, vendorName, userName, true, navigateCallback)
+      startChat(vendorId, vendorName, userName, true, sendMessageCallback)
     );
   };
 

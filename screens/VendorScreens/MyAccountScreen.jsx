@@ -7,6 +7,7 @@ import {
   Button,
   Icon,
   Divider,
+  Input,
   Avatar,
   Tab,
   TabBar,
@@ -16,9 +17,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import OrdersScreen from "../OrdersScreen";
 import { getCurrentUserFromUID } from "../../services/users";
+import { getOrdersCurrentUser } from "../../services/orders";
+import { ORDER_COMPLETED } from "../orderStatuses";
 
 const AccountStack = createStackNavigator();
 const AccountTopTab1 = createMaterialTopTabNavigator();
+
+const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
 const MyAccountStackNavigation = () => (
   <AccountStack.Navigator
@@ -31,12 +36,134 @@ const MyAccountStackNavigation = () => (
   </AccountStack.Navigator>
 );
 
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
+
+const renderCompletedItems = ({ item, index }) => (
+  <Layout style={styles.container}>
+    <Layout style={styles.inner}>
+      <Layout style={styles.containerList}>
+        <Layout style={styles.innerList}>
+          <Layout style={styles.textList}>
+            <Layout
+              style={{
+                paddingHorizontal: 20,
+                shadowRadius: 1,
+                borderColor: "rgb(220,220,220)",
+              }}
+            >
+              <Text
+                category="h6"
+                style={{ alignContent: "center", marginVertical: 6 }}
+              >
+                {item.userName}
+              </Text>
+              <Layout style={{ flex: 1, flexDirection: "row" }}>
+                <Layout
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    minWidth: 60,
+                    marginRight: 32,
+                  }}
+                >
+                  <Text
+                    category="s2"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 3,
+                      color: "rgb(128, 128, 128)",
+                    }}
+                  >
+                    {item.deliveryDate &&
+                      dateToString(item.deliveryDate.toDate())}
+                  </Text>
+                  <Text
+                    category="s2"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 3,
+                      color: "rgb(128, 128, 128)",
+                    }}
+                  >
+                    {item.quantity} item(s)
+                  </Text>
+                </Layout>
+                <Layout
+                  style={{ flex: 1, flexDirection: "column", minWidth: 60 }}
+                >
+                  <Text
+                    category="s2"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 3,
+                      color: "rgb(128, 128, 128)",
+                    }}
+                  >
+                    {item.modeOfPayment || "COD"}
+                  </Text>
+                  <Text
+                    category="s2"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 3,
+                      color: "rgb(128, 128, 128)",
+                    }}
+                  >
+                    {item.price}
+                  </Text>
+                </Layout>
+              </Layout>
+            </Layout>
+          </Layout>
+        </Layout>
+      </Layout>
+    </Layout>
+    <Divider />
+  </Layout>
+);
+
 function MyAccountScreen({ navigation }) {
   const [profile, setProfile] = useState({});
+  const [pastOrders, setPastOrders] = useState([]);
+  const [filteredPastOrders, setFilteredPastOrders] = useState([]);
+  const [query, setSearch] = useState("");
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
   }, []);
+
+  useEffect(() => {
+    const unsubscribeCompleted = getOrdersCurrentUser(
+      ORDER_COMPLETED,
+      setPastOrders
+    );
+
+    return function cleanup() {
+      unsubscribeCompleted();
+    };
+  }, []);
+
+  useEffect(() => {
+    setFilteredPastOrders(pastOrders);
+  }, [pastOrders]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredPastOrders(
+      pastOrders.filter(
+        (order) =>
+          order.product &&
+          (order.product.title.toLowerCase().includes(lowercaseQuery) ||
+            order.product.vendor.toLowerCase().includes(lowercaseQuery))
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -84,25 +211,45 @@ function MyAccountScreen({ navigation }) {
           )}
         </Layout>
       </Layout>
-      <AccountTabNavigation />
+      <AccountTabNavigation orders={filteredPastOrders} setSearch={setSearch} />
     </Layout>
   );
 }
 
-export const AccountTabNavigation = () => {
+export const AccountTabNavigation = ({ orders, setSearch }) => {
   return (
     <AccountTopTab1.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <AccountTopTab1.Screen
         name="Pending Orders"
         component={PendingOrdersNav}
       />
-      <AccountTopTab1.Screen name="Past Orders" component={PastOrdersNav} />
+      <AccountTopTab1.Screen name="Past Orders">
+        {(props) => (
+          <PastOrdersNav {...props} orders={orders} setSearch={setSearch} />
+        )}
+      </AccountTopTab1.Screen>
     </AccountTopTab1.Navigator>
   );
 };
 
-const PastOrdersNav = () => {
-  return <Layout style={[styles.settingsCard]}></Layout>;
+const PastOrdersNav = ({ orders, setSearch }) => {
+  return (
+    <Layout style={styles.container}>
+      <Input
+        onChangeText={(value) => setSearch(value)}
+        placeholder="Search here"
+        style={{ paddingHorizontal: 16, paddingVertical: 12 }}
+        accessoryLeft={SearchIcon}
+      />
+      <Layout style={[styles.settingsCard]}>
+        <Layout style={styles.innerPast}>
+          <Layout style={{ justifyContent: "flex-start" }}>
+            <List data={orders} renderItem={renderCompletedItems} />
+          </Layout>
+        </Layout>
+      </Layout>
+    </Layout>
+  );
 };
 
 const TopTabBar = ({ navigation, state }) => (
@@ -155,7 +302,9 @@ const PendingOrdersNav = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    navigation.navigate("Order Status", { initialScreen: "To Deliver" });
+                    navigation.navigate("Order Status", {
+                      initialScreen: "To Deliver",
+                    });
                   }}
                 >
                   <Icon
@@ -304,6 +453,9 @@ const styles = StyleSheet.create({
   },
   inner: {
     padding: 20,
+  },
+  innerPast: {
+    paddingVertical: 12,
   },
   field: {
     marginVertical: 10,

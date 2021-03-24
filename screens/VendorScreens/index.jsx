@@ -17,6 +17,7 @@ import DTIRegistrationInfoScreen from "../CreateShopScreens/DTIRegistrationInfoS
 import DTIRegistrationNext from "../CreateShopScreens/DTIRegistrationNextScreen";
 import MyShopPreview from "../MyShopScreens/MyShopPreviewScreen";
 import ShopSettings from "../MyShopScreens/ShopSettingsScreen";
+import ProductScreen from "../ProductScreens/ProductDetail/ProductScreen";
 //import SettingsDeliveryAddress from './SettingsDeliveryAddress';
 
 import { vendorApplyStatus } from "../../services/vendor";
@@ -113,6 +114,13 @@ const VendorNavigator = () => {
         name="Add New Item"
         component={NewItemScreen}
         options={showHeader}
+      />
+      <Vendor.Screen
+        name="Product"
+        component={ProductScreen}
+        options={({ route }) => ({
+          headerTitle: route.params.title,
+        })}
       />
     </Vendor.Navigator>
   );

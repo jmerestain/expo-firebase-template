@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Layout, Input, Button, Text, Divider } from "@ui-kitten/components";
 import { createUser, createUserProfile } from "../services/users";
+import LoadingModal from "../components/LoadingModal";
 import PopUpMessage from "../components/PopUpMessage";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -16,10 +17,12 @@ const RegisterScreen = ({ navigation }) => {
   const [lastName, setLastName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <ScrollView>
       <Layout style={styles.container}>
+        <LoadingModal loading={loading} />
         <Text
           category="h6"
           style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
@@ -125,6 +128,7 @@ const RegisterScreen = ({ navigation }) => {
               contactNumber != "" &&
               address != ""
             ) {
+              setLoading(true);
               createUser(email, password, setMessage, (uid) => {
                 createUserProfile(
                   {
@@ -133,11 +137,12 @@ const RegisterScreen = ({ navigation }) => {
                     contactNumber,
                     address,
                   },
-                  navigation
+                  () => setLoading(false)
                 );
               });
             } else {
               setMessage("Credentials provided is not valid");
+              setLoading(false);
             }
           }}
           style={{

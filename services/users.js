@@ -26,22 +26,24 @@ export const createUser = (email, password, setMessage, callback) => {
     });
 };
 
-export const createUserProfile = (userDetails, navigation) => {
+export const createUserProfile = (userDetails, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
   db.collection("user-profiles")
     .doc(currentUserUID)
     .set(userDetails)
-    // .then(() => {
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: "DashNav" }], // Designated main page
-    //   });
-    // })
+    .then(() => {
+      callback();
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "DashNav" }], // Designated main page
+      // });
+    })
     .catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);
+      callback();
     });
 };
 
@@ -51,9 +53,7 @@ export const getUserProfile = (uid, callback) => {
   db.collection("user-profiles")
     .doc(uid)
     .get()
-    .then((userProfile) =>
-      callback({ id: uid, ...userProfile.data() })
-    )
+    .then((userProfile) => callback({ id: uid, ...userProfile.data() }))
     .catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);

@@ -19,7 +19,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
 import _ from "lodash";
-import { ORDER_IN_CART } from "./orderStatuses"
+import { ORDER_IN_CART } from "./orderStatuses";
 
 const OStack = createStackNavigator();
 
@@ -37,7 +37,7 @@ const OrdersScreenNavigator = () => (
 const renderIndivItem = ({ item }) => (
   <Layout style={styles.innerList}>
     <Image
-      style={{ resizeMode: "cover", height: 80, width: '20%' }}
+      style={{ resizeMode: "cover", height: 80, width: "20%" }}
       source={{ uri: item.imageUrl }}
     />
     <Layout style={styles.textList}>
@@ -73,28 +73,28 @@ const renderIndivItem = ({ item }) => (
           }}
         >
           <Layout>
-          <Text
-            category="s2"
-            style={{
-              alignContent: "center",
-              marginVertical: 3,
-              color: "rgb(128, 128, 128)",
-            }}
-          >
-            x{item.quantity}
-          </Text>
+            <Text
+              category="s2"
+              style={{
+                alignContent: "center",
+                marginVertical: 3,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              x{item.quantity}
+            </Text>
           </Layout>
-          <Layout style={{alignItems:"flex-end"}}>
-          <Text
-            category="s2"
-            style={{
-              alignContent: "flex-end",
-              marginVertical: 3,
-              color: "rgb(128, 128, 128)",
-            }}
-          >
-            Subtotal: P{item.product.price * item.quantity}
-          </Text>
+          <Layout style={{ alignItems: "flex-end" }}>
+            <Text
+              category="s2"
+              style={{
+                alignContent: "flex-end",
+                marginVertical: 3,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              Subtotal: P{item.product.price * item.quantity}
+            </Text>
           </Layout>
         </Layout>
       </Layout>
@@ -112,10 +112,7 @@ const renderVendorItem = ({ item, index, navigation }) => (
         </Text>
       </Layout>
       <Layout style={styles.containerList}>
-        <List
-          data={item.orders}
-          renderItem={renderIndivItem}
-        />
+        <List data={item.orders} renderItem={renderIndivItem} />
         <Divider />
         <Layout
           style={{
@@ -128,7 +125,9 @@ const renderVendorItem = ({ item, index, navigation }) => (
           <Button
             size="medium"
             onPress={() =>
-              navigation.navigate("Individual Order", { vendorId: item.vendorId })
+              navigation.navigate("Individual Order", {
+                vendorId: item.vendorId,
+              })
             }
           >
             View Order
@@ -186,13 +185,22 @@ const DeliverAddress = ({ navigation }) => {
       orders: val,
       vendor: key,
       vendorId: val[0].product.vendorId,
-      totalPrice: val.reduce((acc, curr) => acc + (curr.product.price * curr.quantity), 0)
+      totalPrice: val.reduce(
+        (acc, curr) => acc + curr.product.price * curr.quantity,
+        0
+      ),
     }));
     setOrders(groupedOrders);
   };
 
   useEffect(() => {
-    getOrdersCurrentUser(ORDER_IN_CART, groupOrdersByVendor);
+    const unsubscribe = getOrdersCurrentUser(
+      ORDER_IN_CART,
+      groupOrdersByVendor
+    );
+    return function cleanup() {
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -250,7 +258,7 @@ const styles = StyleSheet.create({
   textList: {
     flexDirection: "column",
     marginBottom: 12,
-    width: '80%'
+    width: "80%",
   },
   inner: {
     paddingVertical: 16,

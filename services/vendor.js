@@ -58,7 +58,7 @@ export const getShopDetails = (callback) => {
     .doc(currentUserUID)
     .get()
     .then((vendor) => {
-      callback(vendor.data());
+      callback({ ...vendor.data(), id: vendor.id });
     })
     .catch((e) => console.log(e));
 };
@@ -70,7 +70,7 @@ export const getShopDetailsByUID = (uid, callback) => {
     .doc(uid)
     .get()
     .then((vendor) => {
-      callback({...vendor.data().shop, id: vendor.id});
+      callback({ ...vendor.data().shop, id: vendor.id });
     })
     .catch((e) => console.log(e));
 };
