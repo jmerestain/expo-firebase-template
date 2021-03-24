@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
+    minHeight: 300,
   },
   centeredView: {
     flex: 1,

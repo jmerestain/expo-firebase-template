@@ -1,24 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Modal, TouchableOpacity, Image, SectionList } from 'react-native';
 import { Layout, Text, Button, Icon, Divider, Toggle } from '@ui-kitten/components';
-import { createStackNavigator } from '@react-navigation/stack';
-import OrdersScreen from '../OrdersScreen';
 
-const SettingsStack = createStackNavigator();
-
-const SettingsScreenNavigation = () => (
-    <SettingsStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: 'rgb(138,18,20)'}
-    }}>
-        <SettingsStack.Screen name="Profile Information" component={OrdersScreen} />
-        <SettingsStack.Screen name="Change Password" component={OrdersScreen} />
-        <SettingsStack.Screen name="Push Notification" component={OrdersScreen} />
-        <SettingsStack.Screen name="Push Information" component={OrdersScreen} />
-        <SettingsStack.Screen name="Privacy Policy" component={OrdersScreen} />
-    </SettingsStack.Navigator>
-)
-
-function ShopSettingsScreen ({navigation}) {
+function PushScreen ({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <Layout style={styles.container}>
@@ -31,18 +15,6 @@ function ShopSettingsScreen ({navigation}) {
                 </Layout>
             </Layout>
             <Divider style={{ marginVertical: 18, marginBottom: 12 }} />
-            <Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 16}}>Danger Zone</Text>
-            <Divider style={{ marginBottom: 12 }} />
-            <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'center', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>
-            <Text>Delete Shop Account</Text>
-            <Layout>
-            <Button style={{marginRight: 8}}
-            onPress={() => setModalVisible(true)}>
-                Delete Now
-            </Button>
-            </Layout>
-        </Layout>
-        <Divider style={{ marginVertical: 12, marginBottom: 12 }} />
         <Layout style={styles.centeredView}>
         <Modal
         animationType="slide"
@@ -138,4 +110,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ShopSettingsScreen;
+export default PushScreen;

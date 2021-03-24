@@ -106,7 +106,7 @@ const renderItemRatings = ({ item, index }) => (
           }}
         />
         <Layout>
-          <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 2 }}>
+          <Text style={{ fontSize: 13, fontWeight: "bold", marginVertical: 2 }}>
             {item.ratedBy}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
@@ -120,7 +120,7 @@ const renderItemRatings = ({ item, index }) => (
           rating={item.rating}
           style={{ paddingVertical: 16 }}
           ratingColor="rgb(210,145,91)"
-          imageSize={20}
+          imageSize={16}
         />
       </Layout>
     </Layout>

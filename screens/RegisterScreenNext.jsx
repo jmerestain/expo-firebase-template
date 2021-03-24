@@ -14,7 +14,7 @@ const RegisterScreenNext = ({ navigation }) => {
   return (
     <Layout style={styles.container}>
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         First Name
@@ -25,7 +25,7 @@ const RegisterScreenNext = ({ navigation }) => {
         style={{ paddingHorizontal: 16 }}
       />
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         Last Name
@@ -36,7 +36,7 @@ const RegisterScreenNext = ({ navigation }) => {
         style={{ paddingHorizontal: 16 }}
       />
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         Contact Number
@@ -48,7 +48,7 @@ const RegisterScreenNext = ({ navigation }) => {
         style={{ paddingHorizontal: 16 }}
       />
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         Address

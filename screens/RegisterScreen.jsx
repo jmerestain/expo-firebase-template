@@ -24,8 +24,8 @@ const RegisterScreen = ({ navigation }) => {
       <Layout style={styles.container}>
         <LoadingModal loading={loading} />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Username
         </Text>
@@ -35,8 +35,8 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Email
         </Text>
@@ -46,8 +46,8 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Password
         </Text>
@@ -58,8 +58,8 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Retype Password
         </Text>
@@ -67,12 +67,12 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={(value) => setConfirmPass(value)}
           placeholder="Retype Password"
           secureTextEntry={true}
-          style={{ paddingHorizontal: 16, marginBottom: 28 }}
+          style={{ paddingHorizontal: 16, marginBottom: 16 }}
         />
-        <Divider />
+        <Divider style={{ marginHorizontal: 16, marginBottom: 8 }} />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           First Name
         </Text>
@@ -82,8 +82,8 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Last Name
         </Text>
@@ -93,8 +93,8 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
           Contact Number
         </Text>
@@ -105,14 +105,14 @@ const RegisterScreen = ({ navigation }) => {
           style={{ paddingHorizontal: 16 }}
         />
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
+          category="s1"
+          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
         >
-          Address
+          Delivery Address
         </Text>
         <Input
           onChangeText={(value) => setAddress(value)}
-          placeholder="Shipping Address"
+          placeholder="Delivery Address"
           style={{ paddingHorizontal: 16 }}
         />
         <Button
@@ -194,13 +194,13 @@ const RegisterScreen = ({ navigation }) => {
           Signup with Google
         </Button> */}
         <Layout
-          style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
+          style={{ flex: 1, flexDirection: "row", justifyContent: "center", paddingBottom: 20 }}
         >
           <Text
-            category="h6"
+            category="s1"
             style={{
               textAlign: "center",
-              marginTop: 32,
+              marginTop: 16,
               fontFamily: "Quicksand-Regular",
               fontWeight: "bold",
             }}
@@ -211,13 +211,13 @@ const RegisterScreen = ({ navigation }) => {
             <Button
               appearance="ghost"
               size="small"
-              style={{ textAlign: "center", marginTop: 23 }}
+              style={{ textAlign: "center", marginTop: 7 }}
               onPress={() => {
                 navigation.navigate("Login");
               }}
             >
               <Text
-                category="h6"
+                category="s1"
                 style={{
                   marginLeft: 4,
                   fontFamily: "Quicksand-Regular",
@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    paddingVertical: 20,
   },
 });
 
