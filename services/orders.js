@@ -17,7 +17,7 @@ export const getOrdersCurrentUser = (status, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
-  db.collection("orders")
+  var unsubscribe = db.collection("orders")
     .where("user", "==", currentUserUID)
     .where("status", "==", status)
     .onSnapshot((querySnapshot) => {
@@ -27,6 +27,8 @@ export const getOrdersCurrentUser = (status, callback) => {
       });
       callback(orders);
     });
+  
+  return unsubscribe;
 };
 
 export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
@@ -34,7 +36,7 @@ export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
-  db.collection("orders")
+  var unsubscribe = db.collection("orders")
     .where("status", "==", status)
     .where("user", "==", currentUserUID)
     .where("product.vendorId", "==", vendor)
@@ -45,6 +47,8 @@ export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
       });
       callback(orders);
     });
+  
+  return unsubscribe;
 };
 
 export const getOrdersUnderCurrentVendor = (status, callback) => {
@@ -52,7 +56,8 @@ export const getOrdersUnderCurrentVendor = (status, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
-  db.collection("orders")
+  var unsubscribe = db
+    .collection("orders")
     .where("status", "==", status)
     .where("product.vendorId", "==", currentUserUID)
     .onSnapshot((querySnapshot) => {
@@ -62,6 +67,8 @@ export const getOrdersUnderCurrentVendor = (status, callback) => {
       });
       callback(orders);
     });
+  
+  return unsubscribe;
 };
 
 export const newOrder = (productDetails, userName, callback) => {

@@ -53,10 +53,21 @@ export const startChat = (toUID, toName, fromName, isVendorChat, callback) => {
     .catch((e) => console.log(e));
 };
 
-export const sendMessage = (recipientId, messageDetails, chatroomId, callback) => {
+export const sendMessage = (
+  recipientId,
+  messageDetails,
+  chatroomId,
+  callback
+) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
+
+  if (!(user in messageDetails)) {
+    messageDetails.user = {
+      _id: currentUserUID,
+    };
+  }
 
   const { createdAt, text, user } = messageDetails;
 
@@ -86,7 +97,7 @@ export const sendMessage = (recipientId, messageDetails, chatroomId, callback) =
   batch
     .commit()
     .then(() => {
-      callback();
+      callback(chatroomId);
     })
     .catch((e) => console.log(e));
 };
@@ -94,7 +105,7 @@ export const sendMessage = (recipientId, messageDetails, chatroomId, callback) =
 export const readChatroom = (chatroomId, callback) => {
   const db = firebase.firestore();
 
-  db.collection("chat-rooms")
+  var unsubscribe = db.collection("chat-rooms")
     .doc(chatroomId)
     .collection("messages")
     .orderBy("createdAt", "desc")
@@ -111,6 +122,8 @@ export const readChatroom = (chatroomId, callback) => {
       });
       callback(messages);
     });
+  
+    return unsubscribe;
 };
 
 export const getInbox = (isVendorInbox, callback) => {
@@ -118,7 +131,8 @@ export const getInbox = (isVendorInbox, callback) => {
   const auth = firebase.auth();
   const uid = auth.currentUser.uid;
 
-  db.collection("chat-owners")
+  var unsubscribe = db
+    .collection("chat-owners")
     .doc(uid)
     .collection("chatrooms")
     .where("isVendorChat", "==", isVendorInbox)
@@ -135,4 +149,6 @@ export const getInbox = (isVendorInbox, callback) => {
       });
       callback(chatrooms);
     });
+
+  return unsubscribe;
 };

@@ -70,12 +70,33 @@ const renderItemPosts = ({ item, index }) => (
 
 function PostsScreen({ navigation, route }) {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [query, setSearch] = useState("");
 
   const groupId = route.params.groupId;
 
   useEffect(() => {
-    readPosts(groupId, setPosts);
+    var unsubscribe = readPosts(groupId, setPosts);
+
+    return function cleanup() {
+      unsubscribe();
+    }
   }, []);
+
+  useEffect(() => {
+    setFilteredPosts(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    const lowercaseQuery = query.toLowerCase();
+    setFilteredPosts(
+      posts.filter(
+        (post) =>
+          post.body.toLowerCase().includes(lowercaseQuery) ||
+          post.postedBy.toLowerCase().includes(lowercaseQuery)
+      )
+    );
+  }, [query]);
 
   return (
     <Layout style={styles.container}>
@@ -91,7 +112,7 @@ function PostsScreen({ navigation, route }) {
           }}
         />
         <Divider />
-        <List data={posts} renderItem={renderItemPosts} />
+        <List data={filteredPosts} renderItem={renderItemPosts} />
       </Layout>
       <Layout
         style={{

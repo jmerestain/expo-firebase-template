@@ -57,6 +57,7 @@ const DashNavigator = () => (
       activeTintColor: '#8A1214',
       inactiveTintColor: '#8F9BB3',
     }}
+    backBehavior="initialRoute"
     tabBar={props => <BottomTabBar {...props} /> }
   >
     <Tab.Screen name="Dashboard" component={CatalogueNavigator} options={{

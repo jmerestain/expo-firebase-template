@@ -91,10 +91,12 @@ function InboxScreen({ navigation }) {
   const [inbox, setInbox] = useState([]);
 
   useEffect(() => {
-    getInbox(false, setInbox);
-  }, []);
+    const unsubscribe = getInbox(false, setInbox);
 
-  console.log(inbox);
+    return function cleanup() {
+      unsubscribe();
+    }
+  }, []);
 
   return (
     <Layout style={styles.container}>

@@ -121,7 +121,8 @@ export const createPost = (groupId, post, postedBy, callback) => {
 export const readPosts = (groupId, callback) => {
   const db = firebase.firestore();
 
-  db.collection("groups")
+  var unsubscribe = db
+    .collection("groups")
     .doc(groupId)
     .collection("posts")
     .onSnapshot((querySnapshot) => {
@@ -131,12 +132,14 @@ export const readPosts = (groupId, callback) => {
       });
       callback(posts);
     });
+
+  return unsubscribe;
 };
 
 export const getGroups = (callback) => {
   const db = firebase.firestore();
 
-  db.collection("groups").onSnapshot((querySnapshot) => {
+  var unsubscribe = db.collection("groups").onSnapshot((querySnapshot) => {
     var groups = [];
     querySnapshot.forEach((doc) => {
       // const memberCount = doc.ref.collection("members").get();
@@ -146,4 +149,6 @@ export const getGroups = (callback) => {
     });
     callback(groups);
   });
+
+  return unsubscribe;
 };

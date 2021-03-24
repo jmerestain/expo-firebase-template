@@ -11,7 +11,7 @@ import {
   Icon,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-import { checkAuthenticated } from "../../services/auth";
+import { searchFromData } from "../../services/search";
 import { getProductsCurrentVendor } from "../../services/products";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
@@ -37,7 +37,11 @@ const RenderItem = ({ item, navigation }) => (
                 fontFamily: "NunitoSans-Bold",
               }}
             >
-              {item.title}
+              {item.type == "product"
+                ? item.title
+                : item.shop
+                ? item.shop.name
+                : ""}
             </Text>
             <Text
               category="s2"
@@ -47,40 +51,27 @@ const RenderItem = ({ item, navigation }) => (
                 color: "#000000",
               }}
             >
-              P{item.price}
+              {item.type == "product"
+                ? "P" + item.price
+                : item.shop
+                ? item.shop.owner
+                : ""}
             </Text>
-            <Text
-              category="s2"
-              style={{
-                alignContent: "center",
-                marginVertical: 2,
-                color: "#00000060",
-                fontFamily: "NunitoSans-Regular",
-                fontSize: 12,
-              }}
-            >
-              {item.stock} left
-            </Text>
+            {item.type == "product" && (
+              <Text
+                category="s2"
+                style={{
+                  alignContent: "center",
+                  marginVertical: 2,
+                  color: "#00000060",
+                  fontFamily: "NunitoSans-Regular",
+                  fontSize: 12,
+                }}
+              >
+                {item.stock} left
+              </Text>
+            )}
           </Layout>
-        </Layout>
-        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Button
-            size="small"
-            appearance="outline"
-            style={{
-              alignSelf: "flex-end",
-              marginVertical: 8,
-              marginRight: 16,
-            }}
-            onPress={() => {
-              navigation.navigate("Add New Item", {
-                isUpdating: true,
-                productId: item.id,
-              });
-            }}
-          >
-            Edit Product
-          </Button>
         </Layout>
       </Layout>
     </Layout>
@@ -88,39 +79,26 @@ const RenderItem = ({ item, navigation }) => (
   </Layout>
 );
 
-const ManageProductsScreen = ({ navigation }) => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+const Search = ({ navigation, route }) => {
+  const [results, setResults] = useState({});
   const [query, setSearch] = useState("");
 
   useEffect(() => {
-    var unsubscribe = getProductsCurrentVendor(setProducts);
-
-    return function cleanup() {
-      unsubscribe();
-    };
+    if (route.params.query) {
+      setSearch(route.params.query);
+      searchFromData(route.params.query, setResults);
+    }
   }, []);
 
-  useEffect(() => {
-    setFilteredProducts(products);
-  }, [products]);
-
-  useEffect(() => {
-    const lowercaseQuery = query.toLowerCase();
-    setFilteredProducts(
-      products.filter(
-        (product) =>
-          product.description.toLowerCase().includes(lowercaseQuery) ||
-          product.title.toLowerCase().includes(lowercaseQuery)
-      )
-    );
-  }, [query]);
+  console.log(results);
 
   return (
     <Layout style={styles.container}>
       <Layout style={styles.field}>
         <Input
           onChangeText={(value) => setSearch(value)}
+          defaultValue={query}
+          onSubmitEditing={() => searchFromData(query, setResults)}
           placeholder="Search here"
           accessoryLeft={SearchIcon}
           style={{
@@ -131,12 +109,11 @@ const ManageProductsScreen = ({ navigation }) => {
         />
         <Divider />
         <List
-          data={filteredProducts}
+          data={results}
           renderItem={(props) => RenderItem({ ...props, navigation })}
           style={{ marginBottom: 145 }}
         />
       </Layout>
-      <Layout></Layout>
       <Layout
         style={{
           flex: 1,
@@ -147,18 +124,7 @@ const ManageProductsScreen = ({ navigation }) => {
           left: 0,
           bottom: 0,
         }}
-      >
-        <Divider />
-        <Button
-          size="large"
-          onPress={() => {
-            navigation.navigate("Add New Item", { isUpdating: false });
-          }}
-          style={{ marginHorizontal: 20, marginVertical: 16 }}
-        >
-          + Add New Product
-        </Button>
-      </Layout>
+      ></Layout>
     </Layout>
   );
 };
@@ -243,4 +209,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ManageProductsScreen;
+export default Search;

@@ -15,6 +15,8 @@ import VendorApplication from "../VendorScreens/VendorApplication";
 import CreateShopNavigation from "../CreateShopScreens";
 import MyShopPreview from "../MyShopScreens/MyShopPreviewScreen";
 import ShopSettings from "../MyShopScreens/ShopSettingsScreen";
+import ProductScreen from "../ProductScreens/ProductDetail/ProductScreen";
+//import SettingsDeliveryAddress from './SettingsDeliveryAddress';
 
 import { vendorApplyStatus } from "../../services/vendor";
 import NewItemScreen from "./NewItemScreen";
@@ -110,6 +112,13 @@ const VendorNavigator = () => {
         name="Add New Item"
         component={NewItemScreen}
         options={showHeader}
+      />
+      <Vendor.Screen
+        name="Product"
+        component={ProductScreen}
+        options={({ route }) => ({
+          headerTitle: route.params.title,
+        })}
       />
     </Vendor.Navigator>
   );

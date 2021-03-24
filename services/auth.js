@@ -1,7 +1,13 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const loginUser = (email, password, setMessage, navigation, callback) => {
+export const loginUser = (
+  email,
+  password,
+  setMessage,
+  navigation,
+  callback
+) => {
   firebase
     .auth()
     .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -22,12 +28,14 @@ export const loginUser = (email, password, setMessage, navigation, callback) => 
           const errorCode = error.code;
           console.log(errorCode);
           setMessage(error.message);
+          callback();
         });
     })
     .catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);
       setMessage(error.message);
+      callback();
     });
 };
 
@@ -71,4 +79,4 @@ export const getUserID = (callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
   callback(currentUserUID);
-}
+};
