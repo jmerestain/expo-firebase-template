@@ -77,3 +77,19 @@ export const getCurrentUserFromUID = (callback) => {
     )
     .catch((e) => console.log(e));
 };
+
+export const updateUser = (body, callback) => {
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("user-profiles")
+    .doc(currentUserUID)
+    .update(body)
+    .then((userProfile) =>
+      callback({
+        id: currentUserUID,
+      })
+    )
+    .catch((e) => console.log(e));
+};
