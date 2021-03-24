@@ -2,61 +2,33 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
 import { Layout, Text, Button, Icon, Divider } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
-//import SettingsDeliveryAddress from './SettingsDeliveryAddress';
-import OrdersScreen from '../OrdersScreen';
 
-const SettingsStack = createStackNavigator();
+const Settings = createStackNavigator();
 
-const SettingsScreenNavigation = () => (
-    <SettingsStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: 'rgb(138,18,20)'}
-    }}>
-        <SettingsStack.Screen name="Profile Information" component={OrdersScreen} />
-        <SettingsStack.Screen name="Change Password" component={OrdersScreen} />
-        <SettingsStack.Screen name="Push Notfication" component={OrdersScreen} />
-        <SettingsStack.Screen name="Push Information" component={OrdersScreen} />
-        <SettingsStack.Screen name="Privacy Policy" component={OrdersScreen} />
-    </SettingsStack.Navigator>
-)
-
-function SettingsScreen ({navigation}) {
+function SettingsScreen ({ navigation }) {
     return (
         <Layout style={styles.container}>
-            <SettingsOptions />
-            <Layout style={styles.inner}>
-                <Layout style={styles.field}>
-                    <Text category='label'>
-                        
-                    </Text>
-                </Layout>
-            </Layout>
-        </Layout>
-    )
-}
-
-const SettingsOptions = () => {
-    return (
-        
             <Layout style={[styles.settingsCard]}>
                 <Layout style={styles.daInner}>
-                <Text category='h6' style={{fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
+                <Text category='s1' style={{fontSize: 16, fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
                   Account Settings
                 </Text>
                 <Divider/>
                 <TouchableOpacity
-                onPress={() => navigate('Profile Information')}>
+                onPress={() => { navigation.navigate("Delivery Information") }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
-                          Delivery Address
+                          Delivery Information
                         </Text>
                         <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => { navigation.navigate("Account Details") }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
-                            Change Password
+                            Account Details
                         </Text>
                         <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
                     </Layout>
@@ -65,11 +37,12 @@ const SettingsOptions = () => {
                 </Layout>
 
                 <Layout style={styles.daInner}>
-                <Text category='h6' style={{fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
+                <Text category='s1' style={{fontSize: 16, fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
                   Notifications settings
                 </Text>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => { navigation.navigate("Push Notifications") }}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                           Push Notifications
@@ -81,20 +54,22 @@ const SettingsOptions = () => {
                 </Layout>
 
                 <Layout style={styles.daInner}>
-                <Text category='h6' style={{fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
+                <Text category='s1' style={{fontSize: 16, fontWeight: 'bold', marginBottom: 12, marginTop: 20}}>
                   General
                 </Text>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => { navigation.navigate("Terms and Conditions")}}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
-                          Profile Information
+                          Terms and Conditions
                         </Text>
                         <Icon name='chevron-right' fill='#8A1214' style={{height: 26, width: 26}} />
                     </Layout>
                 </TouchableOpacity>
                 <Divider/>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => { navigation.navigate("Privacy Policy")}}>
                     <Layout style={{flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'space-between', marginVertical: 8}}>
                         <Text style={{paddingTop: 2}}>
                           Privacy Policy
@@ -106,6 +81,7 @@ const SettingsOptions = () => {
                 </Layout>
 
             </Layout>
+        </Layout>
     )
 }
 

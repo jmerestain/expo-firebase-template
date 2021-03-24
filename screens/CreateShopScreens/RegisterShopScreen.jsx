@@ -19,13 +19,13 @@ const RegisterShopScreen = ({ navigation }) => {
   const [message, setMessage] = useState("");
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: "#FFFFFF",}}>
       <Layout style={styles.container}>
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
-        >
-          Business Name*
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
+          Business Name
         </Text>
         <Input
           onChangeText={(value) => setBusinessName(value)}
@@ -34,10 +34,10 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
-        >
-          Owner Full Name*
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
+          Owner Full Name
         </Text>
         <Input
           onChangeText={(value) => setFullName(value)}
@@ -46,9 +46,9 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
-        >
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
           Location
         </Text>
         <Input
@@ -58,9 +58,9 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
-        >
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
           Business Email
         </Text>
         <Input
@@ -70,9 +70,9 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-          category="h6"
-          style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
-        >
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
           Phone Number
         </Text>
         <Input
@@ -82,25 +82,16 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-          category="h6"
-          style={{
-            padding: 16,
-            fontFamily: "NunitoSans-Regular",
-            marginBottom: 4,
-          }}
-        >
-          Valid ID*
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
+          Valid ID
         </Text>
         <ImagePickerComponent image={ID} setImage={setID} setBlob={setBlob1} />
         <Text
-          category="h6"
-          style={{
-            padding: 16,
-            fontFamily: "NunitoSans-Regular",
-            marginBottom: 4,
-            marginTop: 16,
-          }}
-        >
+            category="s1"
+            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+            >
           DTI Registration
         </Text>
         <ImagePickerComponent
@@ -199,6 +190,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    alignContent: "stretch",
+    paddingVertical: 24,
+    paddingHorizontal: 8
   },
 });
 

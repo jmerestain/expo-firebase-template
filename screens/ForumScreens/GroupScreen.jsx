@@ -24,7 +24,7 @@ const GroupScreen = ({ navigation }) => {
         source={require("../../screens/Rectangle_164.png")}
       />
       <Layout style={{ alignSelf: "flex-start" }}>
-        <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 8 }}>
+        <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 8 }}>
           {item.name}
         </Text>
         {/* <Layout style={{ flexDirection: "row", marginVertical: 6 }}>
@@ -41,7 +41,7 @@ const GroupScreen = ({ navigation }) => {
             {item.postCount} posts
           </Text>
         </Layout> */}
-        <Text>{item.description}</Text>
+        <Text style={{ fontSize: 14, marginTop: 4}}>{item.description}</Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -62,7 +62,7 @@ const GroupScreen = ({ navigation }) => {
           accessoryLeft={SearchIcon}
         />
         <Layout style={styles.inner}>
-          <Text category="h6" style={{ marginBottom: 12 }}>
+          <Text category="s1" style={{ fontFamily: 'NunitoSans-Bold', fontSize: 17, marginBottom: 12 }}>
             Featured Groups
           </Text>
           <List

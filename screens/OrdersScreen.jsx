@@ -50,8 +50,8 @@ const renderIndivItem = ({ item }) => (
         }}
       >
         <Text
-          category="h6"
-          style={{ alignContent: "center", marginVertical: 6 }}
+          category="s1"
+          style={{ fontFamily: "NunitoSans-Bold", alignContent: "center", marginTop: 4 }}
         >
           {item.product.title}
         </Text>
@@ -59,6 +59,7 @@ const renderIndivItem = ({ item }) => (
           category="s2"
           style={{
             alignContent: "center",
+            fontFamily: "NunitoSans-Bold", 
             marginVertical: 3,
             color: "rgb(128, 128, 128)",
           }}
@@ -77,7 +78,8 @@ const renderIndivItem = ({ item }) => (
             category="s2"
             style={{
               alignContent: "center",
-              marginVertical: 3,
+              fontFamily: "NunitoSans-Regular", 
+              marginBottom: 3,
               color: "rgb(128, 128, 128)",
             }}
           >
@@ -89,7 +91,8 @@ const renderIndivItem = ({ item }) => (
             category="s2"
             style={{
               alignContent: "flex-end",
-              marginVertical: 3,
+              fontFamily: "NunitoSans-Regular", 
+              marginBottom: 3,
               color: "rgb(128, 128, 128)",
             }}
           >
@@ -107,7 +110,7 @@ const renderVendorItem = ({ item, index, navigation }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.header}>
-        <Text category="h6" style={styles.headerText}>
+        <Text category="s1" style={styles.headerText}>
           {item.vendor}
         </Text>
       </Layout>
@@ -225,7 +228,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "rgb(138,18,20)",
     paddingVertical: 8,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
   },
   headerText: {
     fontWeight: "500",

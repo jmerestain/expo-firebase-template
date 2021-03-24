@@ -25,76 +25,76 @@ import {
 import { startChat } from "../services/messages";
 import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import DeliveryAddress from "./SettingsScreens/AddressSettingsScreen";
 
 const renderItem = ({ item, index }) => (
-  <Layout style={styles.container}>
-    <Layout style={styles.inner}>
-      <Layout style={styles.containerList}>
-        <Layout style={styles.innerList}>
-          <Avatar
-            rounded
-            size="giant"
-            source={require("../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
-          />
-          <Layout style={styles.textList}>
-            <Layout
-              style={{
-                paddingHorizontal: 8,
-                shadowRadius: 1,
-                borderColor: "rgb(220,220,220)",
-              }}
-            >
-              <Text
-                category="h6"
-                style={{ alignContent: "center", marginVertical: 6 }}
-              >
-                {item.product.title}
-              </Text>
-              <Text
-                category="s2"
-                style={{
-                  alignContent: "center",
-                  marginVertical: 3,
-                  color: "rgb(128, 128, 128)",
-                }}
-              >
-                P{item.product.price}
-              </Text>
-              <Layout
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  category="s2"
-                  style={{
-                    alignContent: "center",
-                    marginVertical: 3,
-                    color: "rgb(128, 128, 128)",
-                  }}
-                >
-                  x{item.quantity}
-                </Text>
-                <Text
-                  category="s2"
-                  style={{
-                    alignContent: "center",
-                    marginVertical: 3,
-                    color: "rgb(128, 128, 128)",
-                  }}
-                >
-                  Subtotal: P{item.product.price * item.quantity}
-                </Text>
-              </Layout>
-            </Layout>
+  <Layout style={styles.innerList}>
+    <Image
+      style={{ resizeMode: "cover", height: 80, width: '20%' }}
+      source={{ uri: item.imageUrl }}
+    />
+    <Layout style={styles.textList}>
+      <Layout
+        style={{
+          paddingHorizontal: 8,
+          shadowRadius: 1,
+          borderColor: "rgb(220,220,220)",
+          marginVertical: 8,
+        }}
+      >
+        <Text
+          category="s1"
+          style={{ fontFamily: "NunitoSans-Bold", alignContent: "center", marginTop: 4 }}
+        >
+          {item.product.title}
+        </Text>
+        <Text
+          category="s2"
+          style={{
+            alignContent: "center",
+            fontFamily: "NunitoSans-Bold", 
+            marginVertical: 3,
+            color: "rgb(128, 128, 128)",
+          }}
+        >
+          P{item.product.price}
+        </Text>
+        <Layout
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Layout>
+          <Text
+            category="s2"
+            style={{
+              alignContent: "center",
+              fontFamily: "NunitoSans-Regular", 
+              marginBottom: 3,
+              color: "rgb(128, 128, 128)",
+            }}
+          >
+            x{item.quantity}
+          </Text>
+          </Layout>
+          <Layout style={{alignItems:"flex-end"}}>
+          <Text
+            category="s2"
+            style={{
+              alignContent: "flex-end",
+              fontFamily: "NunitoSans-Regular", 
+              marginBottom: 3,
+              color: "rgb(128, 128, 128)",
+            }}
+          >
+            Subtotal: P{item.product.price * item.quantity}
+          </Text>
           </Layout>
         </Layout>
       </Layout>
     </Layout>
-    <Divider />
   </Layout>
 );
 
@@ -166,9 +166,9 @@ const DeliverAddress = ({ route, navigation }) => {
     <ScrollView>
       <Layout>
         <TouchableOpacity
-        // onPress={() => {
-        //   navigation.navigate("Settings");
-        // }}
+          onPress={() => {
+            navigation.navigate("Delivery Address");
+        }}
         >
           <Layout style={[styles.deliverAddress]}>
             <Layout style={styles.daInner}>
@@ -184,6 +184,7 @@ const DeliverAddress = ({ route, navigation }) => {
                     flex: 1,
                     flexDirection: "row",
                     backgroundColor: "transparent",
+                    
                   }}
                 >
                   <Icon
@@ -198,7 +199,7 @@ const DeliverAddress = ({ route, navigation }) => {
                       flexShrink: 1,
                     }}
                   >
-                    <Text category="h6" style={{ fontWeight: "bold" }}>
+                    <Text category="s1" style={{ fontWeight: "bold", marginBottom: 4 }}>
                       Delivery Address
                     </Text>
                     <Text category="p2">
@@ -206,10 +207,10 @@ const DeliverAddress = ({ route, navigation }) => {
                       {profile.contactNumber}
                     </Text>
                     <Text
-                      category="label"
+                      category="p2"
                       style={{
                         alignSelf: "baseline",
-                        marginTop: 10,
+                        marginTop: 4,
                         flexWrap: "wrap",
                       }}
                     >
@@ -441,7 +442,8 @@ const DeliverAddress = ({ route, navigation }) => {
             </Layout>
             <Button
               size="large"
-              style={{ marginHorizontal: 24, marginTop: 24 }}
+              style={{ backgroundColor: "rgb(210,145,91)",
+              borderColor: "rgb(210,145,91)", marginTop: 24 }}
               onPress={placeOrderCallback}
             >
               Place Order
@@ -457,6 +459,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    paddingHorizontal: 20,
   },
   header: {
     backgroundColor: "rgb(138,18,20)",
@@ -470,7 +473,6 @@ const styles = StyleSheet.create({
   deliverAddress: {
     marginVertical: 10,
     backgroundColor: "rgb(252,252,252)",
-    height: 120,
     flexDirection: "column",
     justifyContent: "flex-start",
   },
@@ -480,10 +482,13 @@ const styles = StyleSheet.create({
   },
   innerList: {
     flexDirection: "row",
+    alignItems: "stretch",
+    justifyContent: "flex-start",
   },
   textList: {
     flexDirection: "column",
     marginBottom: 12,
+    width: '70%'
   },
   inner: {
     paddingVertical: 4,

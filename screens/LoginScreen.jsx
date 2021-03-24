@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
     <Layout style={styles.container}>
       <LoadingModal loading={loading} />
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         Email
@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
         style={{ paddingHorizontal: 16 }}
       />
       <Text
-        category="h6"
+        category="s1"
         style={{ padding: 16, fontFamily: "NunitoSans-Regular" }}
       >
         Password

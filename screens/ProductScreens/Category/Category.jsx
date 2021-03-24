@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Image, Pressable, TouchableOpacity } from "react-native";
 import { Layout, Text, Input, Icon, List, Avatar } from "@ui-kitten/components";
 import { getProductsFromCategory } from "../../../services/products";
+import { getShopDetailsByManyUID } from "../../../services/vendor";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
@@ -17,17 +18,11 @@ const renderItem = ({ item, index, navigation }) => (
         source={{ uri: item.imageUrl }}
       />
       <Layout style={{ alignSelf: "flex-start" }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: "bold",
-            marginTop: 8,
-            marginBottom: 4,
-          }}
-        >
+      <Text category="s1" style={{ fontWeight: "bold", marginVertical: 6, fontFamily: "NunitoSans-Bold", color: '#000' }}>
           {item.title}
         </Text>
-        <Text>P {parseFloat(item.price).toFixed(2)}</Text>
+        <Text category="s2" style={{paddingBottom: 8}}>P {parseFloat(item.price).toFixed(2)}</Text>
+        {/*<Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{item.vendor}</Text>*/}
       </Layout>
     </TouchableOpacity>
     <Layout
@@ -38,11 +33,6 @@ const renderItem = ({ item, index, navigation }) => (
         alignSelf: "flex-start",
       }}
     >
-      <Avatar
-        size="small"
-        source={require("../../avatar-icon.png")}
-        style={{ marginRight: 8 }}
-      />
       <Text
         style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
       >
@@ -51,7 +41,6 @@ const renderItem = ({ item, index, navigation }) => (
     </Layout>
   </Layout>
 );
-
 const Category = ({ route, navigation }) => {
   const [products, setProducts] = useState([]);
 

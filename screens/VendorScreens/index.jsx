@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import VendorScreen from "./VendorScreen";
 import FavoritesScreen from "./FavoritesScreen";
-import SettingsScreen from "./SettingsScreen";
+import SettingsScreen from "../SettingsScreens";
 import MyAccountScreen from "./MyAccountScreen";
 import OrderStatusScreen from "./OrderStatusScreen";
 import ManageProductsScreen from "../ManageProductScreens";
@@ -13,11 +13,8 @@ import CompletedOrder from "../MyShopScreens/CompletedOrderScreen";
 import RegisterShopScreen from "../CreateShopScreens/RegisterShopScreen";
 import VendorApplication from "../VendorScreens/VendorApplication";
 import CreateShopNavigation from "../CreateShopScreens";
-import DTIRegistrationInfoScreen from "../CreateShopScreens/DTIRegistrationInfoScreen";
-import DTIRegistrationNext from "../CreateShopScreens/DTIRegistrationNextScreen";
 import MyShopPreview from "../MyShopScreens/MyShopPreviewScreen";
 import ShopSettings from "../MyShopScreens/ShopSettingsScreen";
-//import SettingsDeliveryAddress from './SettingsDeliveryAddress';
 
 import { vendorApplyStatus } from "../../services/vendor";
 import NewItemScreen from "./NewItemScreen";
@@ -52,7 +49,7 @@ const VendorNavigator = () => {
       <Vendor.Screen
         name="Settings"
         component={SettingsScreen}
-        options={showHeader}
+        options={noHeader}
       />
       <Vendor.Screen
         name="My Account"
