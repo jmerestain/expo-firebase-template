@@ -14,7 +14,7 @@ import {
   Divider,
   Toggle,
 } from "@ui-kitten/components";
-import { updateUser, getCurrentUserFromUID } from "../../services/users";
+import { updateUserProfile, getCurrentUserFromUID } from "../../services/users";
 import PopUpMessage from "../../components/PopUpMessage";
 import { Input } from "@ui-kitten/components";
 
@@ -34,7 +34,7 @@ function AddressSettingsScreen({ navigation }) {
     }
 
     getCurrentUserFromUID(populateFields);
-  }, [])
+  }, []);
 
   return (
     <Layout style={styles.container}>
@@ -144,8 +144,8 @@ function AddressSettingsScreen({ navigation }) {
               contactNumber,
               address,
             };
-            updateUser(body, () =>
-              setMessage("Successfully updated your details!")
+            updateUserProfile(body, (message) =>
+              setMessage(message)
             );
           } else {
             setMessage("Credentials provided is not valid");

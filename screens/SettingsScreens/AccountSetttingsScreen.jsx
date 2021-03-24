@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Modal,
@@ -14,19 +14,27 @@ import {
   Divider,
   Toggle,
 } from "@ui-kitten/components";
-import { createUser, createUserProfile } from "../../services/users";
+import { updateUser, getCurrentUserFromUID } from "../../services/users";
 import PopUpMessage from "../../components/PopUpMessage";
 import { Input } from "@ui-kitten/components";
 
 function AccountSetttingsScreen({ navigation }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const populateFields = (userProfile) => {
+      setEmail(userProfile.email);
+    };
+
+    getCurrentUserFromUID(populateFields);
+  }, []);
 
   return (
     <Layout style={styles.container}>
+      {message == "" ? null : <PopUpMessage message={message} />}
       <Text
         style={{
           fontFamily: "NunitoSans-Bold",
@@ -38,7 +46,7 @@ function AccountSetttingsScreen({ navigation }) {
         Account ID
       </Text>
       <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
-      <Text
+      {/* <Text
         category="s1"
         style={{
           paddingHorizontal: 16,
@@ -52,7 +60,7 @@ function AccountSetttingsScreen({ navigation }) {
         onChangeText={(value) => setUsername(value)}
         placeholder="Username"
         style={{ paddingHorizontal: 16 }}
-      />
+      /> */}
       <Text
         category="s1"
         style={{
@@ -67,6 +75,7 @@ function AccountSetttingsScreen({ navigation }) {
         onChangeText={(value) => setEmail(value)}
         placeholder="Email"
         style={{ paddingHorizontal: 16 }}
+        defaultValue={email}
       />
       <Text
         style={{
@@ -115,25 +124,14 @@ function AccountSetttingsScreen({ navigation }) {
       <Button
         size="large"
         onPress={() => {
-          if (
-            firstName != "" &&
-            lastName != "" &&
-            contactNumber != "" &&
-            address != ""
-          ) {
-            createUser(email, password, setMessage, (uid) => {
-              createUserProfile(
-                {
-                  firstName,
-                  lastName,
-                  contactNumber,
-                  address,
-                },
-                navigation
-              );
-            });
+          if (email != "" && password != "" && password == confirmPass) {
+            updateUser({ email, password }, (message) =>
+              setMessage(message)
+            );
           } else {
-            setMessage("Credentials provided is not valid");
+            setMessage(
+              "Please input your details correctly. Passwords may not have matched."
+            );
           }
         }}
         style={{
@@ -145,7 +143,6 @@ function AccountSetttingsScreen({ navigation }) {
       >
         Submit
       </Button>
-      {message == "" ? null : <PopUpMessage message={message} />}
     </Layout>
   );
 }
