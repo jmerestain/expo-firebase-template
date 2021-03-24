@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Modal,
@@ -14,25 +14,27 @@ import {
   Divider,
   Toggle,
 } from "@ui-kitten/components";
-import { updateUser, getCurrentUserFromUID } from "../../services/users";
-import PopUpMessage from "../../components/PopUpMessage";
+import { updateUserProfile, getCurrentUserFromUID } from "../services/users";
+import PopUpMessage from "../components/PopUpMessage";
 import { Input } from "@ui-kitten/components";
 
-function AccountSetttingsScreen({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
+function OrderAddressScreen({ navigation, route }) {
+  const [firstName, setFirstName] = useState(route.params.firstName);
+  const [lastName, setLastName] = useState(route.params.lastName);
+  const [contactNumber, setContactNumber] = useState(route.params.contactNumber);
+  const [address, setAddress] = useState(route.params.address);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const populateFields = (userProfile) => {
-      setEmail(userProfile.email);
-      setUsername(userProfile.username || "");
-    };
+  //   useEffect(() => {
+  //     const populateFields = (userProfile) => {
+  //       setFirstName(userProfile.firstName);
+  //       setLastName(userProfile.lastName);
+  //       setContactNumber(userProfile.contactNumber);
+  //       setAddress(userProfile.address);
+  //     }
 
-    getCurrentUserFromUID(populateFields);
-  }, []);
+  //     getCurrentUserFromUID(populateFields);
+  //   }, []);
 
   return (
     <Layout style={styles.container}>
@@ -45,7 +47,7 @@ function AccountSetttingsScreen({ navigation }) {
           paddingVertical: 8,
         }}
       >
-        Account ID
+        Contact Details
       </Text>
       <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
       <Text
@@ -56,13 +58,13 @@ function AccountSetttingsScreen({ navigation }) {
           fontFamily: "NunitoSans-Regular",
         }}
       >
-        Username
+        First Name
       </Text>
       <Input
-        onChangeText={(value) => setUsername(value)}
-        placeholder="Username"
+        onChangeText={(value) => setFirstName(value)}
+        placeholder="First Name"
         style={{ paddingHorizontal: 16 }}
-        defaultValue={username}
+        defaultValue={firstName}
       />
       <Text
         category="s1"
@@ -72,14 +74,32 @@ function AccountSetttingsScreen({ navigation }) {
           fontFamily: "NunitoSans-Regular",
         }}
       >
-        Email
+        Last Name
       </Text>
       <Input
-        onChangeText={(value) => setEmail(value)}
-        placeholder="Email"
+        onChangeText={(value) => setLastName(value)}
+        placeholder="Last Name"
         style={{ paddingHorizontal: 16 }}
-        defaultValue={email}
+        defaultValue={lastName}
       />
+      <Text
+        category="s1"
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 6,
+          fontFamily: "NunitoSans-Regular",
+        }}
+      >
+        Contact Number
+      </Text>
+      <Input
+        onChangeText={(value) => setContactNumber(value)}
+        placeholder="+63 *** *** **** "
+        keyboardType="phone-pad"
+        style={{ paddingHorizontal: 16 }}
+        defaultValue={contactNumber}
+      />
+
       <Text
         style={{
           fontFamily: "NunitoSans-Bold",
@@ -89,9 +109,10 @@ function AccountSetttingsScreen({ navigation }) {
           marginTop: 8,
         }}
       >
-        Change Password
+        Shipping Information
       </Text>
       <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
+
       <Text
         category="s1"
         style={{
@@ -100,41 +121,33 @@ function AccountSetttingsScreen({ navigation }) {
           fontFamily: "NunitoSans-Regular",
         }}
       >
-        Password
+        Delivery Address
       </Text>
       <Input
-        onChangeText={(value) => setPassword(value)}
-        placeholder="Password"
-        secureTextEntry={true}
+        onChangeText={(value) => setAddress(value)}
+        placeholder="Delivery Address"
         style={{ paddingHorizontal: 16 }}
-      />
-      <Text
-        category="s1"
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          fontFamily: "NunitoSans-Regular",
-        }}
-      >
-        Retype Password
-      </Text>
-      <Input
-        onChangeText={(value) => setConfirmPass(value)}
-        placeholder="Retype Password"
-        secureTextEntry={true}
-        style={{ paddingHorizontal: 16, marginBottom: 16 }}
+        defaultValue={address}
       />
       <Button
         size="large"
         onPress={() => {
-          if (email != "" && password == confirmPass) {
-            updateUser({ email, password, username }, (message) =>
-              setMessage(message)
-            );
+          if (
+            firstName != "" &&
+            lastName != "" &&
+            contactNumber != "" &&
+            address != ""
+          ) {
+            const body = {
+              firstName,
+              lastName,
+              contactNumber,
+              address,
+            };
+            route.params.updateAfterGoBack(body);
+            navigation.goBack();
           } else {
-            setMessage(
-              "Please input your details correctly. Passwords may not have matched."
-            );
+            setMessage("Incomplete details!");
           }
         }}
         style={{
@@ -144,7 +157,7 @@ function AccountSetttingsScreen({ navigation }) {
           marginBottom: 24,
         }}
       >
-        Submit
+        Update Delivery Details
       </Button>
     </Layout>
   );
@@ -194,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountSetttingsScreen;
+export default OrderAddressScreen;

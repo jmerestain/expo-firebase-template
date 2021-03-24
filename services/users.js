@@ -99,22 +99,15 @@ export const updateUser = (body, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUser = auth.currentUser;
-  const { email, password } = body;
+  const { email, password, username } = body;
 
-  currentUser
-    .updateEmail(email)
+  Promise.all([
+    currentUser.updateEmail(email),
+    password && currentUser.updatePassword(password),
+    db.collection("user-profiles").doc(currentUser.uid).update({ username }),
+  ])
     .then(() => {
-      currentUser
-        .updatePassword(password)
-        .then(() => {
-          callback("Successfully updated your details!");
-        })
-        .catch((e) => {
-          callback(
-            "Could not update your details because of the following: " +
-              e.message
-          );
-        });
+      callback("Successfully updated your details!");
     })
     .catch((e) => {
       callback(

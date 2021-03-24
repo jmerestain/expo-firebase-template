@@ -25,7 +25,6 @@ import {
 import { sendMessage, startChat } from "../services/messages";
 import { ORDER_IN_CART, ORDER_PENDING } from "./orderStatuses";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import DeliveryAddress from "./SettingsScreens/AddressSettingsScreen";
 
 const dateToString = (date) => {
   let year = date.getFullYear();
@@ -38,7 +37,7 @@ const dateToString = (date) => {
 const renderItem = ({ item, index }) => (
   <Layout style={styles.innerList}>
     <Image
-      style={{ resizeMode: "cover", height: 80, width: '20%' }}
+      style={{ resizeMode: "cover", height: 80, width: "20%" }}
       source={{ uri: item.imageUrl }}
     />
     <Layout style={styles.textList}>
@@ -52,7 +51,11 @@ const renderItem = ({ item, index }) => (
       >
         <Text
           category="s1"
-          style={{ fontFamily: "NunitoSans-Bold", alignContent: "center", marginTop: 4 }}
+          style={{
+            fontFamily: "NunitoSans-Bold",
+            alignContent: "center",
+            marginTop: 4,
+          }}
         >
           {item.product.title}
         </Text>
@@ -60,7 +63,7 @@ const renderItem = ({ item, index }) => (
           category="s2"
           style={{
             alignContent: "center",
-            fontFamily: "NunitoSans-Bold", 
+            fontFamily: "NunitoSans-Bold",
             marginVertical: 3,
             color: "rgb(128, 128, 128)",
           }}
@@ -75,30 +78,30 @@ const renderItem = ({ item, index }) => (
           }}
         >
           <Layout>
-          <Text
-            category="s2"
-            style={{
-              alignContent: "center",
-              fontFamily: "NunitoSans-Regular", 
-              marginBottom: 3,
-              color: "rgb(128, 128, 128)",
-            }}
-          >
-            x{item.quantity}
-          </Text>
+            <Text
+              category="s2"
+              style={{
+                alignContent: "center",
+                fontFamily: "NunitoSans-Regular",
+                marginBottom: 3,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              x{item.quantity}
+            </Text>
           </Layout>
-          <Layout style={{alignItems:"flex-end"}}>
-          <Text
-            category="s2"
-            style={{
-              alignContent: "flex-end",
-              fontFamily: "NunitoSans-Regular", 
-              marginBottom: 3,
-              color: "rgb(128, 128, 128)",
-            }}
-          >
-            Subtotal: P{item.product.price * item.quantity}
-          </Text>
+          <Layout style={{ alignItems: "flex-end" }}>
+            <Text
+              category="s2"
+              style={{
+                alignContent: "flex-end",
+                fontFamily: "NunitoSans-Regular",
+                marginBottom: 3,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              Subtotal: P{item.product.price * item.quantity}
+            </Text>
           </Layout>
         </Layout>
       </Layout>
@@ -123,21 +126,36 @@ const DeliverAddress = ({ route, navigation }) => {
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState([]);
   const [vendor, setVendor] = useState({});
+  const [address, setAddress] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [recipientNumber, setRecipientNumber] = useState("");
   const [modeOfPayment, setModeOfPayment] = useState("");
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const vendorId = route.params.vendorId;
 
   useEffect(() => {
-    const unsubscribe = getOrdersCurrentUserPerVendor(ORDER_IN_CART, vendorId, setOrders);
+    const unsubscribe = getOrdersCurrentUserPerVendor(
+      ORDER_IN_CART,
+      vendorId,
+      setOrders
+    );
 
     return function cleanup() {
       unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
   }, []);
+
+  useEffect(() => {
+    setAddress(profile.address);
+    setFirstName(profile.firstName);
+    setLastName(profile.lastName);
+    setRecipientNumber(profile.contactNumber);
+  }, [profile]);
 
   useEffect(() => {
     getShopDetailsByUID(vendorId, setVendor);
@@ -174,9 +192,11 @@ const DeliverAddress = ({ route, navigation }) => {
         text: `Hi, I placed an order! Here are the details:\n\nOrder Summary:\n${orders.reduce(
           (acc, curr) => acc + `${curr.product.title}, x${curr.quantity}\n`,
           ""
-        )}\nDelivery Date: ${dateToString(deliveryDate)}\nMode of Payment: ${
-          modeOfPayment || "COD"
-        }
+        )}\nDelivery Address: ${address}\nDelivery Recipient: ${
+          firstName + " " + lastName
+        }\nContact Number: ${recipientNumber}\nDelivery Date: ${dateToString(
+          deliveryDate
+        )}\nMode of Payment: ${modeOfPayment || "COD"}
         `,
       };
       sendMessage(vendorId, messageDetails, chatroomId, navigateCallback);
@@ -185,7 +205,16 @@ const DeliverAddress = ({ route, navigation }) => {
     const orderIds = orders.map((order) => order.id);
     updateMultipleOrderStatus(
       orderIds,
-      { status: ORDER_PENDING, deliveryDate },
+      {
+        status: ORDER_PENDING,
+        deliveryDate,
+        deliveryDetails: {
+          deliveryAddress: address,
+          firstName,
+          lastName,
+          contactNumber: recipientNumber,
+        },
+      },
       startChat(vendorId, vendorName, userName, true, sendMessageCallback)
     );
   };
@@ -195,8 +224,20 @@ const DeliverAddress = ({ route, navigation }) => {
       <Layout>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Delivery Address");
-        }}
+            navigation.navigate("Delivery Information", {
+              firstName,
+              lastName,
+              address,
+              contactNumber: recipientNumber,
+              updateAfterGoBack: (body) => {
+                const { firstName, lastName, contactNumber, address } = body;
+                setFirstName(firstName);
+                setLastName(lastName);
+                setRecipientNumber(contactNumber);
+                setAddress(address);
+              },
+            });
+          }}
         >
           <Layout style={[styles.deliverAddress]}>
             <Layout style={styles.daInner}>
@@ -212,7 +253,6 @@ const DeliverAddress = ({ route, navigation }) => {
                     flex: 1,
                     flexDirection: "row",
                     backgroundColor: "transparent",
-                    
                   }}
                 >
                   <Icon
@@ -227,12 +267,15 @@ const DeliverAddress = ({ route, navigation }) => {
                       flexShrink: 1,
                     }}
                   >
-                    <Text category="s1" style={{ fontWeight: "bold", marginBottom: 4 }}>
+                    <Text
+                      category="s1"
+                      style={{ fontWeight: "bold", marginBottom: 4 }}
+                    >
                       Delivery Address
                     </Text>
                     <Text category="p2">
-                      {profile.firstName} {profile.lastName} |{" "}
-                      {profile.contactNumber}
+                      {firstName || ""} {lastName || ""} |{" "}
+                      {recipientNumber || ""}
                     </Text>
                     <Text
                       category="p2"
@@ -242,7 +285,7 @@ const DeliverAddress = ({ route, navigation }) => {
                         flexWrap: "wrap",
                       }}
                     >
-                      {profile.address}
+                      {address || ""}
                     </Text>
                   </Layout>
                 </Layout>
@@ -470,8 +513,11 @@ const DeliverAddress = ({ route, navigation }) => {
             </Layout>
             <Button
               size="large"
-              style={{ backgroundColor: "rgb(210,145,91)",
-              borderColor: "rgb(210,145,91)", marginTop: 24 }}
+              style={{
+                backgroundColor: "rgb(210,145,91)",
+                borderColor: "rgb(210,145,91)",
+                marginTop: 24,
+              }}
               onPress={placeOrderCallback}
             >
               Place Order
@@ -516,7 +562,7 @@ const styles = StyleSheet.create({
   textList: {
     flexDirection: "column",
     marginBottom: 12,
-    width: '70%'
+    width: "70%",
   },
   inner: {
     paddingVertical: 4,
