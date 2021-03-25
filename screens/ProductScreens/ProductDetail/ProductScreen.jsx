@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   Image,
   SectionList,
-  Dimensions,
+  Dimensions,ç
 } from "react-native";
 import { Rating } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
@@ -22,7 +22,7 @@ import {
 } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import {
   getProductByID,
   getProductsLimitedFromUID,
@@ -32,6 +32,7 @@ import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
 import LoadingModal from "../../../components/LoadingModal";
+import Modal from 'react-native-modal';
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -46,6 +47,16 @@ const data = new Array(8).fill({
   ratedBy: "Nelly Cruz",
   dateReviewed: "01/11/21",
 });
+
+
+const PlusIcon = (props) => (
+  <Icon {...props} name='plus-circle-outline'/>
+);
+
+const MinusIcon = (props) => (
+  <Icon {...props} name='minus-circle-outline'/>
+);
+
 
 const renderItemMore = ({ item, navigation, index }) => (
   <Layout style={styles.item}>
@@ -137,6 +148,7 @@ function ProductScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [moreProducts, setMoreProducts] = useState({});
   const userName = profile.firstName + " " + profile.lastName;
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -313,18 +325,53 @@ function ProductScreen({ route, navigation }) {
               >
                 Product Reviews
               </Text>
-              <Button
-                appearance="ghost"
-                size="medium"
-                style={{ marginTop: 6 }}
-              >
-                See All &gt;
-              </Button>
             </Layout>
             <List data={data} renderItem={renderItemRatings} />
           </Layout>
         </Layout>
       </ScrollView>
+      <Layout style={styles.centeredView}>
+        <Modal
+        style={{margin: 0}}
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}>
+            <Layout style={styles.centeredView}>
+                <Layout style={styles.modalView}>
+                <Text category='s1' style={{fontSize: 17, color: '#8A1214', paddingVertical: 16, textAlign: "center"}}>Select quantity for {product.title}</Text>
+                <Layout style={{ alignItems: "center", justifyContent: "center"}} flexDirection="row" >
+                <Button 
+                  appearance="ghost" 
+                  accessoryLeft={MinusIcon}>
+                  </Button>
+                  <Input 
+                  placeholder='1'
+                  style={{minWidth:80, textAlign: 'center'}}
+                  textAlign={'center'}>
+
+                  </Input>
+                  <Button 
+                  appearance="ghost" 
+                  accessoryLeft={PlusIcon}>
+                  </Button>
+                </Layout>
+                    <Button appearance='primary'
+                    onPress={() => {addToCartOnPress(); setModalVisible(!modalVisible)}}
+                    style={{marginTop: 20}}>
+                        Buy Now
+                    </Button>
+                    <Button appearance='ghost'
+                    onPress={() => setModalVisible(!modalVisible)}
+                    style={{marginTop: 4}}>
+                        Cancel
+                    </Button>
+                </Layout>
+            </Layout>
+        </Modal>
+        </Layout>
       <Layout style={{ position: "sticky", flex: 1 }}>
         <Layout
           style={{
@@ -350,13 +397,14 @@ function ProductScreen({ route, navigation }) {
           <Button
             size="large"
             style={{ width: "48%", marginHorizontal: 4 }}
-            onPress={addToCartOnPress}
+            onPress={() => setModalVisible(true)}
           >
             Add to Cart
           </Button>
         </Layout>
       </Layout>
     </Layout>
+    
   );
 }
 
@@ -365,6 +413,31 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "stretch",
+    backgroundColor: "#00000080",
+    alignContent: "stretch",
+    textAlign: "center",
+    paddingHorizontal: 16
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    alignItems: "stretch",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
   containerList: {
     flexDirection: "row",

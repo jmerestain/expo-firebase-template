@@ -360,9 +360,7 @@ const PendingOrdersNav = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    navigation.navigate("Order Status", {
-                      initialScreen: "To Review",
-                    });
+                    navigation.navigate("Rate Order")
                   }}
                 >
                   <Icon

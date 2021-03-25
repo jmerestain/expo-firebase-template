@@ -17,7 +17,7 @@ import MyShopPreview from "../MyShopScreens/MyShopPreviewScreen";
 import ShopSettings from "../MyShopScreens/ShopSettingsScreen";
 import ProductScreen from "../ProductScreens/ProductDetail/ProductScreen";
 //import SettingsDeliveryAddress from './SettingsDeliveryAddress';
-
+import RatingScreen from "./RatingScreen";
 import { vendorApplyStatus } from "../../services/vendor";
 import NewItemScreen from "./NewItemScreen";
 
@@ -119,6 +119,11 @@ const VendorNavigator = () => {
         options={({ route }) => ({
           headerTitle: route.params.title,
         })}
+      />
+      <Vendor.Screen
+        name="Rate Order"
+        component={RatingScreen}
+        options={showHeader}
       />
     </Vendor.Navigator>
   );

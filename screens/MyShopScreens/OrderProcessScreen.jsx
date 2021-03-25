@@ -53,8 +53,8 @@ const renderItem = ({ item, index, isPending }) => (
           />
           <Layout style={styles.textList}>
             <Text
-              category="h6"
-              style={{ alignContent: "center", marginVertical: 6 }}
+              category="s1"
+              style={{ alignContent: "center", marginTop: 8, marginBottom: 4 }}
             >
               {item.userName}
             </Text>
@@ -110,7 +110,7 @@ const renderItem2 = ({ item, index }) => (
               }}
             >
               <Text
-                category="h6"
+                category="s1"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
                 {item.userName}
@@ -175,16 +175,6 @@ const renderItem2 = ({ item, index }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
           <Button
             size="small"
             style={{
@@ -219,7 +209,7 @@ const renderItem3 = ({ item, index }) => (
               }}
             >
               <Text
-                category="h6"
+                category="s1"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
                 {item.userName}
@@ -284,16 +274,6 @@ const renderItem3 = ({ item, index }) => (
           </Layout>
         </Layout>
         <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
           <Button
             size="small"
             style={{
@@ -534,7 +514,7 @@ const styles = StyleSheet.create({
   settingsCard: {
     flexDirection: "column",
     justifyContent: "flex-start",
-    marginVertical: 8,
+    marginVertical: 1,
   },
   daInner: {
     marginHorizontal: 20,
