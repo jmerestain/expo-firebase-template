@@ -20,6 +20,7 @@ import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
 import _ from "lodash";
 import { ORDER_IN_CART } from "./orderStatuses";
+import OrderAddressScreen from "./OrderAddressScreen";
 
 const OStack = createStackNavigator();
 
@@ -31,6 +32,10 @@ const OrdersScreenNavigator = () => (
   >
     <OStack.Screen name="Pending Orders" component={OrdersScreen} />
     <OStack.Screen name="Individual Order" component={OrdersIndividualScreen} />
+    <OStack.Screen
+      name="Delivery Information"
+      component={OrderAddressScreen}
+    />
   </OStack.Navigator>
 );
 
