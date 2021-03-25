@@ -44,20 +44,12 @@ const renderItem4 = ({ item, index }) => (
               }}
             >
               <Text
-                category="h6"
+                category="s1"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
                 {item.userName}
               </Text>
               <Layout style={{ flex: 1, flexDirection: "row" }}>
-                <Layout
-                  style={{
-                    flex: 1,
-                    flexDirection: "column",
-                    minWidth: 60,
-                    marginRight: 32,
-                  }}
-                >
                   <Text
                     category="s2"
                     style={{
@@ -74,15 +66,12 @@ const renderItem4 = ({ item, index }) => (
                     style={{
                       alignContent: "center",
                       marginVertical: 3,
+                      marginHorizontal: 25,
                       color: "rgb(128, 128, 128)",
                     }}
                   >
                     {item.quantity} item(s)
                   </Text>
-                </Layout>
-                <Layout
-                  style={{ flex: 1, flexDirection: "column", minWidth: 60 }}
-                >
                   <Text
                     category="s2"
                     style={{
@@ -98,12 +87,12 @@ const renderItem4 = ({ item, index }) => (
                     style={{
                       alignContent: "center",
                       marginVertical: 3,
+                      marginHorizontal: 25,
                       color: "rgb(128, 128, 128)",
                     }}
                   >
                     {item.price}
                   </Text>
-                </Layout>
               </Layout>
             </Layout>
           </Layout>

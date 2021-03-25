@@ -19,7 +19,7 @@ function BottomTabBar({ state, descriptors, navigation }) {
 
         // Getting Icon Name for TabBarIcon
 
-        if (label === "Dashboard") {
+        if (label === "Catalogue") {
           iconName = "home-outline";
         } else if (label === "Orders") {
           iconName = "shopping-bag-outline";

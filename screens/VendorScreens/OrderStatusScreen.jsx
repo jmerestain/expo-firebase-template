@@ -22,6 +22,22 @@ import {
   ORDER_TO_RECEIVE,
   ORDER_COMPLETED,
 } from "../orderStatuses";
+import Modal from 'react-native-modal';
+{/*import RatingScreen from './RatingScreen';
+
+const RatingNav = createStackNavigator();
+
+const RatingsScreens = () => (
+  <RatingNav.Navigator screenOptions={{
+      headerStyle: {
+          backgroundColor: 'rgb(138,18,20)',
+      }
+  }}>
+      <RatingNav.Screen name="Rate Order" component={RatingScreen} 
+      options={showHeader} />
+  </RatingNav.Navigator>
+)
+ */}
 
 const StatusTab = createMaterialTopTabNavigator();
 
@@ -242,81 +258,6 @@ const renderItemReceived = ({ item, index }) => (
   </Layout>
 );
 
-const renderItemRate = ({ item, index }) => (
-  <Layout style={styles.container}>
-    <Layout style={styles.inner}>
-      <Layout style={styles.containerList}>
-        <Layout style={styles.innerList}>
-          <Avatar
-            rounded
-            size="giant"
-            source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
-          />
-          <Layout style={styles.textList}>
-            <Text
-              style={{
-                alignContent: "center",
-                marginTop: 8,
-                marginBottom: 2,
-                fontSize: 16,
-                fontFamily: "NunitoSans-Bold",
-              }}
-            >
-              {item.product.title}
-            </Text>
-            <Text
-              category="s2"
-              style={{
-                alignContent: "center",
-                marginVertical: 2,
-                color: "#000000",
-              }}
-            >
-              P{item.product.price}
-            </Text>
-            <Text
-              category="s2"
-              style={{
-                fontFamily: "NunitoSans-Regular",
-                alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
-              }}
-            >
-              x{item.quantity}
-            </Text>
-            <Text
-              category="s2"
-              style={{
-                fontFamily: "NunitoSans-Regular",
-                alignContent: "center",
-                marginVertical: 1,
-                color: "rgb(128, 128, 128)",
-              }}
-            >
-              {item.product.vendor}
-            </Text>
-          </Layout>
-        </Layout>
-        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
-          <Button
-            size="small"
-            style={{
-              alignSelf: "flex-end",
-              marginVertical: 8,
-              marginRight: 16,
-            }}
-          >
-            Rate Order
-          </Button>
-        </Layout>
-      </Layout>
-    </Layout>
-    <Divider />
-  </Layout>
-);
-
 function OrderStatusScreen({ navigation, route }) {
   const [toProcessOrders, setToProcessOrders] = useState([]);
   const [toDeliverOrders, setToDeliverOrders] = useState([]);
@@ -421,7 +362,6 @@ function OrderStatusScreen({ navigation, route }) {
           toProcessOrders={filteredToProcessOrders}
           toDeliverOrders={filteredToDeliverOrders}
           toReceiveOrders={filteredToReceiveOrders}
-          toReviewOrders={filteredToReviewOrders}
         />
       </NavigationContainer>
     </Layout>
@@ -448,9 +388,6 @@ const StatusTabNavigation = ({
       </StatusTab.Screen>
       <StatusTab.Screen name="To Receive">
         {(props) => <ToReceiveNav {...props} data={toReceiveOrders} />}
-      </StatusTab.Screen>
-      <StatusTab.Screen name="To Review">
-        {(props) => <ToRateNav {...props} data={toReviewOrders} />}
       </StatusTab.Screen>
     </StatusTab.Navigator>
   );
@@ -492,18 +429,6 @@ const ToReceiveNav = ({ data }) => {
   );
 };
 
-const ToRateNav = ({ data }) => {
-  return (
-    <Layout style={[styles.settingsCard]}>
-      <Layout style={styles.inner}>
-        <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItemRate} />
-        </Layout>
-      </Layout>
-    </Layout>
-  );
-};
-
 const TopTabBar = ({ navigation, state }) => (
   <TabBar
     selectedIndex={state.index}
@@ -512,7 +437,6 @@ const TopTabBar = ({ navigation, state }) => (
     <Tab title="To Process" />
     <Tab title="To Deliver" />
     <Tab title="To Receive" />
-    <Tab title="To Review" />
   </TabBar>
 );
 
@@ -530,10 +454,10 @@ const styles = StyleSheet.create({
   },
   innerList: {
     flexDirection: "row",
+    marginBottom: 8
   },
   textList: {
     flexDirection: "column",
-    marginBottom: 12,
   },
   buttonContain: {
     flex: 1,
@@ -545,14 +469,14 @@ const styles = StyleSheet.create({
   settingsCard: {
     flexDirection: "column",
     justifyContent: "flex-start",
-    marginVertical: 8,
+    marginVertical: 1,
   },
   daInner: {
     marginHorizontal: 20,
     backgroundColor: "transparent",
   },
   inner: {
-    paddingVertical: 12,
+    paddingVertical: 4,
   },
   field: {
     marginVertical: 10,

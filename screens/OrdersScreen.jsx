@@ -20,9 +20,17 @@ import OrdersIndividualScreen from "./OrdersIndividualScreen";
 import { getOrdersCurrentUser } from "../services/orders";
 import _ from "lodash";
 import { ORDER_IN_CART } from "./orderStatuses";
+import EmptyState from "@freakycoder/react-native-empty-state";
 import OrderAddressScreen from "./OrderAddressScreen";
 
 const OStack = createStackNavigator();
+
+const emptyStateImage = () => {
+  <Image
+      source={require("../assets/empty-image.png")}
+      style={styles.categoryImage}
+  />
+}
 
 const OrdersScreenNavigator = () => (
   <OStack.Navigator
@@ -174,6 +182,13 @@ const renderVendorItem = ({ item, index, navigation }) => (
 function OrdersScreen({ navigation }) {
   return (
     <Layout style={styles.container}>
+      <EmptyState
+        style={{paddingHorizontal: 24, textAlign: 'center', alignContent: 'center'}}
+        imageSource={emptyStateImage}
+        title="Oops! Nothing in your bag yet."
+        description="We have an array of Nueva Ecija goodies for you to choose from. View our catalogue now!"
+        titleTextStyle= {{ color: '#00000080' }}
+      />
       <DeliverAddress navigation={navigation} />
       <Layout style={styles.inner}>
         <Layout style={styles.field}>
