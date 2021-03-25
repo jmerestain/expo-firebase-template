@@ -76,9 +76,11 @@ export const newOrder = (productDetails, userName, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
+  const { quantity, ...details } = productDetails;
+
   const order = {
-    product: productDetails,
-    quantity: 1,
+    product: details,
+    quantity,
     user: currentUserUID,
     userName,
     status: ORDER_IN_CART,

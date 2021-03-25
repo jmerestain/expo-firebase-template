@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   Image,
   SectionList,
-  Dimensions,ç
+  Dimensions,
+  ç,
 } from "react-native";
 import { Rating } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
@@ -32,7 +33,7 @@ import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
 import LoadingModal from "../../../components/LoadingModal";
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 
 const data = new Array(8).fill({
   product: "Banana Bread",
@@ -48,15 +49,9 @@ const data = new Array(8).fill({
   dateReviewed: "01/11/21",
 });
 
+const PlusIcon = (props) => <Icon {...props} name="plus-circle-outline" />;
 
-const PlusIcon = (props) => (
-  <Icon {...props} name='plus-circle-outline'/>
-);
-
-const MinusIcon = (props) => (
-  <Icon {...props} name='minus-circle-outline'/>
-);
-
+const MinusIcon = (props) => <Icon {...props} name="minus-circle-outline" />;
 
 const renderItemMore = ({ item, navigation, index }) => (
   <Layout style={styles.item}>
@@ -146,9 +141,11 @@ function ProductScreen({ route, navigation }) {
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
   const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const [moreProducts, setMoreProducts] = useState({});
   const userName = profile.firstName + " " + profile.lastName;
   const [modalVisible, setModalVisible] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -169,10 +166,10 @@ function ProductScreen({ route, navigation }) {
     }
 
     return function cleanup() {
-      if(unsubscribe) {
+      if (unsubscribe) {
         unsubscribe();
       }
-    }
+    };
   }, [product]);
 
   const contactSellerOnPress = () => {
@@ -193,19 +190,31 @@ function ProductScreen({ route, navigation }) {
   };
 
   const addToCartOnPress = () => {
-    setLoading(true);
-    const addToCartCallback = () => {
-      setLoading(false);
-      navigation.navigate("Orders");
-    };
+    if (!Number.isInteger(parseFloat(quantity)) || quantity < 0) {
+      setMessage("Please input a valid quantity.");
+    } else {
+      setModalVisible(!modalVisible);
+      setLoading(true);
+      const addToCartCallback = () => {
+        setLoading(false);
+        navigation.navigate("Orders");
+      };
 
-    const { title, price, id } = product;
+      const { title, price, id } = product;
 
-    newOrder(
-      { title, price, vendor: vendor.name, vendorId: vendor.id, id },
-      userName,
-      addToCartCallback
-    );
+      newOrder(
+        {
+          title,
+          price,
+          vendor: vendor.name,
+          vendorId: vendor.id,
+          id,
+          quantity: parseInt(quantity),
+        },
+        userName,
+        addToCartCallback
+      );
+    }
   };
 
   return (
@@ -300,11 +309,7 @@ function ProductScreen({ route, navigation }) {
               <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
                 More from {vendor.name}
               </Text>
-              <Button
-                appearance="ghost"
-                size="medium"
-                style={{ marginTop: 6 }}
-              >
+              <Button appearance="ghost" size="medium" style={{ marginTop: 6 }}>
                 View Shop &gt;
               </Button>
             </Layout>
@@ -312,17 +317,14 @@ function ProductScreen({ route, navigation }) {
             <List
               data={moreProducts}
               numColumns={2}
-              renderItem={(props) => renderItemMore({...props, navigation})}
+              renderItem={(props) => renderItemMore({ ...props, navigation })}
             />
 
             <Divider />
             <Layout
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text
-                category="s1"
-                style={{ marginTop: 18, marginLeft: 18 }}
-              >
+              <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
                 Product Reviews
               </Text>
             </Layout>
@@ -332,46 +334,82 @@ function ProductScreen({ route, navigation }) {
       </ScrollView>
       <Layout style={styles.centeredView}>
         <Modal
-        style={{margin: 0}}
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}>
-            <Layout style={styles.centeredView}>
-                <Layout style={styles.modalView}>
-                <Text category='s1' style={{fontSize: 17, color: '#8A1214', paddingVertical: 16, textAlign: "center"}}>Select quantity for {product.title}</Text>
-                <Layout style={{ alignItems: "center", justifyContent: "center"}} flexDirection="row" >
-                <Button 
-                  appearance="ghost" 
-                  accessoryLeft={MinusIcon}>
-                  </Button>
-                  <Input 
-                  placeholder='1'
-                  style={{minWidth:80, textAlign: 'center'}}
-                  textAlign={'center'}>
-
-                  </Input>
-                  <Button 
-                  appearance="ghost" 
-                  accessoryLeft={PlusIcon}>
-                  </Button>
-                </Layout>
-                    <Button appearance='primary'
-                    onPress={() => {addToCartOnPress(); setModalVisible(!modalVisible)}}
-                    style={{marginTop: 20}}>
-                        Buy Now
-                    </Button>
-                    <Button appearance='ghost'
-                    onPress={() => setModalVisible(!modalVisible)}
-                    style={{marginTop: 4}}>
-                        Cancel
-                    </Button>
-                </Layout>
+          style={{ margin: 0 }}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Layout style={styles.centeredView}>
+            <Layout style={styles.modalView}>
+              {message ? (
+                <Text
+                  category="s1"
+                  style={{
+                    fontSize: 14,
+                    color: "#333333",
+                    textAlign: "center",
+                  }}
+                >
+                  {message}
+                </Text>
+              ) : null}
+              <Text
+                category="s1"
+                style={{
+                  fontSize: 17,
+                  color: "#8A1214",
+                  paddingVertical: 16,
+                  textAlign: "center",
+                }}
+              >
+                Select quantity for {product.title}
+              </Text>
+              <Layout
+                style={{ alignItems: "center", justifyContent: "center" }}
+                flexDirection="row"
+              >
+                <Button
+                  appearance="ghost"
+                  accessoryLeft={MinusIcon}
+                  onPress={() => {
+                    if (quantity > 0) setQuantity(quantity - 1);
+                  }}
+                ></Button>
+                <Input
+                  keyboardType="numeric"
+                  placeholder="1"
+                  style={{ minWidth: 80, textAlign: "center" }}
+                  textAlign={"center"}
+                  defaultValue={quantity + ""}
+                  onChangeText={setQuantity}
+                ></Input>
+                <Button
+                  appearance="ghost"
+                  accessoryLeft={PlusIcon}
+                  onPress={() => setQuantity(quantity + 1)}
+                ></Button>
+              </Layout>
+              <Button
+                appearance="primary"
+                onPress={addToCartOnPress}
+                style={{ marginTop: 20 }}
+              >
+                Buy Now
+              </Button>
+              <Button
+                appearance="ghost"
+                onPress={() => setModalVisible(!modalVisible)}
+                style={{ marginTop: 4 }}
+              >
+                Cancel
+              </Button>
             </Layout>
+          </Layout>
         </Modal>
-        </Layout>
+      </Layout>
       <Layout style={{ position: "sticky", flex: 1 }}>
         <Layout
           style={{
@@ -404,7 +442,6 @@ function ProductScreen({ route, navigation }) {
         </Layout>
       </Layout>
     </Layout>
-    
   );
 }
 
@@ -421,7 +458,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000080",
     alignContent: "stretch",
     textAlign: "center",
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   modalView: {
     margin: 20,
@@ -433,11 +470,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   containerList: {
     flexDirection: "row",

@@ -19,7 +19,9 @@ export const getMyStore = (user, setProducts) => {
 
 export const getCatalogue = (callback) => {
   const db = firebase.firestore();
-  var unsubscribe = db.collection("products")
+  var unsubscribe = db
+    .collection("products")
+    .orderBy("created_at", "desc")
     .limit(10)
     .onSnapshot((querySnapshot) => {
       var products = [];
