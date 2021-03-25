@@ -63,7 +63,7 @@ export const getUserProfile = (uid, callback) => {
 export const getCurrentUserFromUID = (callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
-  const { uid, givenPhotoURL } = auth.currentUser;
+  const { uid, givenPhotoURL, email } = auth.currentUser;
 
   db.collection("user-profiles")
     .doc(uid)
@@ -73,7 +73,45 @@ export const getCurrentUserFromUID = (callback) => {
         id: uid,
         ...((givenPhotoURL && { photoURL: givenPhotoURL }) || null),
         ...userProfile.data(),
+        email,
       })
     )
     .catch((e) => console.log(e));
+};
+
+export const updateUserProfile = (body, callback) => {
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("user-profiles")
+    .doc(currentUserUID)
+    .update(body)
+    .then(() => callback("Successfully updated your details!"))
+    .catch((e) => {
+      callback(
+        "Could not update your details because of the following: " + e.message
+      );
+    });
+};
+
+export const updateUser = (body, callback) => {
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const currentUser = auth.currentUser;
+  const { email, password, username } = body;
+
+  Promise.all([
+    currentUser.updateEmail(email),
+    password && currentUser.updatePassword(password),
+    db.collection("user-profiles").doc(currentUser.uid).update({ username }),
+  ])
+    .then(() => {
+      callback("Successfully updated your details!");
+    })
+    .catch((e) => {
+      callback(
+        "Could not update your details because of the following: " + e.message
+      );
+    });
 };

@@ -14,27 +14,27 @@ import {
   Divider,
   Toggle,
 } from "@ui-kitten/components";
-import { updateUserProfile, getCurrentUserFromUID } from "../../services/users";
-import PopUpMessage from "../../components/PopUpMessage";
+import { updateUserProfile, getCurrentUserFromUID } from "../services/users";
+import PopUpMessage from "../components/PopUpMessage";
 import { Input } from "@ui-kitten/components";
 
-function AddressSettingsScreen({ navigation }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [address, setAddress] = useState("");
+function OrderAddressScreen({ navigation, route }) {
+  const [firstName, setFirstName] = useState(route.params.firstName);
+  const [lastName, setLastName] = useState(route.params.lastName);
+  const [contactNumber, setContactNumber] = useState(route.params.contactNumber);
+  const [address, setAddress] = useState(route.params.address);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const populateFields = (userProfile) => {
-      setFirstName(userProfile.firstName);
-      setLastName(userProfile.lastName);
-      setContactNumber(userProfile.contactNumber);
-      setAddress(userProfile.address);
-    }
+  //   useEffect(() => {
+  //     const populateFields = (userProfile) => {
+  //       setFirstName(userProfile.firstName);
+  //       setLastName(userProfile.lastName);
+  //       setContactNumber(userProfile.contactNumber);
+  //       setAddress(userProfile.address);
+  //     }
 
-    getCurrentUserFromUID(populateFields);
-  }, []);
+  //     getCurrentUserFromUID(populateFields);
+  //   }, []);
 
   return (
     <Layout style={styles.container}>
@@ -144,11 +144,10 @@ function AddressSettingsScreen({ navigation }) {
               contactNumber,
               address,
             };
-            updateUserProfile(body, (message) =>
-              setMessage(message)
-            );
+            route.params.updateAfterGoBack(body);
+            navigation.goBack();
           } else {
-            setMessage("Credentials provided is not valid");
+            setMessage("Incomplete details!");
           }
         }}
         style={{
@@ -158,7 +157,7 @@ function AddressSettingsScreen({ navigation }) {
           marginBottom: 24,
         }}
       >
-        Submit
+        Update Delivery Details
       </Button>
     </Layout>
   );
@@ -208,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressSettingsScreen;
+export default OrderAddressScreen;

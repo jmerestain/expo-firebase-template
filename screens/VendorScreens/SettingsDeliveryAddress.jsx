@@ -4,7 +4,6 @@ import { Layout, Input, Button, Text } from "@ui-kitten/components";
 //import { createUser } from "./services/users";
 import PopUpMessage from "./components/PopUpMessage";
 
-
 const SettingsDeliveryAddress = ({ navigation }) => {
   const [address, setAddress] = useState("");
 
@@ -24,14 +23,14 @@ const SettingsDeliveryAddress = ({ navigation }) => {
       <Button
         size="large"
         onPress={() => {
-          if (
-            address != ""
-          ) {
-            {/*createUser(
+          if (address != "") {
+            {
+              /*createUser(
               address,
               setMessage,
               navigation
-            );*/}
+            );*/
+            }
           } else {
             setMessage("Address field is empty");
           }
