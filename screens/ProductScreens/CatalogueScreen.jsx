@@ -12,6 +12,7 @@ import MessagingScreen from "../MessagingScreens";
 import SearchScreen from "../SearchScreens/Search";
 import Category from "./Category/Category";
 import ProductScreen from "./ProductDetail/ProductScreen";
+import MyShopPreviewScreen from "../MyShopScreens/MyShopPreviewScreen";
 import DashHeader from "../../components/headers/DashHeader";
 
 const artscrafts = require("../../assets/categories/artscrafts.png");
@@ -70,6 +71,14 @@ const CatalogueNavigator = () => {
           title: "Search",
         })}
       />
+      <CStack.Screen
+        name="Vendor Shop"
+        component={MyShopPreviewScreen}
+        options={({route}) => ({
+          headerShown: true,
+          title: route.params.vendorName,
+        })}
+      />
     </CStack.Navigator>
   );
 };
@@ -98,10 +107,10 @@ const HomeComponent = ({ user, navigation }) => {
   useEffect(() => {
     var unsubscribe = getCatalogue(homeProductsCallback);
     return function cleanup() {
-      if(unsubscribe) {
+      if (unsubscribe) {
         unsubscribe();
       }
-    }
+    };
   }, []);
 
   useEffect(() => {

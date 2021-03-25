@@ -20,14 +20,16 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { ScrollView } from "react-native-gesture-handler";
 import ShopProducts from "./MyShopPreview/ShopProducts";
 import ShopRatings from "./MyShopPreview/ShopRatings";
-import { getShopDetails } from "../../services/vendor";
+import { getShopDetails, getShopDetailsByUID } from "../../services/vendor";
 
 const MyShopPreviewTab = createMaterialTopTabNavigator();
 
-const MyShopPreviewNavigation = () => {
+const MyShopPreviewNavigation = ({setNumProducts, setRating}) => {
   return (
     <MyShopPreviewTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
-      <MyShopPreviewTab.Screen name="Products" component={ShopProducts} />
+      <MyShopPreviewTab.Screen name="Products">
+        {props => <ShopProducts {...props} setNumProducts={setNumProducts} />}
+      </MyShopPreviewTab.Screen>
       {/* <MyShopPreviewTab.Screen name="Reviews" component={ShopRatings} /> */}
     </MyShopPreviewTab.Navigator>
   );
@@ -43,11 +45,18 @@ const TopTabBar = ({ navigation, state }) => (
   </TabBar>
 );
 
-function PreviewMyShopScreen({ navigation }) {
+function PreviewMyShopScreen({ navigation, route }) {
   const [shopDetails, setShopDetails] = useState({});
+  const [numProducts, setNumProducts] = useState(0);
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    getShopDetails(setShopDetails);
+    if(route.params.vendorId) {
+      getShopDetailsByUID(route.params.vendorId, setShopDetails);
+    }
+    else {
+      getShopDetails(setShopDetails);
+    }
   }, []);
 
   return (
@@ -108,7 +117,7 @@ function PreviewMyShopScreen({ navigation }) {
                     marginVertical: 2,
                   }}
                 >
-                  3.5
+                  {rating}
                 </Text>
                 <Text
                   style={{
@@ -130,7 +139,7 @@ function PreviewMyShopScreen({ navigation }) {
                     marginVertical: 2,
                   }}
                 >
-                  12
+                  {numProducts}
                 </Text>
                 <Text
                   style={{
@@ -146,11 +155,14 @@ function PreviewMyShopScreen({ navigation }) {
             </Layout>
           </Layout>
         </Layout>
-        <MyShopPreviewNavigation />
+        <MyShopPreviewNavigation
+          setNumProducts={setNumProducts}
+          setRating={setRating}
+        />
         <Button
           size="large"
           onPress={() => {
-            navigation.navigate("Add New Item", {isUpdating: false});
+            navigation.navigate("Add New Item", { isUpdating: false });
           }}
           style={{ marginHorizontal: 20, marginVertical: 16 }}
         >

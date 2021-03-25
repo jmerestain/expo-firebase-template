@@ -309,7 +309,15 @@ function ProductScreen({ route, navigation }) {
               <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
                 More from {vendor.name}
               </Text>
-              <Button appearance="ghost" size="medium" style={{ marginTop: 6 }}>
+              <Button
+                appearance="ghost"
+                size="medium"
+                style={{ marginTop: 6 }}
+                onPress={() => navigation.navigate("Vendor Shop", {
+                  vendorName: vendor.name,
+                  vendorId: vendor.id
+                })}
+              >
                 View Shop &gt;
               </Button>
             </Layout>

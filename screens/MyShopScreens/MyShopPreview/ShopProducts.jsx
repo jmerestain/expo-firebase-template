@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
-const ProductsNav = () => {
+const ProductsNav = ({setNumProducts}) => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -22,6 +22,7 @@ const ProductsNav = () => {
 
   useEffect(() => {
     setFilteredProducts(products);
+    setNumProducts(products.length);
   }, [products]);
 
   useEffect(() => {
