@@ -48,7 +48,6 @@ export const createUserProfile = (userDetails, callback) => {
 };
 
 export const getUserProfile = (uid, callback) => {
-  const auth = firebase.auth();
   const db = firebase.firestore();
   db.collection("user-profiles")
     .doc(uid)

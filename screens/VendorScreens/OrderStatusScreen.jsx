@@ -20,10 +20,17 @@ import {
   ORDER_TO_PAY,
   ORDER_TO_SHIP,
   ORDER_TO_RECEIVE,
+  ORDER_TO_RATE,
   ORDER_COMPLETED,
 } from "../orderStatuses";
-import Modal from 'react-native-modal';
-{/*import RatingScreen from './RatingScreen';
+import { getCurrentUserFromUID } from "../../services/users";
+import { postReview } from "../../services/reviews";
+import { Rating } from "react-native-elements";
+import LoadingModal from "../../components/LoadingModal";
+import MessageComponent from "../../components/MessageComponent";
+import Modal from "react-native-modal";
+{
+  /*import RatingScreen from './RatingScreen';
 
 const RatingNav = createStackNavigator();
 
@@ -37,7 +44,8 @@ const RatingsScreens = () => (
       options={showHeader} />
   </RatingNav.Navigator>
 )
- */}
+ */
+}
 
 const StatusTab = createMaterialTopTabNavigator();
 
@@ -246,10 +254,89 @@ const renderItemReceived = ({ item, index }) => (
               marginRight: 16,
             }}
             onPress={() => {
-              updateOrderStatus(item.id, ORDER_COMPLETED, () => {});
+              updateOrderStatus(item.id, ORDER_TO_RATE, () => {});
             }}
           >
             Item Received
+          </Button>
+        </Layout>
+      </Layout>
+    </Layout>
+    <Divider />
+  </Layout>
+);
+
+const renderItemRate = ({ item, index, setModalVisible, setOrderToRate }) => (
+  <Layout style={styles.container}>
+    <Layout style={styles.inner}>
+      <Layout style={styles.containerList}>
+        <Layout style={styles.innerList}>
+          <Avatar
+            rounded
+            size="giant"
+            source={require("../../screens/avatar-icon.png")}
+            style={{ marginHorizontal: 20, alignSelf: "center" }}
+          />
+          <Layout style={styles.textList}>
+            <Text
+              style={{
+                alignContent: "center",
+                marginTop: 8,
+                marginBottom: 2,
+                fontSize: 16,
+                fontFamily: "NunitoSans-Bold",
+              }}
+            >
+              {item.product.title}
+            </Text>
+            <Text
+              category="s2"
+              style={{
+                alignContent: "center",
+                marginVertical: 2,
+                color: "#000000",
+              }}
+            >
+              P{item.product.price}
+            </Text>
+            <Text
+              category="s2"
+              style={{
+                fontFamily: "NunitoSans-Regular",
+                alignContent: "center",
+                marginVertical: 1,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              x{item.quantity}
+            </Text>
+            <Text
+              category="s2"
+              style={{
+                fontFamily: "NunitoSans-Regular",
+                alignContent: "center",
+                marginVertical: 1,
+                color: "rgb(128, 128, 128)",
+              }}
+            >
+              {item.product.vendor}
+            </Text>
+          </Layout>
+        </Layout>
+        <Layout style={{ alignContent: "flex-end", alignItems: "flex-end" }}>
+          <Button
+            size="small"
+            style={{
+              alignSelf: "flex-end",
+              marginVertical: 8,
+              marginRight: 16,
+            }}
+            onPress={() => {
+              setOrderToRate(item);
+              setModalVisible(true);
+            }}
+          >
+            Rate Order
           </Button>
         </Layout>
       </Layout>
@@ -268,7 +355,15 @@ function OrderStatusScreen({ navigation, route }) {
   const [filteredToDeliverOrders, setFilteredToDeliverOrders] = useState([]);
   const [filteredToReceiveOrders, setFilteredToReceiveOrders] = useState([]);
   const [filteredToReviewOrders, setFilteredToReviewOrders] = useState([]);
+
+  const [profile, setProfile] = useState({});
   const [query, setSearch] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [orderToRate, setOrderToRate] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const [message, setMessage] = useState("Successful!");
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const unsubscribeToPay = getOrdersCurrentUser(
@@ -284,7 +379,7 @@ function OrderStatusScreen({ navigation, route }) {
       setToReceiveOrders
     );
     const unsubscribeCompleted = getOrdersCurrentUser(
-      ORDER_COMPLETED,
+      ORDER_TO_RATE,
       setToReviewOrders
     );
 
@@ -295,6 +390,12 @@ function OrderStatusScreen({ navigation, route }) {
       unsubscribeCompleted();
     };
   }, []);
+
+  useEffect(() => {
+    getCurrentUserFromUID(setProfile);
+  }, []);
+
+  const userName = profile.firstName + " " + profile.lastName;
 
   useEffect(() => {
     setFilteredToProcessOrders(toProcessOrders);
@@ -350,11 +451,18 @@ function OrderStatusScreen({ navigation, route }) {
 
   return (
     <Layout style={styles.container}>
+      <LoadingModal loading={loading} />
       <Input
         onChangeText={(value) => setSearch(value)}
         placeholder="Search here"
         style={{ paddingHorizontal: 16, paddingVertical: 12 }}
         accessoryLeft={SearchIcon}
+      />
+      <MessageComponent
+        message={message}
+        setMessage={setMessage}
+        visible={visible}
+        setVisible={setVisible}
       />
       <NavigationContainer independent="true">
         <StatusTabNavigation
@@ -362,6 +470,16 @@ function OrderStatusScreen({ navigation, route }) {
           toProcessOrders={filteredToProcessOrders}
           toDeliverOrders={filteredToDeliverOrders}
           toReceiveOrders={filteredToReceiveOrders}
+          toReviewOrders={filteredToReviewOrders}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          setLoading={setLoading}
+          userName={userName}
+          setOrderToRate={setOrderToRate}
+          orderToRate={orderToRate}
+          setMessage={setMessage}
+          message={message}
+          setVisible={setVisible}
         />
       </NavigationContainer>
     </Layout>
@@ -374,6 +492,15 @@ const StatusTabNavigation = ({
   toDeliverOrders,
   toReceiveOrders,
   toReviewOrders,
+  modalVisible,
+  setModalVisible,
+  setLoading,
+  userName,
+  orderToRate,
+  setOrderToRate,
+  message,
+  setMessage,
+  setVisible,
 }) => {
   return (
     <StatusTab.Navigator
@@ -388,6 +515,23 @@ const StatusTabNavigation = ({
       </StatusTab.Screen>
       <StatusTab.Screen name="To Receive">
         {(props) => <ToReceiveNav {...props} data={toReceiveOrders} />}
+      </StatusTab.Screen>
+      <StatusTab.Screen name="To Review">
+        {(props) => (
+          <ToRateNav
+            {...props}
+            data={toReviewOrders}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            setLoading={setLoading}
+            userName={userName}
+            orderToRate={orderToRate}
+            setOrderToRate={setOrderToRate}
+            message={message}
+            setMessage={setMessage}
+            setVisible={setVisible}
+          />
+        )}
       </StatusTab.Screen>
     </StatusTab.Navigator>
   );
@@ -429,6 +573,128 @@ const ToReceiveNav = ({ data }) => {
   );
 };
 
+const ToRateNav = ({
+  data,
+  modalVisible,
+  setModalVisible,
+  setLoading,
+  userName,
+  orderToRate,
+  setOrderToRate,
+  message,
+  setMessage,
+  setVisible,
+}) => {
+  const [rating, setRating] = useState(5);
+  const [comments, setComments] = useState("");
+
+  return (
+    <Layout style={styles.container}>
+      <Layout style={[styles.settingsCard]}>
+        <Layout style={styles.inner}>
+          <Layout style={{ justifyContent: "flex-start" }}>
+            <List
+              data={data}
+              renderItem={(props) =>
+                renderItemRate({ ...props, setModalVisible, setOrderToRate })
+              }
+            />
+          </Layout>
+        </Layout>
+      </Layout>
+      <Layout style={styles.centeredView}>
+        <Modal
+          style={{ margin: 0 }}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Layout style={styles.modalView}>
+            <Text
+              category="s1"
+              style={{
+                fontSize: 17,
+                color: "#8A1214",
+                paddingVertical: 16,
+                textAlign: "center",
+              }}
+            >
+              Rating Product from Seller
+            </Text>
+            <Layout
+              style={{ alignItems: "left", justifyContent: "center" }}
+              flexDirection="center"
+            >
+              <Layout>
+                <Text style={{ textAlign: "left" }}>Rating</Text>
+                <Rating
+                  type="custom"
+                  style={{ paddingBottom: 16, paddingTop: 8 }}
+                  ratingColor="rgb(210,145,91)"
+                  imageSize={24}
+                  onFinishRating={setRating}
+                />
+              </Layout>
+              <Text>Additional Comments</Text>
+              <Input
+                style={{ paddingTop: 8 }}
+                placeholder="Enter comments on the product here"
+                onChangeText={setComments}
+              ></Input>
+            </Layout>
+            <Button
+              appearance="primary"
+              onPress={() => {
+                setModalVisible(false);
+                setLoading(true);
+                postReview(
+                  orderToRate.product.vendorId,
+                  orderToRate.product.id,
+                  { rating, comments, userName },
+                  (callbackMessage) => {
+                    if (callbackMessage == "Successfully rated the product!") {
+                      updateOrderStatus(orderToRate.id, ORDER_COMPLETED, (arg) => {
+                        setLoading(false);
+                        if(typeof arg == "string") {
+                          setMessage("Error in rating the product!");
+                          setVisible(true);
+                        }
+                        else {
+                          setMessage("Successfully rated the product!");
+                          setVisible(true);
+                        }
+                        // navigation.goBack();
+                      });
+                    }
+                    else {
+                      setLoading(false);
+                      setMessage(callbackMessage);
+                      setVisible(true);
+                    }
+                  }
+                );
+              }}
+              style={{ marginTop: 20 }}
+            >
+              Rate Now
+            </Button>
+            <Button
+              appearance="ghost"
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{ marginTop: 4 }}
+            >
+              Cancel
+            </Button>
+          </Layout>
+        </Modal>
+      </Layout>
+    </Layout>
+  );
+};
+
 const TopTabBar = ({ navigation, state }) => (
   <TabBar
     selectedIndex={state.index}
@@ -437,6 +703,7 @@ const TopTabBar = ({ navigation, state }) => (
     <Tab title="To Process" />
     <Tab title="To Deliver" />
     <Tab title="To Receive" />
+    <Tab title="To Review" />
   </TabBar>
 );
 
@@ -446,6 +713,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "stretch",
+    backgroundColor: "#00000080",
+    alignContent: "stretch",
+    textAlign: "center",
+    paddingHorizontal: 16,
+  },
   containerList: {
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -454,7 +730,7 @@ const styles = StyleSheet.create({
   },
   innerList: {
     flexDirection: "row",
-    marginBottom: 8
+    marginBottom: 8,
   },
   textList: {
     flexDirection: "column",
@@ -470,6 +746,22 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     marginVertical: 1,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    alignItems: "stretch",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   daInner: {
     marginHorizontal: 20,

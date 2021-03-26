@@ -51,11 +51,11 @@ function PreviewMyShopScreen({ navigation, route }) {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    if(route.params.vendorId) {
+    if(route.params && route.params.vendorId) {
       getShopDetailsByUID(route.params.vendorId, setShopDetails);
     }
     else {
-      getShopDetails(setShopDetails);
+      getShopDetails((details) => setShopDetails(details.shop));
     }
   }, []);
 

@@ -16,20 +16,21 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Rating } from "react-native-elements";
-import Modal from 'react-native-modal';
+import LoadingModal from "../../components/LoadingModal";
+import Modal from "react-native-modal";
+import { postReview } from "../../services/reviews";
 
 const StatusTab = createMaterialTopTabNavigator();
 
 const emptyStateImage = () => {
   <Image
-            source={require("../../assets/empty-image.png")}
-            style={styles.categoryImage}
-          />
-}
+    source={require("../../assets/empty-image.png")}
+    style={styles.categoryImage}
+  />;
+};
 
 const renderItemRate = ({ item, index, props }) => {
-
-  return(
+  return (
     <Layout style={styles.container}>
       <Layout style={styles.inner}>
         <Layout style={styles.containerList}>
@@ -102,65 +103,95 @@ const renderItemRate = ({ item, index, props }) => {
         </Layout>
       </Layout>
       <Divider />
-    </Layout>);
-  }
+    </Layout>
+  );
+};
 
 function RatingScreen({ navigation, route, data }) {
   const [toReviewOrders, setToReviewOrders] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comments, setComments] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <Layout style={styles.container}>
+      <LoadingModal loading={loading} />
       <Layout style={[styles.settingsCard]}>
-      <Layout style={styles.inner}>
-        <Layout style={{ justifyContent: "flex-start" }}>
-          <Button
-          onPress={() => setModalVisible(true)}
-          >To Rate</Button>
-          <List data={toReviewOrders} renderItem={renderItemRate} />
+        <Layout style={styles.inner}>
+          <Layout style={{ justifyContent: "flex-start" }}>
+            <Button onPress={() => setModalVisible(true)}>To Rate</Button>
+            <List data={toReviewOrders} renderItem={renderItemRate} />
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
       <Layout style={styles.centeredView}>
         <Modal
-        style={{margin: 0}}
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);}}>
-                <Layout style={styles.modalView}>
-                <Text category='s1' style={{fontSize: 17, color: '#8A1214', paddingVertical: 16, textAlign: "center"}}>Rating Product from Selleer</Text>
-                <Layout style={{ alignItems: "left", justifyContent: "center"}} flexDirection="center" >
-                <Layout >
-                    <Text style={{ textAlign: "left" }}>Rating</Text>
-                    <Rating
-                    type="custom"
-                    rating='0'
-                    style={{ paddingBottom: 16, paddingTop:8 }}
-                    ratingColor="rgb(210,145,91)"
-                    imageSize={24}
-                    />
-                </Layout>
-                <Text>Additional Comments</Text>
-                  <Input 
-                  style={{ paddingTop:8 }}
-                  placeholder='Enter comments on the product here'>
-                  </Input>
-                </Layout>
-                    <Button appearance='primary'
-                    onPress={() => setModalVisible(!modalVisible)}
-                    style={{marginTop: 20}}>
-                        Rate Now
-                    </Button>
-                    <Button appearance='ghost'
-                    onPress={() => setModalVisible(!modalVisible)}
-                    style={{marginTop: 4}}>
-                        Cancel
-                    </Button>
-                </Layout>
-            </Modal>
-        </Layout>
+          style={{ margin: 0 }}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Layout style={styles.modalView}>
+            <Text
+              category="s1"
+              style={{
+                fontSize: 17,
+                color: "#8A1214",
+                paddingVertical: 16,
+                textAlign: "center",
+              }}
+            >
+              Rating Product from Seller
+            </Text>
+            <Layout
+              style={{ alignItems: "left", justifyContent: "center" }}
+              flexDirection="center"
+            >
+              <Layout>
+                <Text style={{ textAlign: "left" }}>Rating</Text>
+                <Rating
+                  type="custom"
+                  style={{ paddingBottom: 16, paddingTop: 8 }}
+                  ratingColor="rgb(210,145,91)"
+                  imageSize={24}
+                  onFinishRating={setRating}
+                />
+              </Layout>
+              <Text>Additional Comments</Text>
+              <Input
+                style={{ paddingTop: 8 }}
+                placeholder="Enter comments on the product here"
+                onChangeText={setComments}
+              ></Input>
+            </Layout>
+            <Button
+              appearance="primary"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                setLoading(true);
+                postReview({ rating, comments }, () => {
+                  setLoading(false);
+                  navigation.goBack();
+                });
+              }}
+              style={{ marginTop: 20 }}
+            >
+              Rate Now
+            </Button>
+            <Button
+              appearance="ghost"
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{ marginTop: 4 }}
+            >
+              Cancel
+            </Button>
+          </Layout>
+        </Modal>
+      </Layout>
     </Layout>
   );
 }
@@ -179,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000080",
     alignContent: "stretch",
     textAlign: "center",
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   modalView: {
     margin: 20,
@@ -191,11 +222,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   containerList: {
     flexDirection: "row",

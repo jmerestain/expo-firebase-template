@@ -101,7 +101,7 @@ export const updateOrderStatus = (orderId, status, callback) => {
     .doc(orderId)
     .update({ status: status }, { merge: true })
     .then((order) => callback(order))
-    .catch((e) => console.log(e));
+    .catch((e) => callback("Error in updating orders!"));
 };
 
 export const updateMultipleOrderStatus = (orderIds, orderDetails, callback) => {
