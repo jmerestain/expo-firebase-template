@@ -12,29 +12,12 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const data = new Array(8).fill({
-  name: "Bea's Bakery",
-  location: "Cabanatuan, Nueva Ecija",
-  shopRating: "3.5",
-  totalProducts: "12",
-  totalFollowers: "234",
-  product: "Cheeseburger",
-  price: "P150",
-  rating: 5,
-  review:
-    "Very responsive, good service. Carrot cake came just in time for my sister’s birthday.",
-  ratedBy: "Nelly Cruz",
-  dateReviewed: "01/11/21",
-});
-
 const RatingNav = ({ vendorId, setRating }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getReviewsByVendor(vendorId, setReviews);
   }, []);
-
-  // console.log(reviews);
 
   return (
     <Layout style={styles.container}>

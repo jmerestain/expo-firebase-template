@@ -7,6 +7,7 @@ export const getReviewsByProduct = (productId, callback) => {
     .doc(productId)
     .collection("reviews")
     .limit(5)
+    .get()
     .then((reviews) =>
       callback(
         reviews.docs.map((review) => ({ id: review.id, ...review.data() }))

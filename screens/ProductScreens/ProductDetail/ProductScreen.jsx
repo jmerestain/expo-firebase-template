@@ -32,26 +32,21 @@ import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
+import { getReviewsByProduct } from "../../../services/reviews";
 import LoadingModal from "../../../components/LoadingModal";
 import Modal from "react-native-modal";
-
-const data = new Array(8).fill({
-  product: "Banana Bread",
-  shop: "Bea’s Bakery",
-  rating: 4,
-  price: "P200",
-  productDetails:
-    "Our banana bread will surely leave you drooling and craving for more! Made from bananas and flour, this bread is one of the best here in Nueva Ecija! Grab your loaf today!",
-  quantity: "120",
-  review:
-    "Very responsive, good service. Carrot cake came just in time for my sister’s birthday.",
-  ratedBy: "Nelly Cruz",
-  dateReviewed: "01/11/21",
-});
 
 const PlusIcon = (props) => <Icon {...props} name="plus-circle-outline" />;
 
 const MinusIcon = (props) => <Icon {...props} name="minus-circle-outline" />;
+
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
 
 const renderItemMore = ({ item, navigation, index }) => (
   <Layout style={styles.item}>
@@ -113,24 +108,25 @@ const renderItemRatings = ({ item, index }) => (
         />
         <Layout>
           <Text style={{ fontSize: 13, fontWeight: "bold", marginVertical: 2 }}>
-            {item.ratedBy}
+            {item.userName}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
-            {item.dateReviewed}
+            {dateToString(item.createdAt.toDate())}
           </Text>
         </Layout>
       </Layout>
       <Layout style={{ marginLeft: "25%" }}>
         <Rating
           type="custom"
-          rating={item.rating}
+          startingValue={item.rating}
           style={{ paddingVertical: 16 }}
           ratingColor="rgb(210,145,91)"
           imageSize={16}
+          readonly
         />
       </Layout>
     </Layout>
-    <Text style={{ marginBottom: 16 }}>{item.review}</Text>
+    <Text style={{ marginBottom: 16 }}>{item.comments}</Text>
     <Divider />
   </Layout>
 );
@@ -146,6 +142,7 @@ function ProductScreen({ route, navigation }) {
   const userName = profile.firstName + " " + profile.lastName;
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState("");
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -153,6 +150,10 @@ function ProductScreen({ route, navigation }) {
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
+  }, []);
+
+  useEffect(() => {
+    getReviewsByProduct(route.params.productId, setReviews);
   }, []);
 
   useEffect(() => {
@@ -313,10 +314,12 @@ function ProductScreen({ route, navigation }) {
                 appearance="ghost"
                 size="medium"
                 style={{ marginTop: 6 }}
-                onPress={() => navigation.navigate("Vendor Shop", {
-                  vendorName: vendor.name,
-                  vendorId: vendor.id
-                })}
+                onPress={() =>
+                  navigation.navigate("Vendor Shop", {
+                    vendorName: vendor.name,
+                    vendorId: vendor.id,
+                  })
+                }
               >
                 View Shop &gt;
               </Button>
@@ -329,14 +332,21 @@ function ProductScreen({ route, navigation }) {
             />
 
             <Divider />
-            <Layout
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
-                Product Reviews
-              </Text>
-            </Layout>
-            <List data={data} renderItem={renderItemRatings} />
+            {reviews.length ? (
+              <React.Fragment>
+                <Layout
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
+                    Product Reviews
+                  </Text>
+                </Layout>
+                <List data={reviews} renderItem={renderItemRatings} />
+              </React.Fragment>
+            ) : null}
           </Layout>
         </Layout>
       </ScrollView>
