@@ -101,6 +101,27 @@ export const joinGroup = (groupId, callback) => {
 //     .catch((e) => console.log(e));
 // };
 
+export const editPost = (postId, postContent, callback) => {
+  const db = firebase.firestore();
+  const editedAt = new Date();
+
+  const post = {
+    body: postContent,
+    editedAt
+  }
+
+  db.collection("groups")
+    .doc(groupId)
+    .collection("posts")
+    .doc(postId)
+    .update(post)
+    .then((postRef) => {
+      // console.log(postRef.id);
+      callback();
+    })
+    .catch((e) => console.log(e));
+};
+
 export const createPost = (groupId, post, postedBy, callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
@@ -117,6 +138,102 @@ export const createPost = (groupId, post, postedBy, callback) => {
     })
     .catch((e) => console.log(e));
 };
+
+export const deletePost = (postId, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("groups")
+    .doc(groupId)
+    .collection("posts")
+    .doc(postId)
+    .delete()
+    .then(() => {
+      callback();
+    })
+    .catch((e) => console.log(e));
+};
+
+export const createComment = (groupId, postId, commentContent, callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+  const postedAt = new Date();
+
+  const comment = {
+    body: commentContent,
+    user: currentUserUID,
+    postedAt
+  }
+
+  db.collection("groups")
+  .doc(groupId)
+  .collection("posts")
+  .doc(postId)
+  .collection("comments")
+  .add(comment)
+  .then((commentRef) => {
+    callback(commentRef)
+  })
+  .catch((e) => console.log(e));
+}
+
+export const editComment = (groupId, postId, commentId, commentContent, callback) => {
+  const db = firebase.firestore();
+  const editedAt = new Date();
+
+  const comment = {
+    body: commentContent,
+    editedAt,
+  }
+
+  db.collection("groups")
+  .doc(groupId)
+  .collection("posts")
+  .doc(postId)
+  .collection("comments")
+  .doc(commentId)
+  .update(comment)
+  .then((commentRef) => {
+    callback(commentRef)
+  })
+  .catch((e) => console.log(e));
+}
+
+export const deleteComment = (groupId, postId, commentId, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("groups")
+    .doc(groupId)
+    .collection("posts")
+    .doc(postId)
+    .collection("comments")
+    .doc(commentId)
+    .delete()
+    .then(() => {
+      callback();
+    })
+    .catch((e) => console.log(e));
+}
+
+export const readComments = (groupId, postId, callback) => {
+  const db = firebase.firestore();
+
+  var unsubscribe = db
+    .collection("groups")
+    .doc(groupId)
+    .collection("posts")
+    .doc(postId)
+    .collection("comments")
+    .onSnapshot((querySnapshot) => {
+      var comments = [];
+      querySnapshot.forEach((doc) => {
+        comments.push({ id: doc.id, ...doc.data() });
+      });
+      callback(comments);
+    });
+
+  return unsubscribe;
+}
 
 export const readPosts = (groupId, callback) => {
   const db = firebase.firestore();
