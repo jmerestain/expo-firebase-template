@@ -72,17 +72,19 @@ const renderCompletedItems = ({ item, index }) => (
                     marginRight: 32,
                   }}
                 >
-                  <Text
-                    category="s2"
-                    style={{
-                      alignContent: "center",
-                      marginVertical: 3,
-                      color: "rgb(128, 128, 128)",
-                    }}
-                  >
-                    {item.deliveryDate &&
-                      dateToString(item.deliveryDate.toDate())}
-                  </Text>
+                  {item.deliveryDate ? (
+                    <Text
+                      category="s2"
+                      style={{
+                        alignContent: "center",
+                        marginVertical: 3,
+                        color: "rgb(128, 128, 128)",
+                      }}
+                    >
+                      {item.deliveryDate &&
+                        dateToString(item.deliveryDate.toDate())}
+                    </Text>
+                  ) : null}
                   <Text
                     category="s2"
                     style={{

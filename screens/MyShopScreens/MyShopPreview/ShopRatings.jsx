@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Rating } from "react-native-elements";
-import {
-  Layout,
-  Text,
-  Divider,
-  Avatar,
-  List,
-} from "@ui-kitten/components";
+import { Layout, Text, Divider, Avatar, List } from "@ui-kitten/components";
+import { getReviewsByVendor } from "../../../services/reviews";
+
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
 
 const data = new Array(8).fill({
   name: "Bea's Bakery",
@@ -24,11 +27,19 @@ const data = new Array(8).fill({
   dateReviewed: "01/11/21",
 });
 
-const RatingNav = () => {
+const RatingNav = ({ vendorId, setRating }) => {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    getReviewsByVendor(vendorId, setReviews);
+  }, []);
+
+  // console.log(reviews);
+
   return (
     <Layout style={styles.container}>
       <List
-        data={data}
+        data={reviews}
         renderItem={renderItemRatings}
         style={{ marginHorizontal: 12 }}
       />
@@ -64,25 +75,26 @@ const renderItemRatings = ({ item, index }) => (
         />
         <Layout>
           <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 2 }}>
-            {item.ratedBy}
+            {item.userName}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
-            {item.dateReviewed}
+            {dateToString(item.createdAt.toDate())}
           </Text>
         </Layout>
       </Layout>
       <Layout style={{ marginLeft: "25%" }}>
         <Rating
           type="custom"
-          rating={item.rating}
+          startingValue={item.rating}
           style={{ paddingVertical: 16 }}
           ratingColor="rgb(210,145,91)"
-          imageSize={20}
+          imageSize={13}
+          readonly
         />
       </Layout>
       <Layout></Layout>
     </Layout>
-    <Text style={{ marginBottom: 16 }}>{item.review}</Text>
+    <Text style={{ marginBottom: 16 }}>{item.comments}</Text>
     <Divider />
   </Layout>
 );

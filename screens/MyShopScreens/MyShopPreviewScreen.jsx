@@ -24,13 +24,17 @@ import { getShopDetails, getShopDetailsByUID } from "../../services/vendor";
 
 const MyShopPreviewTab = createMaterialTopTabNavigator();
 
-const MyShopPreviewNavigation = ({setNumProducts, setRating}) => {
+const MyShopPreviewNavigation = ({ setNumProducts, setRating, vendorId }) => {
   return (
     <MyShopPreviewTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <MyShopPreviewTab.Screen name="Products">
-        {props => <ShopProducts {...props} setNumProducts={setNumProducts} />}
+        {(props) => <ShopProducts {...props} setNumProducts={setNumProducts} />}
       </MyShopPreviewTab.Screen>
-      {/* <MyShopPreviewTab.Screen name="Reviews" component={ShopRatings} /> */}
+      <MyShopPreviewTab.Screen name="Reviews">
+        {(props) => (
+          <ShopRatings {...props} vendorId={vendorId} setRating={setRating} />
+        )}
+      </MyShopPreviewTab.Screen>
     </MyShopPreviewTab.Navigator>
   );
 };
@@ -51,13 +55,21 @@ function PreviewMyShopScreen({ navigation, route }) {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    if(route.params && route.params.vendorId) {
-      getShopDetailsByUID(route.params.vendorId, setShopDetails);
-    }
-    else {
-      getShopDetails((details) => setShopDetails(details.shop));
+    if (route.params && route.params.vendorId) {
+      getShopDetailsByUID(route.params.vendorId, (details) =>
+        setShopDetails({ ...details, id: details.id })
+      );
+    } else {
+      getShopDetails((details) =>
+        setShopDetails({ ...details.shop, id: details.id })
+      );
     }
   }, []);
+
+  useEffect(() => {
+    if(shopDetails.averageRating)
+      setRating(shopDetails.averageRating.avgRating);
+  }, [shopDetails])
 
   return (
     <ScrollView>
@@ -117,7 +129,7 @@ function PreviewMyShopScreen({ navigation, route }) {
                     marginVertical: 2,
                   }}
                 >
-                  {rating}
+                  {rating.toFixed(2)}
                 </Text>
                 <Text
                   style={{
@@ -157,7 +169,7 @@ function PreviewMyShopScreen({ navigation, route }) {
         </Layout>
         <MyShopPreviewNavigation
           setNumProducts={setNumProducts}
-          setRating={setRating}
+          vendorId={shopDetails.id}
         />
         <Button
           size="large"

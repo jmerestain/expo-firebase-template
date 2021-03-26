@@ -47,6 +47,14 @@ const RatingsScreens = () => (
  */
 }
 
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+
+  return month + "/" + day + "/" + year;
+};
+
 const StatusTab = createMaterialTopTabNavigator();
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
@@ -178,7 +186,7 @@ const renderItemDeliver = ({ item, index }) => (
                 color: "rgb(128, 128, 128)",
               }}
             >
-              Expected delivery by {item.deliveryDate}
+              Expected delivery by {dateToString(item.deliveryDate.toDate())}
             </Text>
           </Layout>
         </Layout>
@@ -362,8 +370,8 @@ function OrderStatusScreen({ navigation, route }) {
   const [orderToRate, setOrderToRate] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const [message, setMessage] = useState("Successful!");
-  const [visible, setVisible] = useState(true);
+  const [message, setMessage] = useState("");
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribeToPay = getOrdersCurrentUser(
