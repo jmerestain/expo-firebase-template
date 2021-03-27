@@ -17,7 +17,9 @@ const GroupScreen = ({ navigation }) => {
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate("Group", { groupId: item.id })}
+      onPress={() =>
+        navigation.navigate("Group", { groupId: item.id, title: item.name })
+      }
     >
       <Image
         style={{ resizeMode: "contain" }}
@@ -41,7 +43,7 @@ const GroupScreen = ({ navigation }) => {
             {item.postCount} posts
           </Text>
         </Layout> */}
-        <Text style={{ fontSize: 14, marginTop: 4}}>{item.description}</Text>
+        <Text style={{ fontSize: 14, marginTop: 4 }}>{item.description}</Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -55,7 +57,7 @@ const GroupScreen = ({ navigation }) => {
 
     return function cleanup() {
       unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -83,7 +85,14 @@ const GroupScreen = ({ navigation }) => {
           accessoryLeft={SearchIcon}
         />
         <Layout style={styles.inner}>
-          <Text category="s1" style={{ fontFamily: 'NunitoSans-Bold', fontSize: 17, marginBottom: 12 }}>
+          <Text
+            category="s1"
+            style={{
+              fontFamily: "NunitoSans-Bold",
+              fontSize: 17,
+              marginBottom: 12,
+            }}
+          >
             Featured Groups
           </Text>
           <List

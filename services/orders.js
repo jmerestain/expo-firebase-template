@@ -17,7 +17,8 @@ export const getOrdersCurrentUser = (status, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
-  var unsubscribe = db.collection("orders")
+  var unsubscribe = db
+    .collection("orders")
     .where("user", "==", currentUserUID)
     .where("status", "==", status)
     .onSnapshot((querySnapshot) => {
@@ -27,7 +28,7 @@ export const getOrdersCurrentUser = (status, callback) => {
       });
       callback(orders);
     });
-  
+
   return unsubscribe;
 };
 
@@ -36,7 +37,8 @@ export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
   const auth = firebase.auth();
   const currentUserUID = auth.currentUser.uid;
 
-  var unsubscribe = db.collection("orders")
+  var unsubscribe = db
+    .collection("orders")
     .where("status", "==", status)
     .where("user", "==", currentUserUID)
     .where("product.vendorId", "==", vendor)
@@ -47,7 +49,7 @@ export const getOrdersCurrentUserPerVendor = (status, vendor, callback) => {
       });
       callback(orders);
     });
-  
+
   return unsubscribe;
 };
 
@@ -67,7 +69,7 @@ export const getOrdersUnderCurrentVendor = (status, callback) => {
       });
       callback(orders);
     });
-  
+
   return unsubscribe;
 };
 
@@ -84,12 +86,13 @@ export const newOrder = (productDetails, userName, callback) => {
     user: currentUserUID,
     userName,
     status: ORDER_IN_CART,
+    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
   };
 
   db.collection("orders")
     .add(order)
     .then((orderRef) => {
-      callback(orderRef.id)
+      callback(orderRef.id);
     })
     .catch((e) => console.log(e));
 };
@@ -107,12 +110,12 @@ export const updateOrderStatus = (orderId, status, callback) => {
 export const updateMultipleOrderStatus = (orderIds, orderDetails, callback) => {
   const db = firebase.firestore();
 
-  const batch = db.batch()
+  const batch = db.batch();
 
-  orderIds.forEach(id => {
+  orderIds.forEach((id) => {
     const orderRef = db.collection("orders").doc(id);
     batch.update(orderRef, orderDetails);
-  })
+  });
 
   batch
     .commit()

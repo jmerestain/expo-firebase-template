@@ -125,6 +125,7 @@ export const readPosts = (groupId, callback) => {
     .collection("groups")
     .doc(groupId)
     .collection("posts")
+    .orderBy("postedAt", "desc")
     .onSnapshot((querySnapshot) => {
       var posts = [];
       querySnapshot.forEach((doc) => {

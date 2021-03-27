@@ -6,6 +6,7 @@ export const getReviewsByProduct = (productId, callback) => {
   db.collection("products")
     .doc(productId)
     .collection("reviews")
+    .orderBy("createdAt", "desc")
     .limit(5)
     .get()
     .then((reviews) =>
@@ -21,6 +22,7 @@ export const getReviewsByVendor = (vendorId, callback) => {
   db.collection("vendor-profiles")
     .doc(vendorId)
     .collection("reviews")
+    .orderBy("createdAt", "desc")
     .get()
     .then((reviews) =>
       callback(
