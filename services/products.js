@@ -19,7 +19,9 @@ export const getMyStore = (user, setProducts) => {
 
 export const getCatalogue = (callback) => {
   const db = firebase.firestore();
-  var unsubscribe = db.collection("products")
+  var unsubscribe = db
+    .collection("products")
+    .orderBy("created_at", "desc")
     .limit(10)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -48,6 +50,7 @@ export const getProductsFromCategory = (categoryId, callback) => {
   var unsubscribe = db
     .collection("products")
     .where("category", "array-contains", categoryId)
+    .orderBy("created_at", "desc")
     .onSnapshot((querySnapshot) => {
       var products = [];
       querySnapshot.forEach((doc) => {
@@ -66,6 +69,7 @@ export const getProductsFromUID = (uid, callback) => {
   var unsubscribe = db
     .collection("products")
     .where("vendor", "==", uid)
+    .orderBy("created_at", "desc")
     .onSnapshot((querySnapshot) => {
       var products = [];
       querySnapshot.forEach((doc) => {
@@ -84,6 +88,7 @@ export const getProductsLimitedFromUID = (uid, limit, callback) => {
   var unsubscribe = db
     .collection("products")
     .where("vendor", "==", uid)
+    .orderBy("created_at", "desc")
     .limit(limit)
     .onSnapshot((querySnapshot) => {
       var products = [];
@@ -105,6 +110,7 @@ export const getProductsCurrentVendor = (callback) => {
   var unsubscribe = db
     .collection("products")
     .where("vendor", "==", uid)
+    .orderBy("created_at", "desc")
     .onSnapshot((querySnapshot) => {
       var products = [];
       querySnapshot.forEach((doc) => {

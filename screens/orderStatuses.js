@@ -19,10 +19,13 @@ export const ORDER_TO_SHIP = 4
 export const ORDER_TO_RECEIVE = 5
 
 // User has received the order
-export const ORDER_COMPLETED = 6
+export const ORDER_TO_RATE = 6
+
+// User has received the order
+export const ORDER_COMPLETED = 7
 
 // User cancelled the order
-export const ORDER_CANCELLED = 7
+export const ORDER_CANCELLED = 8
 
 // Order has been returned to the user
-export const ORDER_RETURNED = 8
+export const ORDER_RETURNED = 9

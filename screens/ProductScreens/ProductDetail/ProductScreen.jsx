@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   Image,
   SectionList,
-  Dimensions,ç
+  Dimensions,
+  ç,
 } from "react-native";
 import { Rating } from "react-native-elements";
 import { NavigationContainer } from "@react-navigation/native";
@@ -31,32 +32,21 @@ import { getShopDetailsByUID } from "../../../services/vendor";
 import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
+import { getReviewsByProduct } from "../../../services/reviews";
 import LoadingModal from "../../../components/LoadingModal";
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 
-const data = new Array(8).fill({
-  product: "Banana Bread",
-  shop: "Bea’s Bakery",
-  rating: 4,
-  price: "P200",
-  productDetails:
-    "Our banana bread will surely leave you drooling and craving for more! Made from bananas and flour, this bread is one of the best here in Nueva Ecija! Grab your loaf today!",
-  quantity: "120",
-  review:
-    "Very responsive, good service. Carrot cake came just in time for my sister’s birthday.",
-  ratedBy: "Nelly Cruz",
-  dateReviewed: "01/11/21",
-});
+const PlusIcon = (props) => <Icon {...props} name="plus-circle-outline" />;
 
+const MinusIcon = (props) => <Icon {...props} name="minus-circle-outline" />;
 
-const PlusIcon = (props) => (
-  <Icon {...props} name='plus-circle-outline'/>
-);
+const dateToString = (date) => {
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
 
-const MinusIcon = (props) => (
-  <Icon {...props} name='minus-circle-outline'/>
-);
-
+  return month + "/" + day + "/" + year;
+};
 
 const renderItemMore = ({ item, navigation, index }) => (
   <Layout style={styles.item}>
@@ -118,24 +108,25 @@ const renderItemRatings = ({ item, index }) => (
         />
         <Layout>
           <Text style={{ fontSize: 13, fontWeight: "bold", marginVertical: 2 }}>
-            {item.ratedBy}
+            {item.userName}
           </Text>
           <Text style={{ fontSize: 10, color: "rgb(186,186,186)" }}>
-            {item.dateReviewed}
+            {dateToString(item.createdAt.toDate())}
           </Text>
         </Layout>
       </Layout>
       <Layout style={{ marginLeft: "25%" }}>
         <Rating
           type="custom"
-          rating={item.rating}
+          startingValue={item.rating}
           style={{ paddingVertical: 16 }}
           ratingColor="rgb(210,145,91)"
           imageSize={16}
+          readonly
         />
       </Layout>
     </Layout>
-    <Text style={{ marginBottom: 16 }}>{item.review}</Text>
+    <Text style={{ marginBottom: 16 }}>{item.comments}</Text>
     <Divider />
   </Layout>
 );
@@ -146,9 +137,12 @@ function ProductScreen({ route, navigation }) {
   const [product, setProduct] = useState({});
   const [vendor, setVendor] = useState({});
   const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const [moreProducts, setMoreProducts] = useState({});
   const userName = profile.firstName + " " + profile.lastName;
   const [modalVisible, setModalVisible] = useState(false);
+  const [message, setMessage] = useState("");
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -156,6 +150,10 @@ function ProductScreen({ route, navigation }) {
 
   useEffect(() => {
     getCurrentUserFromUID(setProfile);
+  }, []);
+
+  useEffect(() => {
+    getReviewsByProduct(route.params.productId, setReviews);
   }, []);
 
   useEffect(() => {
@@ -169,10 +167,10 @@ function ProductScreen({ route, navigation }) {
     }
 
     return function cleanup() {
-      if(unsubscribe) {
+      if (unsubscribe) {
         unsubscribe();
       }
-    }
+    };
   }, [product]);
 
   const contactSellerOnPress = () => {
@@ -193,19 +191,31 @@ function ProductScreen({ route, navigation }) {
   };
 
   const addToCartOnPress = () => {
-    setLoading(true);
-    const addToCartCallback = () => {
-      setLoading(false);
-      navigation.navigate("Orders");
-    };
+    if (!Number.isInteger(parseFloat(quantity)) || quantity < 0) {
+      setMessage("Please input a valid quantity.");
+    } else {
+      setModalVisible(!modalVisible);
+      setLoading(true);
+      const addToCartCallback = () => {
+        setLoading(false);
+        navigation.navigate("Orders");
+      };
 
-    const { title, price, id } = product;
+      const { title, price, id } = product;
 
-    newOrder(
-      { title, price, vendor: vendor.name, vendorId: vendor.id, id },
-      userName,
-      addToCartCallback
-    );
+      newOrder(
+        {
+          title,
+          price,
+          vendor: vendor.name,
+          vendorId: vendor.id,
+          id,
+          quantity: parseInt(quantity),
+        },
+        userName,
+        addToCartCallback
+      );
+    }
   };
 
   return (
@@ -304,6 +314,12 @@ function ProductScreen({ route, navigation }) {
                 appearance="ghost"
                 size="medium"
                 style={{ marginTop: 6 }}
+                onPress={() =>
+                  navigation.navigate("Vendor Shop", {
+                    vendorName: vendor.name,
+                    vendorId: vendor.id,
+                  })
+                }
               >
                 View Shop &gt;
               </Button>
@@ -312,66 +328,106 @@ function ProductScreen({ route, navigation }) {
             <List
               data={moreProducts}
               numColumns={2}
-              renderItem={(props) => renderItemMore({...props, navigation})}
+              renderItem={(props) => renderItemMore({ ...props, navigation })}
             />
 
             <Divider />
-            <Layout
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text
-                category="s1"
-                style={{ marginTop: 18, marginLeft: 18 }}
-              >
-                Product Reviews
-              </Text>
-            </Layout>
-            <List data={data} renderItem={renderItemRatings} />
+            {reviews.length ? (
+              <React.Fragment>
+                <Layout
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text category="s1" style={{ marginTop: 18, marginLeft: 18 }}>
+                    Product Reviews
+                  </Text>
+                </Layout>
+                <List data={reviews} renderItem={renderItemRatings} />
+              </React.Fragment>
+            ) : null}
           </Layout>
         </Layout>
       </ScrollView>
       <Layout style={styles.centeredView}>
         <Modal
-        style={{margin: 0}}
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}>
-            <Layout style={styles.centeredView}>
-                <Layout style={styles.modalView}>
-                <Text category='s1' style={{fontSize: 17, color: '#8A1214', paddingVertical: 16, textAlign: "center"}}>Select quantity for {product.title}</Text>
-                <Layout style={{ alignItems: "center", justifyContent: "center"}} flexDirection="row" >
-                <Button 
-                  appearance="ghost" 
-                  accessoryLeft={MinusIcon}>
-                  </Button>
-                  <Input 
-                  placeholder='1'
-                  style={{minWidth:80, textAlign: 'center'}}
-                  textAlign={'center'}>
-
-                  </Input>
-                  <Button 
-                  appearance="ghost" 
-                  accessoryLeft={PlusIcon}>
-                  </Button>
-                </Layout>
-                    <Button appearance='primary'
-                    onPress={() => {addToCartOnPress(); setModalVisible(!modalVisible)}}
-                    style={{marginTop: 20}}>
-                        Buy Now
-                    </Button>
-                    <Button appearance='ghost'
-                    onPress={() => setModalVisible(!modalVisible)}
-                    style={{marginTop: 4}}>
-                        Cancel
-                    </Button>
-                </Layout>
+          style={{ margin: 0 }}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Layout style={styles.centeredView}>
+            <Layout style={styles.modalView}>
+              {message ? (
+                <Text
+                  category="s1"
+                  style={{
+                    fontSize: 14,
+                    color: "#333333",
+                    textAlign: "center",
+                  }}
+                >
+                  {message}
+                </Text>
+              ) : null}
+              <Text
+                category="s1"
+                style={{
+                  fontSize: 17,
+                  color: "#8A1214",
+                  paddingVertical: 16,
+                  textAlign: "center",
+                }}
+              >
+                Select quantity for {product.title}
+              </Text>
+              <Layout
+                style={{ alignItems: "center", justifyContent: "center" }}
+                flexDirection="row"
+              >
+                <Button
+                  appearance="ghost"
+                  accessoryLeft={MinusIcon}
+                  onPress={() => {
+                    if (quantity > 0) setQuantity(quantity - 1);
+                  }}
+                ></Button>
+                <Input
+                  keyboardType="numeric"
+                  placeholder="1"
+                  style={{ minWidth: 80, textAlign: "center" }}
+                  textAlign={"center"}
+                  defaultValue={quantity + ""}
+                  onChangeText={setQuantity}
+                ></Input>
+                <Button
+                  appearance="ghost"
+                  accessoryLeft={PlusIcon}
+                  onPress={() => setQuantity(quantity + 1)}
+                ></Button>
+              </Layout>
+              <Button
+                appearance="primary"
+                onPress={addToCartOnPress}
+                style={{ marginTop: 20 }}
+              >
+                Buy Now
+              </Button>
+              <Button
+                appearance="ghost"
+                onPress={() => setModalVisible(!modalVisible)}
+                style={{ marginTop: 4 }}
+              >
+                Cancel
+              </Button>
             </Layout>
+          </Layout>
         </Modal>
-        </Layout>
+      </Layout>
       <Layout style={{ position: "sticky", flex: 1 }}>
         <Layout
           style={{
@@ -404,7 +460,6 @@ function ProductScreen({ route, navigation }) {
         </Layout>
       </Layout>
     </Layout>
-    
   );
 }
 
@@ -421,7 +476,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000080",
     alignContent: "stretch",
     textAlign: "center",
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   modalView: {
     margin: 20,
@@ -433,11 +488,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   containerList: {
     flexDirection: "row",

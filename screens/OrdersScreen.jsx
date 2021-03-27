@@ -180,27 +180,17 @@ const renderVendorItem = ({ item, index, navigation }) => (
 );
 
 function OrdersScreen({ navigation }) {
-  return (
-    <Layout style={styles.container}>
-      <EmptyState
-        style={{paddingHorizontal: 24, textAlign: 'center', alignContent: 'center'}}
-        imageSource={emptyStateImage}
-        title="Oops! Nothing in your bag yet."
-        description="We have an array of Nueva Ecija goodies for you to choose from. View our catalogue now!"
-        titleTextStyle= {{ color: '#00000080' }}
-      />
-      <DeliverAddress navigation={navigation} />
-      <Layout style={styles.inner}>
-        <Layout style={styles.field}>
-          <Text category="label"></Text>
-        </Layout>
-      </Layout>
-    </Layout>
-  );
-}
-
-const DeliverAddress = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = getOrdersCurrentUser(
+      ORDER_IN_CART,
+      groupOrdersByVendor
+    );
+    return function cleanup() {
+      unsubscribe();
+    };
+  }, []);
 
   const groupOrdersByVendor = (orders) => {
     let groupedOrders = _.groupBy(orders, (order) => order.product.vendor);
@@ -216,16 +206,30 @@ const DeliverAddress = ({ navigation }) => {
     setOrders(groupedOrders);
   };
 
-  useEffect(() => {
-    const unsubscribe = getOrdersCurrentUser(
-      ORDER_IN_CART,
-      groupOrdersByVendor
-    );
-    return function cleanup() {
-      unsubscribe();
-    };
-  }, []);
+  return (
+    <Layout style={styles.container}>
+      {orders == 0 && <EmptyState
+        style={{
+          paddingHorizontal: 24,
+          textAlign: "center",
+          alignContent: "center",
+        }}
+        imageSource={emptyStateImage}
+        title="Oops! Nothing in your bag yet."
+        description="We have an array of Nueva Ecija goodies for you to choose from. View our catalogue now!"
+        titleTextStyle={{ color: "#00000080" }}
+      />}
+      <DeliverAddress navigation={navigation} orders={orders} setOrders={setOrders} />
+      <Layout style={styles.inner}>
+        <Layout style={styles.field}>
+          <Text category="label"></Text>
+        </Layout>
+      </Layout>
+    </Layout>
+  );
+}
 
+const DeliverAddress = ({ navigation, orders, setOrders }) => {
   return (
     <ScrollView>
       <Layout>
