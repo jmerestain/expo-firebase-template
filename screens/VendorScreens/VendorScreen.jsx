@@ -39,7 +39,7 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
             size="giant"
             shape="round"
             source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 50, alignItems: "center" }}
+            style={{ marginHorizontal: 50, width:80, height:80, alignItems: "center" }}
           />
         </Layout>
         <Button
@@ -63,15 +63,6 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
           style={{ marginHorizontal: 32, marginVertical: 8 }}
         >
           My Shop
-        </Button>
-        <Button
-          size="large"
-          onPress={() => {
-            navigation.navigate("Favorites");
-          }}
-          style={{ marginHorizontal: 32, marginVertical: 8 }}
-        >
-          Favorites
         </Button>
         <Button
           size="large"

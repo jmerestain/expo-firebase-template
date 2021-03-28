@@ -18,27 +18,18 @@ const renderItem = ({ item, index, navigation }) => (
         source={{ uri: item.imageUrl }}
       />
       <Layout style={{ alignSelf: "flex-start" }}>
-      <Text category="s1" style={{ fontWeight: "bold", marginVertical: 6, fontFamily: "NunitoSans-Bold", color: '#000' }}>
+      <Text category="s1" style={{ fontWeight: "bold", marginBottom: 3, marginTop: 10, fontFamily: "NunitoSans-Bold", color: '#000' }}>
           {item.title}
         </Text>
-        <Text category="s2" style={{paddingBottom: 8}}>P {parseFloat(item.price).toFixed(2)}</Text>
+        <Text category="s2" style={{paddingBottom: 4}}>P {parseFloat(item.price).toFixed(2)}</Text>
         {/*<Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{item.vendor}</Text>*/}
-      </Layout>
-    </TouchableOpacity>
-    <Layout
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 8,
-        alignSelf: "flex-start",
-      }}
-    >
-      <Text
+        <Text
         style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
       >
         {item.vendorName}
       </Text>
-    </Layout>
+      </Layout>
+    </TouchableOpacity>
   </Layout>
 );
 const Category = ({ route, navigation }) => {

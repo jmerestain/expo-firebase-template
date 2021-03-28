@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Layout, Input, Button, Text, Divider } from "@ui-kitten/components";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Image } from "react-native";
+import { Layout, Input, Button, Text, Divider, Card, Avatar } from "@ui-kitten/components";
 import { createUser, createUserProfile } from "../services/users";
 import LoadingModal from "../components/LoadingModal";
 import PopUpMessage from "../components/PopUpMessage";
 import { ScrollView } from "react-native-gesture-handler";
+import * as ImagePicker from "expo-image-picker";
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -18,14 +19,19 @@ const RegisterScreen = ({ navigation }) => {
   const [contactNumber, setContactNumber] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   return (
     <ScrollView>
       <Layout style={styles.container}>
         <LoadingModal loading={loading} />
+        <PreviewComponent
+          image={image}
+          setImage={setImage}
+        />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{ paddingHorizontal: 16, paddingVertical: 6, marginTop: 12, fontFamily: "NunitoSans-Regular" }}
         >
           Username
         </Text>
@@ -233,6 +239,71 @@ const RegisterScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+const PreviewComponent = ({ setImage, setBlob, image }) => {
+  return (
+    <Layout style={styles.field}>
+        <Avatar
+          source={{ uri: image }}
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: "contain",
+            marginVertical: 5,
+            alignSelf: "center",
+            borderWidth: 1,
+            borderColor: "#BDBDBD",
+          }}
+        />
+        <ImagePickerComponent
+          setImage={setImage}
+          setBlob={setBlob}
+          image={image}
+        />
+    </Layout>
+  );
+};
+
+function ImagePickerComponent({ setImage, setBlob, image }) {
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to add images");
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      const response = await fetch(result.uri);
+      const blob = await response.blob();
+      setBlob(blob);
+    }
+  };
+
+  return (
+    <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal: 5 }}>
+      <Button onPress={pickImage} size="small" appearance="ghost" style={{ }}>
+        {image != null ? "Change Avatar" : "Set Avatar"}
+      </Button>
+    </Layout>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

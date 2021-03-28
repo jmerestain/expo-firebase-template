@@ -37,11 +37,11 @@ const renderItem = ({ item, navigation }) => (
               rounded
               size="giant"
               source={require("../../screens/avatar-icon.png")}
-              style={{ marginHorizontal: 20, alignSelf: "center" }}
+              style={{ marginHorizontal: 20, marginTop: 3}}
             />
             <Layout style={styles.textList}>
               <Text
-                category="h6"
+                category="s1"
                 style={{ alignContent: "center", marginVertical: 6 }}
               >
                 {item.recipientName}
@@ -52,6 +52,7 @@ const renderItem = ({ item, navigation }) => (
                 <Text
                   style={{
                     alignContent: "center",
+                    fontSize: 13,
                     marginVertical: 1,
                     color: "rgb(128, 128, 128)",
                   }}
@@ -70,16 +71,6 @@ const renderItem = ({ item, navigation }) => (
               </Layout>
             </Layout>
           </Layout>
-          <Icon
-            name="more-horizontal"
-            fill="rgb(160,160,160)"
-            style={{
-              height: 26,
-              width: 26,
-              marginHorizontal: 16,
-              marginVertical: 4,
-            }}
-          />
         </Layout>
       </Layout>
     </TouchableOpacity>
