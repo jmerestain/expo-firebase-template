@@ -11,7 +11,7 @@ import {
   Icon,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-import { checkAuthenticated } from "../../services/auth";
+import { vendorApplyStatus } from "../../services/vendor";
 import { getProductsCurrentVendor } from "../../services/products";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
@@ -92,6 +92,14 @@ const ManageProductsScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [query, setSearch] = useState("");
+
+  useEffect(() => {
+    vendorApplyStatus((response) => {
+      if (response != "approved") {
+        navigation.replace('Build My Shop', {vendorStatus: response})
+      }
+    })
+  }, []);
 
   useEffect(() => {
     var unsubscribe = getProductsCurrentVendor(setProducts);
