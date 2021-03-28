@@ -50,7 +50,7 @@ const OrdersScreenNavigator = () => (
 const renderIndivItem = ({ item }) => (
   <Layout style={styles.innerList}>
     <Image
-      style={{ resizeMode: "cover", height: 80, width: "20%" }}
+      style={{ resizeMode: "cover", height: 60, width: 60, marginHorizontal: 18, borderRadius: 4  }}
       source={{ uri: item.imageUrl }}
     />
     <Layout style={styles.textList}>
@@ -81,7 +81,6 @@ const renderIndivItem = ({ item }) => (
         </Text>
         <Layout
           style={{
-            flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
           }}
@@ -285,7 +284,7 @@ const styles = StyleSheet.create({
   textList: {
     flexDirection: "column",
     marginBottom: 12,
-    width: "80%",
+    width: "72%",
   },
   inner: {
     paddingVertical: 16,

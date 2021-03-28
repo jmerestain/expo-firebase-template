@@ -48,9 +48,9 @@ const LoginScreen = ({ navigation }) => {
             setLoading(false);
           }
         }}
-        style={{ margin: 16 }}
+        style={{ margin: 16, marginTop: 20 }}
       >
-        Submit
+        Login
       </Button>
       <Text
         category="h6"
@@ -58,6 +58,7 @@ const LoginScreen = ({ navigation }) => {
           textAlign: "center",
           marginBottom: 8,
           fontFamily: "Quicksand-Regular",
+          marginHorizontal: 16,
         }}
       >
         {message == "" ? null : <PopUpMessage message={message} />}
@@ -92,41 +93,41 @@ const LoginScreen = ({ navigation }) => {
         Login with Google
       </Button> */}
       <Layout
-        style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
-      >
-        <Text
-          category="h6"
-          style={{
-            textAlign: "center",
-            marginTop: 32,
-            fontFamily: "Quicksand-Regular",
-            fontWeight: "bold",
-          }}
+          style={{ flex: 1, flexDirection: "row", justifyContent: "center", paddingBottom: 20 }}
         >
-          Don't have an account?
-        </Text>
-        <Layout>
-          <Button
-            appearance="ghost"
-            size="small"
-            style={{ textAlign: "center", marginTop: 23 }}
-            onPress={() => {
-              navigation.navigate("Register");
+          <Text
+            category="s1"
+            style={{
+              textAlign: "center",
+              marginTop: 16,
+              fontFamily: "Quicksand-Regular",
+              fontWeight: "bold",
             }}
           >
-            <Text
-              category="h6"
-              style={{
-                marginLeft: 4,
-                fontFamily: "Quicksand-Regular",
-                color: "rgb(138,18,20)",
+            Already have an account?
+          </Text>
+          <Layout>
+            <Button
+              appearance="ghost"
+              size="small"
+              style={{ textAlign: "center", marginTop: 7 }}
+              onPress={() => {
+                navigation.navigate("Register");
               }}
             >
-              Register
-            </Text>
-          </Button>
+              <Text
+                category="s1"
+                style={{
+                  marginLeft: 4,
+                  fontFamily: "Quicksand-Regular",
+                  color: "rgb(138,18,20)",
+                }}
+              >
+                Register
+              </Text>
+            </Button>
+          </Layout>
         </Layout>
-      </Layout>
     </Layout>
   );
 };

@@ -10,22 +10,26 @@ import {
   Input,
   Icon,
 } from "@ui-kitten/components";
-import { StyleSheet } from "react-native";
+import { StyleSheet, 
+  TouchableOpacity,
+  Image,
+  ScrollView, } from "react-native";
 import { searchFromData } from "../../services/search";
 import { getProductsCurrentVendor } from "../../services/products";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
 const RenderItem = ({ item, navigation }) => (
+  <ScrollView>
   <Layout style={styles.containerTop}>
     <Layout style={styles.inner}>
+    <TouchableOpacity>
       <Layout style={styles.containerList}>
+      
         <Layout style={styles.innerList}>
-          <Avatar
-            rounded
-            size="giant"
-            source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
+        <Image
+            style={{ resizeMode: "cover", height: 80, width: 80, marginHorizontal: 18, borderRadius: 4 }}
+            source={{ uri: item.imageUrl }}
           />
           <Layout style={styles.textList}>
             <Text
@@ -72,11 +76,15 @@ const RenderItem = ({ item, navigation }) => (
               </Text>
             )}
           </Layout>
+          
         </Layout>
+        
       </Layout>
+      </TouchableOpacity>
     </Layout>
     <Divider />
   </Layout>
+  </ScrollView>
 );
 
 const Search = ({ navigation, route }) => {

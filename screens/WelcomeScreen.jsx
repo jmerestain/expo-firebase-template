@@ -302,7 +302,7 @@ const OScreen5 = ({ setFirstTime, setScreen }) => {
 
 const AuthOptions = ({ navigation }) => {
   return (
-    <Layout style={styles.container}>
+    <Layout style={styles.containerLogin}>
       <Image
         style={styles.onBoardImage}
         source={require("../assets/welcome/logo.png")}
@@ -315,17 +315,17 @@ const AuthOptions = ({ navigation }) => {
             navigation.navigate("Login");
           }}
         >
-          Login
+          <Text style={{color: "#8A1214", fontWeight:"bold"}}>Login</Text>
         </Button>
         <Button
           appearance="outline"
-          style={styles.authButton}
+          style={styles.authButtonReg}
           size="large"
           onPress={() => {
             navigation.navigate("Register");
           }}
         >
-          Register
+          <Text style={{color: "#FFFFFF", fontWeight:"bold"}}>Register</Text>
         </Button>
       </Layout>
     </Layout>
@@ -337,11 +337,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
   },
+  containerLogin: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#8A1214"
+  },
   authInner: {
     flex: 1,
     flexDirection: "column",
-    marginHorizontal: 20,
+    marginHorizontal: 30,
     justifyContent: "center",
+    backgroundColor: "#8A1214",
+    marginBottom: 20,
   },
   onBoardScreen: {
     flex: 1,
@@ -364,6 +371,14 @@ const styles = StyleSheet.create({
   },
   authButton: {
     marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    color: "#8A1214"
+  },
+  authButtonReg: {
+    marginBottom: 10,
+    backgroundColor: "#FFFFFF50",
+    borderColor: "#FFFFFF",
+    borderStyle: "solid",
   },
 });
 

@@ -126,11 +126,11 @@ const HomeComponent = ({ user, navigation }) => {
             style={styles.categoryImage}
           />
         </Layout>
-        <Text style={{ paddingVertical: 20, fontWeight: "bold" }} category="h6">
+        <Text style={{ paddingVertical: 20, fontWeight: "bold", fontFamily: "Quicksand-Bold" }} category="h6">
           Categories
         </Text>
         <CategorySection categories={categories} />
-        <Text style={{ paddingVertical: 20, fontWeight: "bold" }} category="h6">
+        <Text style={{ paddingVertical: 20, fontWeight: "bold", fontFamily: "Quicksand-Bold"}} category="h6">
           Latest Products
         </Text>
         {homeProducts.length != 0 ? (
@@ -186,6 +186,7 @@ const CategoryEntry = ({ category }) => {
             textAlign: "center",
             fontWeight: "bold",
             fontFamily: "NunitoSans-Bold",
+            fontSize: 13
           }}
         >
           {title}
@@ -219,28 +220,15 @@ const renderItem = ({ item, navigation }) => {
     >
       <Layout style={styles.pickForYou}>
         <Image source={{ uri: imageUrl }} style={{ width: 160, height: 120 }} />
-        <Text
-          category="s1"
-          style={{
-            fontWeight: "bold",
-            marginVertical: 6,
-            fontFamily: "NunitoSans-Bold",
-            color: "#000",
-          }}
-        >
-          {title}
+        <Text category="s1" style={{ fontWeight: "bold", marginBottom: 3, marginTop: 10, fontFamily: "NunitoSans-Bold", color: '#000' }}>
+          {item.title}
         </Text>
-        <Text category="s2">P{price}</Text>
+        <Text category="s2" style={{paddingBottom: 4}}>P {parseFloat(item.price).toFixed(2)}</Text>
         <Text
-          category="s2"
-          style={{
-            marginVertical: 4,
-            color: "#00000070",
-            fontFamily: "NunitoSans-Regular",
-          }}
-        >
-          {vendor}
-        </Text>
+        style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
+      >
+        {item.vendorName}
+      </Text>
       </Layout>
     </TouchableOpacity>
   );
