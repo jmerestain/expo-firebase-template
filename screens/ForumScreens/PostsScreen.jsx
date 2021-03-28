@@ -127,7 +127,7 @@ function PostsScreen({ navigation, route }) {
       >
         <Divider />
         <Button
-          size="large"
+          size="medium"
           onPress={() => {
             navigation.navigate("Add New Post", { groupId });
           }}

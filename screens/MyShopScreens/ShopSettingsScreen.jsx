@@ -22,15 +22,15 @@ function ShopSettingsScreen ({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <Layout style={styles.container}>
-            <Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 12}}>Notifications</Text>
+            {/*<Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 12}}>Notifications</Text>
             <Divider style={{ marginBottom: 12 }} />
             <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'flex-end', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>
                 <Text>Turn on Notifications</Text>
                 <Layout>
                 <SettingsOptions />
                 </Layout>
-            </Layout>
-            <Divider style={{ marginVertical: 18, marginBottom: 12 }} />
+                </Layout>
+            <Divider style={{ marginVertical: 18, marginBottom: 12 }} />*/}
             <Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 16}}>Danger Zone</Text>
             <Divider style={{ marginBottom: 12 }} />
             <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'center', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>

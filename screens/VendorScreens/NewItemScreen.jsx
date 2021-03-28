@@ -263,6 +263,12 @@ const NewItemScreen = ({ navigation, route }) => {
           >
             {isUpdating ? "Update" : "Add New"} Product
           </Button>
+          <Button
+            appearance="outline"
+           style={{marginTop: 12}}
+          >
+            {isUpdating ? "Delete Product" : "" }
+          </Button>
         </Layout>
         <MessageComponent
           visible={visible}
@@ -334,7 +340,7 @@ const PreviewComponent = ({ setImage, setBlob, image }) => {
         <Image
           source={{ uri: image }}
           style={{
-            width: 200,
+            width: 250,
             height: 150,
             resizeMode: "contain",
             marginVertical: 10,

@@ -68,7 +68,7 @@ function SettingsScreen({ navigation }) {
           <Divider />
         </Layout>
 
-        <Layout style={styles.daInner}>
+        {/*<Layout style={styles.daInner}>
           <Text
             category="s1"
             style={{
@@ -103,7 +103,7 @@ function SettingsScreen({ navigation }) {
             </Layout>
           </TouchableOpacity>
           <Divider />
-        </Layout>
+        </Layout>*/}
 
         <Layout style={styles.daInner}>
           <Text

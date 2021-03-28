@@ -32,6 +32,8 @@ const emptyStateImage = () => {
   />
 }
 
+const CloseIcon = (props) => <Icon name="close-circle-outline" {...props} />;
+
 const OrdersScreenNavigator = () => (
   <OStack.Navigator
     screenOptions={{
@@ -50,7 +52,7 @@ const OrdersScreenNavigator = () => (
 const renderIndivItem = ({ item }) => (
   <Layout style={styles.innerList}>
     <Image
-      style={{ resizeMode: "cover", height: 60, width: 60, marginHorizontal: 18, borderRadius: 4  }}
+      style={{ resizeMode: "cover", height: 50, width: 50, marginHorizontal: 16, borderRadius: 4  }}
       source={{ uri: item.imageUrl }}
     />
     <Layout style={styles.textList}>
@@ -62,6 +64,8 @@ const renderIndivItem = ({ item }) => (
           marginVertical: 8,
         }}
       >
+        <Layout style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Layout>
         <Text
           category="s1"
           style={{ fontFamily: "NunitoSans-Bold", alignContent: "center", marginTop: 4 }}
@@ -79,6 +83,17 @@ const renderIndivItem = ({ item }) => (
         >
           P{item.product.price}
         </Text>
+        </Layout>
+        <Layout style={{alignItems:"flex-end"}}>
+        <Button
+        size="small"
+        appearance="ghost"
+        style={{padding: 0, margin: 0, width: 10}}
+        accessoryRight={CloseIcon}>
+          </Button>
+          </Layout>
+          </Layout>
+        
         <Layout
           style={{
             flexDirection: "row",
@@ -105,6 +120,7 @@ const renderIndivItem = ({ item }) => (
               alignContent: "flex-end",
               fontFamily: "NunitoSans-Regular", 
               marginBottom: 3,
+              marginRight: 8,
               color: "rgb(128, 128, 128)",
             }}
           >
@@ -284,7 +300,7 @@ const styles = StyleSheet.create({
   textList: {
     flexDirection: "column",
     marginBottom: 12,
-    width: "72%",
+    minWidth: "75%"
   },
   inner: {
     paddingVertical: 16,
