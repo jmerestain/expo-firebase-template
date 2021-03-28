@@ -233,3 +233,17 @@ export const updateProduct = (
       });
   }
 };
+
+export const deleteProduct = (productId, callback) => {
+  const db = firebase.firestore();
+
+  db.collection("products")
+  .doc(productId)
+  .delete()
+  .then(() => {
+    callback()
+  })
+  .catch((e) => {
+    console.log(e);
+  })
+}
