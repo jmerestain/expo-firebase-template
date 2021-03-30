@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Image } from "react-native";
-import { Layout, Input, Button, Text, Card, Icon } from "@ui-kitten/components";
+import { Layout, Input, Button, Text, Card, Icon, Avatar } from "@ui-kitten/components";
 import * as ImagePicker from "expo-image-picker";
 import { vendorApply } from "../../services/vendor";
 import PopUpMessage from "../../components/PopUpMessage";
@@ -17,10 +17,15 @@ const RegisterShopScreen = ({ navigation }) => {
   const [blob2, setBlob2] = useState(null);
   const [DTIcert, setDTIcert] = useState("");
   const [message, setMessage] = useState("");
+  const [image, setImage] = useState(null);
 
   return (
     <ScrollView style={{backgroundColor: "#FFFFFF",}}>
       <Layout style={styles.container}>
+        <PreviewComponent
+          image={image}
+          setImage={setImage}
+        />
         <Text
             category="s1"
             style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
@@ -129,6 +134,31 @@ const RegisterShopScreen = ({ navigation }) => {
   );
 };
 
+
+const PreviewComponent = ({ setImage, setBlob, image }) => {
+  return (
+    <Layout style={styles.field}>
+        <Avatar
+          source={{ uri: image }}
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: "contain",
+            marginVertical: 5,
+            alignSelf: "center",
+            borderWidth: 1,
+            borderColor: "#BDBDBD",
+          }}
+        />
+        <ImagePickerComponent
+          setImage={setImage}
+          setBlob={setBlob}
+          image={image}
+        />
+    </Layout>
+  );
+};
+
 function ImagePickerComponent({ setImage, setBlob, image }) {
   useEffect(() => {
     (async () => {
@@ -151,6 +181,8 @@ function ImagePickerComponent({ setImage, setBlob, image }) {
       quality: 1,
     });
 
+    console.log(result);
+
     if (!result.cancelled) {
       setImage(result.uri);
       const response = await fetch(result.uri);
@@ -160,26 +192,9 @@ function ImagePickerComponent({ setImage, setBlob, image }) {
   };
 
   return (
-    <Layout style={{}}>
-      <Button
-        onPress={pickImage}
-        size="large"
-        appearance="outline"
-        color="rgb(186,186,186)"
-        style={{
-          borderColor: "rgb(186,186,186)",
-          backgroundColor: "#F3f3f3",
-          marginHorizontal: 16,
-        }}
-        icon={
-          <Icon
-            name="cloud-upload-outline"
-            size={15}
-            color="rgb(186,186,186)"
-          />
-        }
-      >
-        {image ? "Change Image" : "Upload Image"}
+    <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal: 5 }}>
+      <Button onPress={pickImage} size="small" appearance="ghost" style={{ }}>
+        {image != null ? "Change Avatar" : "Set Avatar"}
       </Button>
     </Layout>
   );

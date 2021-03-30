@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, TouchableOpacity, Image, SectionList } from 'react-native';
-import { Layout, Text, Button, Icon, Divider, Toggle } from '@ui-kitten/components';
+import { StyleSheet, Modal, TouchableOpacity, Image, SectionList, Input } from 'react-native';
+import { Layout, Text, Button, Icon, Divider, Toggle, Avatar } from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as ImagePicker from "expo-image-picker";
 import OrdersScreen from '../OrdersScreen';
 
 const SettingsStack = createStackNavigator();
@@ -20,8 +21,93 @@ const SettingsScreenNavigation = () => (
 
 function ShopSettingsScreen ({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
+    const [image, setImage] = useState(null);
+    const [businessName, setBusinessName] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [location, setLocation] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
+    
     return (
         <Layout style={styles.container}>
+            <PreviewComponent
+          image={image}
+          setImage={setImage}
+        />
+            <Text
+                style={{
+                fontFamily: "NunitoSans-Bold",
+                fontSize: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                }}
+            >
+                Shop Information
+            </Text>
+            <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
+            <Text
+                category="s1"
+                style={{
+                paddingHorizontal: 16,
+                paddingVertical: 6,
+                fontFamily: "NunitoSans-Regular",
+                }}
+            >
+                Business Name
+            </Text>
+            <Input
+                onChangeText={(value) => setBusinessName(value)}
+                placeholder="Business Name"
+                style={{ paddingHorizontal: 16 }}
+                defaultValue={businessName}
+            />
+            <Text
+                category="s1"
+                style={{
+                paddingHorizontal: 16,
+                paddingVertical: 6,
+                fontFamily: "NunitoSans-Regular",
+                }}
+            >
+                Full Name
+            </Text>
+            <Input
+                onChangeText={(value) => setFullName(value)}
+                placeholder="Full Name"
+                style={{ paddingHorizontal: 16 }}
+                defaultValue={fullName}
+            />
+            <Text
+                category="s1"
+                style={{
+                paddingHorizontal: 16,
+                paddingVertical: 6,
+                fontFamily: "NunitoSans-Regular",
+                }}
+            >
+                Location
+            </Text>
+            <Input
+                onChangeText={(value) => setLocation(value)}
+                placeholder="Location"
+                style={{ paddingHorizontal: 16 }}
+                defaultValue={location}
+            />
+            <Text
+                category="s1"
+                style={{
+                paddingHorizontal: 16,
+                paddingVertical: 6,
+                fontFamily: "NunitoSans-Regular",
+                }}
+            >
+                Contact Number
+            </Text>
+            <Input
+                onChangeText={(value) => setContactNumber(value)}
+                placeholder="Contact Number"
+                style={{ paddingHorizontal: 16 }}
+                defaultValue={contactNumber}
+            />
             {/*<Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 12}}>Notifications</Text>
             <Divider style={{ marginBottom: 12 }} />
             <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'flex-end', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>
@@ -31,8 +117,17 @@ function ShopSettingsScreen ({navigation}) {
                 </Layout>
                 </Layout>
             <Divider style={{ marginVertical: 18, marginBottom: 12 }} />*/}
-            <Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 16}}>Danger Zone</Text>
-            <Divider style={{ marginBottom: 12 }} />
+            <Text
+                style={{
+                fontFamily: "NunitoSans-Bold",
+                fontSize: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                }}
+            >
+                Danger Zone
+            </Text>
+            <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
             <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'center', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>
             <Text>Delete Shop Account</Text>
             <Layout>
@@ -93,6 +188,71 @@ const SettingsOptions = () => {
         </Layout>
     )
 }
+
+const PreviewComponent = ({ setImage, setBlob, image }) => {
+    return (
+      <Layout style={styles.field}>
+          <Avatar
+            source={{ uri: image }}
+            style={{
+              width: 100,
+              height: 100,
+              resizeMode: "contain",
+              marginVertical: 5,
+              alignSelf: "center",
+              borderWidth: 1,
+              borderColor: "#BDBDBD",
+            }}
+          />
+          <ImagePickerComponent
+            setImage={setImage}
+            setBlob={setBlob}
+            image={image}
+          />
+      </Layout>
+    );
+  };
+  
+  function ImagePickerComponent({ setImage, setBlob, image }) {
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS !== "web") {
+          const {
+            status,
+          } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== "granted") {
+            alert("Sorry, we need camera roll permissions to add images");
+          }
+        }
+      })();
+    }, []);
+  
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.cancelled) {
+        setImage(result.uri);
+        const response = await fetch(result.uri);
+        const blob = await response.blob();
+        setBlob(blob);
+      }
+    };
+  
+    return (
+      <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal:  16}}>
+        <Button onPress={pickImage} size="small" appearance="ghost" style={{ }}>
+          {image != null ? "Change Avatar" : "Set Avatar"}
+        </Button>
+      </Layout>
+    );
+  }
 
 const styles = StyleSheet.create({
     container: {
