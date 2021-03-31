@@ -18,6 +18,7 @@ import {
   getCategories,
   getProductByID,
   updateProduct,
+  deleteProduct
 } from "../../services/products";
 
 const NewItemScreen = ({ navigation, route }) => {
@@ -245,7 +246,7 @@ const NewItemScreen = ({ navigation, route }) => {
                 stock,
                 weight,
                 vendor: vendor.id,
-                vendorName: vendor.shop.name
+                vendorName: vendor.shop.name,
               };
               if (isUpdating) {
                 updateProduct(
@@ -263,12 +264,15 @@ const NewItemScreen = ({ navigation, route }) => {
           >
             {isUpdating ? "Update" : "Add New"} Product
           </Button>
-          <Button
-            appearance="outline"
-           style={{marginTop: 12}}
-          >
-            {isUpdating ? "Delete Product" : "" }
-          </Button>
+          {isUpdating && (
+            <Button appearance="outline" style={{ marginTop: 12 }} onPress={
+              () => {
+                deleteProduct(productId, setMessage, setVisible);
+              }
+            }>
+              Delete Product
+            </Button>
+          )}
         </Layout>
         <MessageComponent
           visible={visible}

@@ -25,27 +25,11 @@ import {
 } from "../orderStatuses";
 import { getCurrentUserFromUID } from "../../services/users";
 import { postReview } from "../../services/reviews";
+import { getAvatarsVendors } from "../../services/users";
 import { Rating } from "react-native-elements";
 import LoadingModal from "../../components/LoadingModal";
 import MessageComponent from "../../components/MessageComponent";
 import Modal from "react-native-modal";
-{
-  /*import RatingScreen from './RatingScreen';
-
-const RatingNav = createStackNavigator();
-
-const RatingsScreens = () => (
-  <RatingNav.Navigator screenOptions={{
-      headerStyle: {
-          backgroundColor: 'rgb(138,18,20)',
-      }
-  }}>
-      <RatingNav.Screen name="Rate Order" component={RatingScreen} 
-      options={showHeader} />
-  </RatingNav.Navigator>
-)
- */
-}
 
 const dateToString = (date) => {
   let year = date.getFullYear();
@@ -59,7 +43,7 @@ const StatusTab = createMaterialTopTabNavigator();
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
-const renderItem = ({ item, index }) => (
+const renderItem = ({ item, index, avatars }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -67,7 +51,11 @@ const renderItem = ({ item, index }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              avatars[item.user]
+                ? { uri: avatars[item.user] }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
@@ -122,7 +110,7 @@ const renderItem = ({ item, index }) => (
   </Layout>
 );
 
-const renderItemDeliver = ({ item, index }) => (
+const renderItemDeliver = ({ item, index, avatars }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -130,7 +118,11 @@ const renderItemDeliver = ({ item, index }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              avatars[item.user]
+                ? { uri: avatars[item.user] }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
@@ -196,7 +188,7 @@ const renderItemDeliver = ({ item, index }) => (
   </Layout>
 );
 
-const renderItemReceived = ({ item, index }) => (
+const renderItemReceived = ({ item, index, avatars }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -204,7 +196,11 @@ const renderItemReceived = ({ item, index }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              avatars[item.user]
+                ? { uri: avatars[item.user] }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
@@ -274,7 +270,13 @@ const renderItemReceived = ({ item, index }) => (
   </Layout>
 );
 
-const renderItemRate = ({ item, index, setModalVisible, setOrderToRate }) => (
+const renderItemRate = ({
+  item,
+  index,
+  setModalVisible,
+  setOrderToRate,
+  avatars,
+}) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -282,7 +284,11 @@ const renderItemRate = ({ item, index, setModalVisible, setOrderToRate }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              avatars[item.user]
+                ? { uri: avatars[item.user] }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
@@ -373,6 +379,8 @@ function OrderStatusScreen({ navigation, route }) {
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
 
+  const [avatars, setAvatars] = useState({});
+
   useEffect(() => {
     const unsubscribeToPay = getOrdersCurrentUser(
       ORDER_TO_PAY,
@@ -420,6 +428,20 @@ function OrderStatusScreen({ navigation, route }) {
   useEffect(() => {
     setFilteredToReviewOrders(toReviewOrders);
   }, [toReviewOrders]);
+
+  useEffect(() => {
+    getAvatarsVendors(
+      [
+        ...new Set([
+          ...toProcessOrders.map((order) => order.user),
+          ...toDeliverOrders.map((order) => order.user),
+          ...toReceiveOrders.map((order) => order.user),
+          ...toReviewOrders.map((order) => order.user),
+        ]),
+      ],
+      setAvatars
+    );
+  }, [toProcessOrders, toDeliverOrders, toReceiveOrders, toReviewOrders]);
 
   useEffect(() => {
     const lowercaseQuery = query.toLowerCase();
@@ -488,6 +510,7 @@ function OrderStatusScreen({ navigation, route }) {
           setMessage={setMessage}
           message={message}
           setVisible={setVisible}
+          avatars={avatars}
         />
       </NavigationContainer>
     </Layout>
@@ -509,6 +532,7 @@ const StatusTabNavigation = ({
   message,
   setMessage,
   setVisible,
+  avatars
 }) => {
   return (
     <StatusTab.Navigator
@@ -516,13 +540,19 @@ const StatusTabNavigation = ({
       initialRouteName={route.params.initialScreen || "To Process"}
     >
       <StatusTab.Screen name="To Process">
-        {(props) => <ToProcessNav {...props} data={toProcessOrders} />}
+        {(props) => (
+          <ToProcessNav {...props} data={toProcessOrders} avatars={avatars} />
+        )}
       </StatusTab.Screen>
       <StatusTab.Screen name="To Deliver">
-        {(props) => <ToDeliverNav {...props} data={toDeliverOrders} />}
+        {(props) => (
+          <ToDeliverNav {...props} data={toDeliverOrders} avatars={avatars} />
+        )}
       </StatusTab.Screen>
       <StatusTab.Screen name="To Receive">
-        {(props) => <ToReceiveNav {...props} data={toReceiveOrders} />}
+        {(props) => (
+          <ToReceiveNav {...props} data={toReceiveOrders} avatars={avatars} />
+        )}
       </StatusTab.Screen>
       <StatusTab.Screen name="To Review">
         {(props) => (
@@ -538,6 +568,7 @@ const StatusTabNavigation = ({
             message={message}
             setMessage={setMessage}
             setVisible={setVisible}
+            avatars={avatars}
           />
         )}
       </StatusTab.Screen>
@@ -545,36 +576,36 @@ const StatusTabNavigation = ({
   );
 };
 
-const ToProcessNav = ({ data }) => {
+const ToProcessNav = ({ data, avatars }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItem} />
+          <List data={data} renderItem={(props) => renderItem({...props, avatars})} />
         </Layout>
       </Layout>
     </Layout>
   );
 };
 
-const ToDeliverNav = ({ data }) => {
+const ToDeliverNav = ({ data, avatars }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItemDeliver} />
+          <List data={data} renderItem={(props) => renderItemDeliver({...props, avatars})} />
         </Layout>
       </Layout>
     </Layout>
   );
 };
 
-const ToReceiveNav = ({ data }) => {
+const ToReceiveNav = ({ data, avatars }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItemReceived} />
+          <List data={data} renderItem={(props) => renderItemReceived({...props, avatars})} />
         </Layout>
       </Layout>
     </Layout>
@@ -592,6 +623,7 @@ const ToRateNav = ({
   message,
   setMessage,
   setVisible,
+  avatars
 }) => {
   const [rating, setRating] = useState(5);
   const [comments, setComments] = useState("");
@@ -604,7 +636,7 @@ const ToRateNav = ({
             <List
               data={data}
               renderItem={(props) =>
-                renderItemRate({ ...props, setModalVisible, setOrderToRate })
+                renderItemRate({ ...props, setModalVisible, setOrderToRate, avatars })
               }
             />
           </Layout>
@@ -664,20 +696,22 @@ const ToRateNav = ({
                   { rating, comments, userName },
                   (callbackMessage) => {
                     if (callbackMessage == "Successfully rated the product!") {
-                      updateOrderStatus(orderToRate.id, ORDER_COMPLETED, (arg) => {
-                        setLoading(false);
-                        if(typeof arg == "string") {
-                          setMessage("Error in rating the product!");
-                          setVisible(true);
+                      updateOrderStatus(
+                        orderToRate.id,
+                        ORDER_COMPLETED,
+                        (arg) => {
+                          setLoading(false);
+                          if (typeof arg == "string") {
+                            setMessage("Error in rating the product!");
+                            setVisible(true);
+                          } else {
+                            setMessage("Successfully rated the product!");
+                            setVisible(true);
+                          }
+                          // navigation.goBack();
                         }
-                        else {
-                          setMessage("Successfully rated the product!");
-                          setVisible(true);
-                        }
-                        // navigation.goBack();
-                      });
-                    }
-                    else {
+                      );
+                    } else {
                       setLoading(false);
                       setMessage(callbackMessage);
                       setVisible(true);

@@ -150,15 +150,82 @@ export const getAvatars = (uids, callback) => {
 
   Promise.all(
     uids.map((uid) => {
-      db.collection("user-profiles")
+      return db.collection("user-profiles")
         .doc(uid)
         .get()
         .then((userProfile) => {
           const userData = userProfile.data();
-          if (userData.avatarUrl) {
+          if (userData && userData.avatarUrl) {
             avatarUrls[userProfile.id] = userData.avatarUrl;
           }
         });
+    })
+  )
+    .then(() => {
+      callback(avatarUrls);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+    });
+};
+
+export const getAvatarsVendors = (uids, callback) => {
+  const db = firebase.firestore();
+  const avatarUrls = {};
+
+  Promise.all(
+    uids.map((uid) => {
+      return db.collection("vendor-profiles")
+        .doc(uid)
+        .get()
+        .then((userProfile) => {
+          const userData = userProfile.data();
+          if (userData && userData.avatarUrl) {
+            avatarUrls[userProfile.id] = userData.avatarUrl;
+          }
+        });
+    })
+  )
+    .then(() => {
+      callback(avatarUrls);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+    });
+};
+
+export const getAvatarsVendorOrBuyer = (uids, callback) => {
+  const db = firebase.firestore();
+  const avatarUrls = {};
+
+  Promise.all(
+    uids.map((uidObj) => {
+      const { uid, isVendorChat } = uidObj;
+      if (isVendorChat) {
+        return db.collection("vendor-profiles")
+          .doc(uid)
+          .get()
+          .then((userProfile) => {
+            const userData = userProfile.data();
+            if (userData && userData.avatarUrl) {
+              avatarUrls[`${uid}-vendor`] =
+                userData.avatarUrl;
+            }
+          });
+      } else {
+        return db.collection("user-profiles")
+          .doc(uid)
+          .get()
+          .then((userProfile) => {
+            const userData = userProfile.data();
+            if (userData && userData.avatarUrl) {
+              avatarUrls[`${uid}-personal`] =
+                userData.avatarUrl;
+            }
+          });
+      }
     })
   )
     .then(() => {

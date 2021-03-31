@@ -21,10 +21,17 @@ import { ScrollView } from "react-native-gesture-handler";
 import ShopProducts from "./MyShopPreview/ShopProducts";
 import ShopRatings from "./MyShopPreview/ShopRatings";
 import { getShopDetails, getShopDetailsByUID } from "../../services/vendor";
+import { getReviewsByVendor } from "../../services/reviews";
+import { getAvatars } from "../../services/users";
 
 const MyShopPreviewTab = createMaterialTopTabNavigator();
 
-const MyShopPreviewNavigation = ({ setNumProducts, setRating, vendorId }) => {
+const MyShopPreviewNavigation = ({
+  setNumProducts,
+  setRating,
+  reviews,
+  avatars,
+}) => {
   return (
     <MyShopPreviewTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <MyShopPreviewTab.Screen name="Products">
@@ -32,7 +39,12 @@ const MyShopPreviewNavigation = ({ setNumProducts, setRating, vendorId }) => {
       </MyShopPreviewTab.Screen>
       <MyShopPreviewTab.Screen name="Reviews">
         {(props) => (
-          <ShopRatings {...props} vendorId={vendorId} setRating={setRating} />
+          <ShopRatings
+            {...props}
+            setRating={setRating}
+            reviews={reviews}
+            avatars={avatars}
+          />
         )}
       </MyShopPreviewTab.Screen>
     </MyShopPreviewTab.Navigator>
@@ -53,6 +65,8 @@ function PreviewMyShopScreen({ navigation, route }) {
   const [shopDetails, setShopDetails] = useState({});
   const [numProducts, setNumProducts] = useState(0);
   const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [avatars, setAvatars] = useState({});
 
   useEffect(() => {
     if (route.params && route.params.vendorId) {
@@ -67,9 +81,20 @@ function PreviewMyShopScreen({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    if(shopDetails.averageRating)
+    getReviewsByVendor(shopDetails.id, setReviews);
+  }, [shopDetails]);
+
+  useEffect(() => {
+    getAvatars(
+      [...new Set(reviews.map((review) => review.userId))],
+      setAvatars
+    );
+  }, [reviews]);
+
+  useEffect(() => {
+    if (shopDetails.averageRating)
       setRating(shopDetails.averageRating.avgRating);
-  }, [shopDetails])
+  }, [shopDetails]);
 
   return (
     <ScrollView>
@@ -80,7 +105,11 @@ function PreviewMyShopScreen({ navigation, route }) {
               rounded
               size="giant"
               shape="round"
-              source={require("../avatar-icon.png")}
+              source={
+                shopDetails.avatarUrl
+                  ? { uri: shopDetails.avatarUrl }
+                  : require("../avatar-icon.png")
+              }
               style={{
                 marginHorizontal: 50,
                 marginTop: 24,
@@ -169,7 +198,8 @@ function PreviewMyShopScreen({ navigation, route }) {
         </Layout>
         <MyShopPreviewNavigation
           setNumProducts={setNumProducts}
-          vendorId={shopDetails.id}
+          reviews={reviews}
+          avatars={avatars}
         />
         <Button
           size="large"

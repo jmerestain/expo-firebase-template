@@ -33,6 +33,7 @@ import { newOrder } from "../../../services/orders";
 import { getCurrentUserFromUID } from "../../../services/users";
 import { startChat } from "../../../services/messages";
 import { getReviewsByProduct } from "../../../services/reviews";
+import { getAvatars } from "../../../services/users";
 import LoadingModal from "../../../components/LoadingModal";
 import Modal from "react-native-modal";
 
@@ -80,7 +81,7 @@ const renderItemMore = ({ item, navigation, index }) => (
   </Layout>
 );
 
-const renderItemRatings = ({ item, index }) => (
+const renderItemRatings = ({ item, index, avatars }) => (
   <Layout style={styles.item2}>
     <Layout
       style={{
@@ -96,7 +97,11 @@ const renderItemRatings = ({ item, index }) => (
           rounded
           size="small"
           shape="round"
-          source={require("../../avatar-icon.png")}
+          source={
+            avatars[item.userId]
+              ? { uri: avatars[item.userId] }
+              : require("../../avatar-icon.png")
+          }
           style={{
             marginRight: 12,
             marginLeft: 2,
@@ -143,6 +148,7 @@ function ProductScreen({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [reviews, setReviews] = useState([]);
+  const [avatars, setAvatars] = useState({});
 
   useEffect(() => {
     getProductByID(route.params.productId, setProduct);
@@ -155,6 +161,13 @@ function ProductScreen({ route, navigation }) {
   useEffect(() => {
     getReviewsByProduct(route.params.productId, setReviews);
   }, []);
+
+  useEffect(() => {
+    getAvatars(
+      [...new Set(reviews.map((review) => review.userId))],
+      setAvatars
+    );
+  }, [reviews]);
 
   useEffect(() => {
     if (product.vendor) {
@@ -344,7 +357,12 @@ function ProductScreen({ route, navigation }) {
                     Product Reviews
                   </Text>
                 </Layout>
-                <List data={reviews} renderItem={renderItemRatings} />
+                <List
+                  data={reviews}
+                  renderItem={(props) =>
+                    renderItemRatings({ ...props, avatars })
+                  }
+                />
               </React.Fragment>
             ) : null}
           </Layout>

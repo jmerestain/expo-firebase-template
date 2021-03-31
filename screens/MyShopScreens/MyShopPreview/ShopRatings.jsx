@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Rating } from "react-native-elements";
 import { Layout, Text, Divider, Avatar, List } from "@ui-kitten/components";
-import { getReviewsByVendor } from "../../../services/reviews";
 
 const dateToString = (date) => {
   let year = date.getFullYear();
@@ -12,25 +11,19 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const RatingNav = ({ vendorId, setRating }) => {
-  const [reviews, setReviews] = useState([]);
-
-  useEffect(() => {
-    getReviewsByVendor(vendorId, setReviews);
-  }, []);
-
+const RatingNav = ({ reviews, avatars }) => {
   return (
     <Layout style={styles.container}>
       <List
         data={reviews}
-        renderItem={renderItemRatings}
+        renderItem={(props) => renderItemRatings({ ...props, avatars })}
         style={{ marginHorizontal: 12 }}
       />
     </Layout>
   );
 };
 
-const renderItemRatings = ({ item, index }) => (
+const renderItemRatings = ({ item, index, avatars }) => (
   <Layout style={styles.item2}>
     <Layout
       style={{
@@ -46,7 +39,11 @@ const renderItemRatings = ({ item, index }) => (
           rounded
           size="small"
           shape="round"
-          source={require("../../avatar-icon.png")}
+          source={
+            avatars[item.userId]
+              ? { uri: avatars[item.userId] }
+              : require("../../avatar-icon.png")
+          }
           style={{
             marginRight: 12,
             marginLeft: 2,

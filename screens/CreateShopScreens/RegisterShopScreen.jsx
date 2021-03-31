@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Image } from "react-native";
-import { Layout, Input, Button, Text, Card, Icon, Avatar } from "@ui-kitten/components";
+import {
+  Layout,
+  Input,
+  Button,
+  Text,
+  Card,
+  Icon,
+  Avatar,
+} from "@ui-kitten/components";
 import * as ImagePicker from "expo-image-picker";
 import { vendorApply } from "../../services/vendor";
 import PopUpMessage from "../../components/PopUpMessage";
@@ -15,21 +23,27 @@ const RegisterShopScreen = ({ navigation }) => {
   const [ID, setID] = useState("");
   const [blob1, setBlob1] = useState(null);
   const [blob2, setBlob2] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [avatarBlob, setAvatarBlob] = useState(null);
   const [DTIcert, setDTIcert] = useState("");
   const [message, setMessage] = useState("");
-  const [image, setImage] = useState(null);
 
   return (
-    <ScrollView style={{backgroundColor: "#FFFFFF",}}>
+    <ScrollView style={{ backgroundColor: "#FFFFFF" }}>
       <Layout style={styles.container}>
         <PreviewComponent
-          image={image}
-          setImage={setImage}
+          image={avatar}
+          setImage={setAvatar}
+          setBlob={setAvatarBlob}
         />
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Business Name
         </Text>
         <Input
@@ -39,9 +53,13 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Owner Full Name
         </Text>
         <Input
@@ -51,9 +69,13 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Location
         </Text>
         <Input
@@ -63,9 +85,13 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Business Email
         </Text>
         <Input
@@ -75,9 +101,13 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Phone Number
         </Text>
         <Input
@@ -87,16 +117,28 @@ const RegisterShopScreen = ({ navigation }) => {
         />
 
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           Valid ID
         </Text>
-        <ImagePickerComponent image={ID} setImage={setID} setBlob={setBlob1} />
+        <ImagePickerComponent
+          image={ID}
+          setImage={setID}
+          setBlob={setBlob1}
+        />
         <Text
-            category="s1"
-            style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
-            >
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
           DTI Registration
         </Text>
         <ImagePickerComponent
@@ -117,7 +159,7 @@ const RegisterShopScreen = ({ navigation }) => {
                   ...(contactNumber && { contactNumber }),
                 },
               };
-              vendorApply(shopDetails, blob1, blob2, () =>
+              vendorApply(shopDetails, blob1, blob2, avatarBlob, () =>
                 navigation.navigate("Confirm Register Shop")
               );
             } else {
@@ -128,33 +170,32 @@ const RegisterShopScreen = ({ navigation }) => {
         >
           Register Shop
         </Button>
-        {message ? (<PopUpMessage message={message} />) : null}
+        {message ? <PopUpMessage message={message} /> : null}
       </Layout>
     </ScrollView>
   );
 };
 
-
 const PreviewComponent = ({ setImage, setBlob, image }) => {
   return (
     <Layout style={styles.field}>
-        <Avatar
-          source={{ uri: image }}
-          style={{
-            width: 100,
-            height: 100,
-            resizeMode: "contain",
-            marginVertical: 5,
-            alignSelf: "center",
-            borderWidth: 1,
-            borderColor: "#BDBDBD",
-          }}
-        />
-        <ImagePickerComponent
-          setImage={setImage}
-          setBlob={setBlob}
-          image={image}
-        />
+      <Avatar
+        source={{ uri: image }}
+        style={{
+          width: 100,
+          height: 100,
+          resizeMode: "contain",
+          marginVertical: 5,
+          alignSelf: "center",
+          borderWidth: 1,
+          borderColor: "#BDBDBD",
+        }}
+      />
+      <ImagePickerComponent
+        setImage={setImage}
+        setBlob={setBlob}
+        image={image}
+      />
     </Layout>
   );
 };
@@ -193,8 +234,13 @@ function ImagePickerComponent({ setImage, setBlob, image }) {
 
   return (
     <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal: 5 }}>
-      <Button onPress={pickImage} size="small" appearance="ghost" style={{ }}>
-        {image != null ? "Change Avatar" : "Set Avatar"}
+      <Button 
+        onPress={pickImage} 
+        size="small" 
+        appearance="ghost" 
+        style={{}}
+      >
+        {image ? "Change Image" : "Set Image"}
       </Button>
     </Layout>
   );
@@ -207,7 +253,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "stretch",
     paddingVertical: 24,
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
   },
 });
 

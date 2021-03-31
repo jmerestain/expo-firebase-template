@@ -24,7 +24,11 @@ const RenderItem = ({ item, navigation }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              item.imageUrl
+                ? { uri: item.imageUrl }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, alignSelf: "center" }}
           />
           <Layout style={styles.textList}>
@@ -96,9 +100,9 @@ const ManageProductsScreen = ({ navigation }) => {
   useEffect(() => {
     vendorApplyStatus((response) => {
       if (response != "approved") {
-        navigation.replace('Build My Shop', {vendorStatus: response})
+        navigation.replace("Build My Shop", { vendorStatus: response });
       }
-    })
+    });
   }, []);
 
   useEffect(() => {

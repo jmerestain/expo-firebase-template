@@ -26,7 +26,7 @@ export const startChat = (toUID, toName, fromName, isVendorChat, callback) => {
   batch.set(currentOwnerRef, {
     recipientName: toName,
     recipient: toUID,
-    isVendorChat: false,
+    isVendorChat,
   });
 
   const otherOwnerRef = db
@@ -135,7 +135,7 @@ export const getInbox = (isVendorInbox, callback) => {
     .collection("chat-owners")
     .doc(uid)
     .collection("chatrooms")
-    .where("isVendorChat", "==", isVendorInbox)
+    // .where("isVendorChat", "==", isVendorInbox)
     .orderBy("createdAt", "desc")
     .onSnapshot((querySnapshot) => {
       var chatrooms = [];

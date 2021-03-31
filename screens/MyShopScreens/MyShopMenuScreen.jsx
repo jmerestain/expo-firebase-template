@@ -42,7 +42,11 @@ const MyShopScreen = ({ navigation }) => {
             rounded
             size="giant"
             shape="round"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              shopDetails.avatarUrl
+                ? { uri: shopDetails.avatarUrl }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{
               marginHorizontal: 50,
               marginTop: 24,

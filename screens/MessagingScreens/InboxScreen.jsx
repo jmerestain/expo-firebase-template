@@ -16,10 +16,20 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getInbox } from "../../services/messages";
+import { getAvatarsVendorOrBuyer } from "../../services/users";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
-const renderItem = ({ item, navigation }) => (
+const truncateText = (text) => {
+  const MAX_LENGTH = 30;
+  if (text.length <= MAX_LENGTH) {
+    return text;
+  } else {
+    return text.substring(0, MAX_LENGTH) + "...";
+  }
+};
+
+const renderItem = ({ item, navigation, avatars }) => (
   <Layout style={styles.container}>
     <TouchableOpacity
       onPress={() =>
@@ -36,8 +46,20 @@ const renderItem = ({ item, navigation }) => (
             <Avatar
               rounded
               size="giant"
-              source={require("../../screens/avatar-icon.png")}
-              style={{ marginHorizontal: 20, marginTop: 3}}
+              source={
+                avatars[
+                  `${item.recipient}-${
+                    item.isVendorChat ? "vendor" : "personal"
+                  }`
+                ]
+                  ? avatars[
+                      `${item.recipient}-${
+                        item.isVendorChat ? "vendor" : "personal"
+                      }`
+                    ]
+                  : require("../../screens/avatar-icon.png")
+              }
+              style={{ marginHorizontal: 20, marginTop: 3 }}
             />
             <Layout style={styles.textList}>
               <Text
@@ -57,7 +79,7 @@ const renderItem = ({ item, navigation }) => (
                     color: "rgb(128, 128, 128)",
                   }}
                 >
-                  {item.text}
+                  {truncateText(item.text)}
                 </Text>
                 {/* <Text
                   style={{
@@ -80,14 +102,25 @@ const renderItem = ({ item, navigation }) => (
 
 function InboxScreen({ navigation }) {
   const [inbox, setInbox] = useState([]);
+  const [avatars, setAvatars] = useState({});
 
   useEffect(() => {
     const unsubscribe = getInbox(false, setInbox);
 
     return function cleanup() {
       unsubscribe();
-    }
+    };
   }, []);
+
+  useEffect(() => {
+    getAvatarsVendorOrBuyer(
+      inbox.map((chat) => ({
+        uid: chat.recipient,
+        isVendorChat: chat.isVendorChat,
+      })),
+      setAvatars
+    );
+  }, [inbox]);
 
   return (
     <Layout style={styles.container}>
@@ -99,7 +132,7 @@ function InboxScreen({ navigation }) {
       />
       <List
         data={inbox}
-        renderItem={(props) => renderItem({ ...props, navigation })}
+        renderItem={(props) => renderItem({ ...props, navigation, avatars })}
       />
     </Layout>
   );
