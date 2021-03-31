@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
 import {
+  ScrollView,
   StyleSheet,
   Modal,
   TouchableOpacity,
@@ -38,122 +39,121 @@ function AccountSetttingsScreen({ navigation }) {
   }, []);
 
   return (
-    <Layout style={styles.container}>
-      {message == "" ? null : <PopUpMessage message={message} />}
-      <PreviewComponent
-          image={image}
-          setImage={setImage}
+    <ScrollView>
+      <Layout style={styles.container}>
+        {message == "" ? null : <PopUpMessage message={message} />}
+        <PreviewComponent image={image} setImage={setImage} />
+        <Text
+          style={{
+            fontFamily: "NunitoSans-Bold",
+            fontSize: 16,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+          }}
+        >
+          Account ID
+        </Text>
+        <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
+        <Text
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          Username
+        </Text>
+        <Input
+          onChangeText={(value) => setUsername(value)}
+          placeholder="Username"
+          style={{ paddingHorizontal: 16 }}
+          defaultValue={username}
         />
-      <Text
-        style={{
-          fontFamily: "NunitoSans-Bold",
-          fontSize: 16,
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-        }}
-      >
-        Account ID
-      </Text>
-      <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
-      <Text
-        category="s1"
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          fontFamily: "NunitoSans-Regular",
-        }}
-      >
-        Username
-      </Text>
-      <Input
-        onChangeText={(value) => setUsername(value)}
-        placeholder="Username"
-        style={{ paddingHorizontal: 16 }}
-        defaultValue={username}
-      />
-      <Text
-        category="s1"
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          fontFamily: "NunitoSans-Regular",
-        }}
-      >
-        Email
-      </Text>
-      <Input
-        onChangeText={(value) => setEmail(value)}
-        placeholder="Email"
-        style={{ paddingHorizontal: 16 }}
-        defaultValue={email}
-      />
-      <Text
-        style={{
-          fontFamily: "NunitoSans-Bold",
-          fontSize: 16,
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          marginTop: 8,
-        }}
-      >
-        Change Password
-      </Text>
-      <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
-      <Text
-        category="s1"
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          fontFamily: "NunitoSans-Regular",
-        }}
-      >
-        Password
-      </Text>
-      <Input
-        onChangeText={(value) => setPassword(value)}
-        placeholder="Password"
-        secureTextEntry={true}
-        style={{ paddingHorizontal: 16 }}
-      />
-      <Text
-        category="s1"
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          fontFamily: "NunitoSans-Regular",
-        }}
-      >
-        Retype Password
-      </Text>
-      <Input
-        onChangeText={(value) => setConfirmPass(value)}
-        placeholder="Retype Password"
-        secureTextEntry={true}
-        style={{ paddingHorizontal: 16, marginBottom: 16 }}
-      />
-      <Button
-        size="large"
-        onPress={() => {
-          if (email != "" && password == confirmPass) {
-            updateUser({ email, password, username }, (message) =>
-              setMessage(message)
-            );
-          } else {
-            setMessage(
-              "Please input your details correctly. Passwords may not have matched."
-            );
-          }
-        }}
-        style={{
-          marginLeft: 16,
-          marginRight: 16,
-          marginTop: 24,
-          marginBottom: 24,
-        }}
-      >
-        Submit
-      </Button>
-    </Layout>
+        <Text
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          Email
+        </Text>
+        <Input
+          onChangeText={(value) => setEmail(value)}
+          placeholder="Email"
+          style={{ paddingHorizontal: 16 }}
+          defaultValue={email}
+        />
+        <Text
+          style={{
+            fontFamily: "NunitoSans-Bold",
+            fontSize: 16,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            marginTop: 8,
+          }}
+        >
+          Change Password
+        </Text>
+        <Divider style={{ marginHorizontal: 16, marginBottom: 12 }} />
+        <Text
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          Password
+        </Text>
+        <Input
+          onChangeText={(value) => setPassword(value)}
+          placeholder="Password"
+          secureTextEntry={true}
+          style={{ paddingHorizontal: 16 }}
+        />
+        <Text
+          category="s1"
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
+        >
+          Retype Password
+        </Text>
+        <Input
+          onChangeText={(value) => setConfirmPass(value)}
+          placeholder="Retype Password"
+          secureTextEntry={true}
+          style={{ paddingHorizontal: 16, marginBottom: 16 }}
+        />
+        <Button
+          size="large"
+          onPress={() => {
+            if (email != "" && password == confirmPass) {
+              updateUser({ email, password, username }, (message) =>
+                setMessage(message)
+              );
+            } else {
+              setMessage(
+                "Please input your details correctly. Passwords may not have matched."
+              );
+            }
+          }}
+          style={{
+            marginLeft: 16,
+            marginRight: 16,
+            marginTop: 24,
+            marginBottom: 24,
+          }}
+        >
+          Submit
+        </Button>
+      </Layout>
+    </ScrollView>
   );
 }
 
