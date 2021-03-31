@@ -47,7 +47,9 @@ const DashHeader = ({ navigation }) => {
   return (
     <TopNavigation
       style={styles.container}
-      accessoryLeft={SignOutButton}
+      accessoryLeft={(props) => (
+        <SignOutButton {...props} navigation={navigation} />
+      )}
       accessoryRight={(props) => (
         <MessagesButton {...props} navigation={navigation} />
       )}

@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-import { checkAuthenticated } from "../../services/auth";
+import { getCurrentUserFromUID } from "../../services/users";
 import { getMyStore } from "../../services/products";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -20,12 +20,14 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuthenticated(setUser, navigation);
-    //checkVendorApproved(setVendorApproved, setLoading, navigation);
+    getCurrentUserFromUID(setUser);
   }, []);
-  useEffect(() => {
-    getMyStore(user, setProducts);
-  }, [user]);
+
+  // useEffect(() => {
+  //   getMyStore(user, setProducts);
+  // }, [user]);
+
+  console.log(user);
 
   return (
     <Layout style={styles.container}>
@@ -38,8 +40,17 @@ const VendorScreen = ({ route, navigation, vendorStatus }) => {
             rounded
             size="giant"
             shape="round"
-            source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 50, width:80, height:80, alignItems: "center" }}
+            source={
+              (user && user.avatarUrl)
+                ? { uri: user.avatarUrl }
+                : require("../../screens/avatar-icon.png")
+            }
+            style={{
+              marginHorizontal: 50,
+              width: 80,
+              height: 80,
+              alignItems: "center",
+            }}
           />
         </Layout>
         <Button

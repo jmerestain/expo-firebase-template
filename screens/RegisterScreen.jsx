@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Image } from "react-native";
-import { Layout, Input, Button, Text, Divider, Card, Avatar } from "@ui-kitten/components";
-import { createUser, createUserProfile } from "../services/users";
+import {
+  Layout,
+  Input,
+  Button,
+  Text,
+  Divider,
+  Card,
+  Avatar,
+} from "@ui-kitten/components";
+import { createUserAndProfile, createUserProfile } from "../services/users";
 import LoadingModal from "../components/LoadingModal";
 import PopUpMessage from "../components/PopUpMessage";
 import { ScrollView } from "react-native-gesture-handler";
@@ -26,14 +34,15 @@ const RegisterScreen = ({ navigation }) => {
     <ScrollView>
       <Layout style={styles.container}>
         <LoadingModal loading={loading} />
-        <PreviewComponent
-          image={image}
-          setImage={setImage}
-          setBlob={setBlob}
-        />
+        <PreviewComponent image={image} setImage={setImage} setBlob={setBlob} />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, marginTop: 12, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            marginTop: 12,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Username
         </Text>
@@ -44,7 +53,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Email
         </Text>
@@ -55,7 +68,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Password
         </Text>
@@ -67,7 +84,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Retype Password
         </Text>
@@ -80,7 +101,11 @@ const RegisterScreen = ({ navigation }) => {
         <Divider style={{ marginHorizontal: 16, marginBottom: 8 }} />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           First Name
         </Text>
@@ -91,7 +116,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Last Name
         </Text>
@@ -102,7 +131,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Contact Number
         </Text>
@@ -114,7 +147,11 @@ const RegisterScreen = ({ navigation }) => {
         />
         <Text
           category="s1"
-          style={{ paddingHorizontal: 16, paddingVertical: 6, fontFamily: "NunitoSans-Regular" }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 6,
+            fontFamily: "NunitoSans-Regular",
+          }}
         >
           Delivery Address
         </Text>
@@ -137,17 +174,19 @@ const RegisterScreen = ({ navigation }) => {
               address != ""
             ) {
               setLoading(true);
-              createUser(email, password, setMessage, (uid) => {
-                createUserProfile(
-                  {
-                    firstName,
-                    lastName,
-                    contactNumber,
-                    address,
-                  },
-                  () => setLoading(false)
-                );
-              });
+              createUserAndProfile(
+                email,
+                password,
+                {
+                  firstName,
+                  lastName,
+                  contactNumber,
+                  address,
+                },
+                blob,
+                setMessage,
+                () => setLoading(false)
+              );
             } else {
               setMessage("Credentials provided is not valid");
               setLoading(false);
@@ -202,7 +241,12 @@ const RegisterScreen = ({ navigation }) => {
           Signup with Google
         </Button> */}
         <Layout
-          style={{ flex: 1, flexDirection: "row", justifyContent: "center", paddingBottom: 20 }}
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingBottom: 20,
+          }}
         >
           <Text
             category="s1"
@@ -245,23 +289,23 @@ const RegisterScreen = ({ navigation }) => {
 const PreviewComponent = ({ setImage, setBlob, image }) => {
   return (
     <Layout style={styles.field}>
-        <Avatar
-          source={{ uri: image }}
-          style={{
-            width: 100,
-            height: 100,
-            resizeMode: "contain",
-            marginVertical: 5,
-            alignSelf: "center",
-            borderWidth: 1,
-            borderColor: "#BDBDBD",
-          }}
-        />
-        <ImagePickerComponent
-          setImage={setImage}
-          setBlob={setBlob}
-          image={image}
-        />
+      <Avatar
+        source={{ uri: image }}
+        style={{
+          width: 100,
+          height: 100,
+          resizeMode: "contain",
+          marginVertical: 5,
+          alignSelf: "center",
+          borderWidth: 1,
+          borderColor: "#BDBDBD",
+        }}
+      />
+      <ImagePickerComponent
+        setImage={setImage}
+        setBlob={setBlob}
+        image={image}
+      />
     </Layout>
   );
 };
@@ -300,7 +344,7 @@ function ImagePickerComponent({ setImage, setBlob, image }) {
 
   return (
     <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal: 5 }}>
-      <Button onPress={pickImage} size="small" appearance="ghost" style={{ }}>
+      <Button onPress={pickImage} size="small" appearance="ghost" style={{}}>
         {image != null ? "Change Avatar" : "Set Avatar"}
       </Button>
     </Layout>

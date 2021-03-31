@@ -1,6 +1,40 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
+export const createUserAndProfile = (
+  email,
+  password,
+  userDetails,
+  avatar,
+  setMessage,
+  callback
+) => {
+  firebase
+    .auth()
+    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(({ user }) => {
+          createUserProfile(user.uid, userDetails, avatar, callback);
+          setMessage("Registered user!");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.log(errorCode);
+          setMessage(error.message);
+          callback();
+        });
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+      setMessage(error.message);
+      callback();
+    });
+};
+
 export const createUser = (email, password, setMessage, callback) => {
   firebase
     .auth()
@@ -26,52 +60,76 @@ export const createUser = (email, password, setMessage, callback) => {
     });
 };
 
-export const createUserProfile = (userDetails, image, callback) => {
-  const auth = firebase.auth();
+export const createUserProfile = (
+  currentUserUID,
+  userDetails,
+  image,
+  callback
+) => {
   const db = firebase.firestore();
-  const currentUserUID = auth.currentUser.uid;
   const storage = firebase.storage();
   const storageRef = storage.ref();
   const imageId = Date.now();
-  const avatarRef = storageRef.child(`avatars/${currentUser}/imageId.jpg`);
+  const avatarRef = storageRef.child(`avatars/${currentUserUID}/imageId.jpg`);
   let imageUrl;
 
-  avatarRef
-    .put(image)
-    .then(() => {
-      avatarRef
-        .getDownloadURL()
-        .then((url) => {
-          imageUrl = url;
-        })
-        .then(() => {
-          const userData = {
-            ...userDetails,
-            avatarId: imageId,
-            avatarUrl: imageUrl,
-          };
-          db.collection("user-profiles")
-            .doc(currentUserUID)
-            .set(userData)
-            .then(() => {
-              callback();
-              // navigation.reset({
-              //   index: 0,
-              //   routes: [{ name: "DashNav" }], // Designated main page
-              // });
-            });
-        })
-        .catch((e) => {
-          const errorCode = error.code;
-          console.log(errorCode);
-          callback();
-        });
-    })
-    .catch((e) => {
-      const errorCode = error.code;
-      console.log(errorCode);
-      callback();
-    });
+  if (image) {
+    avatarRef
+      .put(image)
+      .then(() => {
+        avatarRef
+          .getDownloadURL()
+          .then((url) => {
+            imageUrl = url;
+          })
+          .then(() => {
+            const userData = {
+              ...userDetails,
+              avatarId: imageId,
+              avatarUrl: imageUrl,
+            };
+            db.collection("user-profiles")
+              .doc(currentUserUID)
+              .set(userData)
+              .then(() => {
+                callback();
+                // navigation.reset({
+                //   index: 0,
+                //   routes: [{ name: "DashNav" }], // Designated main page
+                // });
+              });
+          })
+          .catch((e) => {
+            const errorCode = e.code;
+            console.log(e.message);
+            console.log(errorCode);
+            callback();
+          });
+      })
+      .catch((e) => {
+        const errorCode = e.code;
+        console.log(e.message);
+        console.log(errorCode);
+        callback();
+      });
+  } else {
+    db.collection("user-profiles")
+      .doc(currentUserUID)
+      .set(userDetails)
+      .then(() => {
+        callback();
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: "DashNav" }], // Designated main page
+        // });
+      })
+      .catch((e) => {
+        const errorCode = e.code;
+        console.log(e.message);
+        console.log(errorCode);
+        callback();
+      });
+  }
 };
 
 export const getUserProfile = (uid, callback) => {
