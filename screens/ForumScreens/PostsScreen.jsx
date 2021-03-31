@@ -12,6 +12,7 @@ import {
 } from "@ui-kitten/components";
 import { ScrollView } from "react-native-gesture-handler";
 import { readPosts } from "../../services/forums";
+import { getAvatars } from "../../services/users";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
@@ -23,7 +24,7 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const renderItemPosts = ({ item, index }) => (
+const renderItemPosts = ({ item, index, avatars }) => (
   <Layout style={styles.item2}>
     <Layout
       style={{
@@ -39,7 +40,11 @@ const renderItemPosts = ({ item, index }) => (
           rounded
           size="small"
           shape="round"
-          source={require("../../screens/avatar-icon.png")}
+          source={
+            avatars[item.user]
+              ? { uri: avatars[item.user] }
+              : require("../../screens/avatar-icon.png")
+          }
           style={{
             marginRight: 12,
             marginLeft: 2,
@@ -70,6 +75,7 @@ const renderItemPosts = ({ item, index }) => (
 
 function PostsScreen({ navigation, route }) {
   const [posts, setPosts] = useState([]);
+  const [avatars, setAvatars] = useState({});
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [query, setSearch] = useState("");
 
@@ -80,11 +86,15 @@ function PostsScreen({ navigation, route }) {
 
     return function cleanup() {
       unsubscribe();
-    }
+    };
   }, []);
 
   useEffect(() => {
     setFilteredPosts(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    getAvatars([...new Set(posts.map((post) => post.user))], setAvatars);
   }, [posts]);
 
   useEffect(() => {
@@ -112,7 +122,10 @@ function PostsScreen({ navigation, route }) {
           }}
         />
         <Divider />
-        <List data={filteredPosts} renderItem={renderItemPosts} />
+        <List
+          data={filteredPosts}
+          renderItem={(props) => renderItemPosts({ ...props, avatars })}
+        />
       </Layout>
       <Layout
         style={{

@@ -144,6 +144,32 @@ export const getUserProfile = (uid, callback) => {
     });
 };
 
+export const getAvatars = (uids, callback) => {
+  const db = firebase.firestore();
+  const avatarUrls = {};
+
+  Promise.all(
+    uids.map((uid) => {
+      db.collection("user-profiles")
+        .doc(uid)
+        .get()
+        .then((userProfile) => {
+          const userData = userProfile.data();
+          if (userData.avatarUrl) {
+            avatarUrls[userProfile.id] = userData.avatarUrl;
+          }
+        });
+    })
+  )
+    .then(() => {
+      callback(avatarUrls);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+    });
+};
+
 export const getCurrentUserFromUID = (callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
