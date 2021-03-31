@@ -26,21 +26,48 @@ export const createUser = (email, password, setMessage, callback) => {
     });
 };
 
-export const createUserProfile = (userDetails, callback) => {
+export const createUserProfile = (userDetails, image, callback) => {
   const auth = firebase.auth();
   const db = firebase.firestore();
   const currentUserUID = auth.currentUser.uid;
-  db.collection("user-profiles")
-    .doc(currentUserUID)
-    .set(userDetails)
+  const storage = firebase.storage();
+  const storageRef = storage.ref();
+  const imageId = Date.now();
+  const avatarRef = storageRef.child(`avatars/${currentUser}/imageId.jpg`);
+  let imageUrl;
+
+  avatarRef
+    .put(image)
     .then(() => {
-      callback();
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "DashNav" }], // Designated main page
-      // });
+      avatarRef
+        .getDownloadURL()
+        .then((url) => {
+          imageUrl = url;
+        })
+        .then(() => {
+          const userData = {
+            ...userDetails,
+            avatarId: imageId,
+            avatarUrl: imageUrl,
+          };
+          db.collection("user-profiles")
+            .doc(currentUserUID)
+            .set(userData)
+            .then(() => {
+              callback();
+              // navigation.reset({
+              //   index: 0,
+              //   routes: [{ name: "DashNav" }], // Designated main page
+              // });
+            });
+        })
+        .catch((e) => {
+          const errorCode = error.code;
+          console.log(errorCode);
+          callback();
+        });
     })
-    .catch((error) => {
+    .catch((e) => {
       const errorCode = error.code;
       console.log(errorCode);
       callback();

@@ -68,7 +68,7 @@ const renderItem = ({ item, index }) => (
             rounded
             size="giant"
             source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
+            style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
             <Text
@@ -131,7 +131,7 @@ const renderItemDeliver = ({ item, index }) => (
             rounded
             size="giant"
             source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
+            style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
             <Text
@@ -205,7 +205,7 @@ const renderItemReceived = ({ item, index }) => (
             rounded
             size="giant"
             source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
+            style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
             <Text
@@ -283,7 +283,7 @@ const renderItemRate = ({ item, index, setModalVisible, setOrderToRate }) => (
             rounded
             size="giant"
             source={require("../../screens/avatar-icon.png")}
-            style={{ marginHorizontal: 20, alignSelf: "center" }}
+            style={{ marginHorizontal: 20, marginTop: 10 }}
           />
           <Layout style={styles.textList}>
             <Text
@@ -463,7 +463,7 @@ function OrderStatusScreen({ navigation, route }) {
       <Input
         onChangeText={(value) => setSearch(value)}
         placeholder="Search here"
-        style={{ paddingHorizontal: 16, paddingVertical: 12 }}
+        style={{ paddingHorizontal: 16, paddingTop: 12 }}
         accessoryLeft={SearchIcon}
       />
       <MessageComponent

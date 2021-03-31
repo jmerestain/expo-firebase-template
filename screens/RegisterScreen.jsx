@@ -20,6 +20,7 @@ const RegisterScreen = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
+  const [blob, setBlob] = useState(null);
 
   return (
     <ScrollView>
@@ -28,6 +29,7 @@ const RegisterScreen = ({ navigation }) => {
         <PreviewComponent
           image={image}
           setImage={setImage}
+          setBlob={setBlob}
         />
         <Text
           category="s1"
