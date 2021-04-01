@@ -20,6 +20,7 @@ import {
   updateMultipleOrderStatus,
   updateOrderStatus,
 } from "../../services/orders";
+import { getAvatars } from "../../services/users";
 import {
   ORDER_PENDING,
   ORDER_TO_PAY,
@@ -40,7 +41,7 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const renderItem = ({ item, index, isPending }) => (
+const renderItem = ({ item, index, isPending, avatars }) => (
   <Layout style={styles.container}>
     <Layout style={styles.inner}>
       <Layout style={styles.containerList}>
@@ -48,7 +49,11 @@ const renderItem = ({ item, index, isPending }) => (
           <Avatar
             rounded
             size="giant"
-            source={require("../../screens/avatar-icon.png")}
+            source={
+              avatars[item.user]
+                ? { uri: avatars[item.user] }
+                : require("../../screens/avatar-icon.png")
+            }
             style={{ marginHorizontal: 20, alignSelf: "center" }}
           />
           <Layout style={styles.textList}>
@@ -303,6 +308,8 @@ function OrderStatusScreen({ navigation }) {
   const [filteredToReceiveOrders, setFilteredToReceiveOrders] = useState([]);
   const [query, setSearch] = useState("");
 
+  const [avatars, setAvatars] = useState({});
+
   const groupOrdersByUser = (orders, callback) => {
     let groupedOrders = _.groupBy(orders, (order) => order.user);
     groupedOrders = Object.entries(groupedOrders).map(([key, val]) => ({
@@ -390,6 +397,18 @@ function OrderStatusScreen({ navigation }) {
     );
   }, [query]);
 
+  useEffect(() => {
+    getAvatars(
+      [
+        ...new Set([
+          ...pendingOrders.map((order) => order.user),
+          ...toPayOrders.map((order) => order.user),
+        ]),
+      ],
+      setAvatars
+    );
+  }, [pendingOrders, toPayOrders]);
+
   return (
     <Layout style={styles.container}>
       <Input
@@ -404,6 +423,7 @@ function OrderStatusScreen({ navigation }) {
           toPayOrders={filteredToPayOrders}
           toDeliverOrders={filteredToDeliverOrders}
           toReceiveOrders={filteredToReceiveOrders}
+          avatars={avatars}
         />
       </NavigationContainer>
     </Layout>
@@ -415,14 +435,24 @@ const MyShopStatusTabNavigation = ({
   toPayOrders,
   toDeliverOrders,
   toReceiveOrders,
+  avatars,
 }) => {
   return (
     <MyShopStatusTab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       <MyShopStatusTab.Screen name="Pending">
-        {(props) => <ToProcessNav {...props} data={pendingOrders} isPending />}
+        {(props) => (
+          <ToProcessNav
+            {...props}
+            data={pendingOrders}
+            isPending
+            avatars={avatars}
+          />
+        )}
       </MyShopStatusTab.Screen>
       <MyShopStatusTab.Screen name="To Pay">
-        {(props) => <ToProcessNav {...props} data={toPayOrders} />}
+        {(props) => (
+          <ToProcessNav {...props} data={toPayOrders} avatars={avatars} />
+        )}
       </MyShopStatusTab.Screen>
       <MyShopStatusTab.Screen name="To Deliver">
         {(props) => <ToDeliverNav {...props} data={toDeliverOrders} />}
@@ -434,14 +464,14 @@ const MyShopStatusTabNavigation = ({
   );
 };
 
-const ToProcessNav = ({ data, isPending }) => {
+const ToProcessNav = ({ data, isPending, avatars }) => {
   return (
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
           <List
             data={data}
-            renderItem={(props) => renderItem({ ...props, isPending })}
+            renderItem={(props) => renderItem({ ...props, isPending, avatars })}
           />
         </Layout>
       </Layout>
@@ -454,7 +484,7 @@ const ToDeliverNav = ({ data }) => {
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItem2} />
+          <List data={data} renderItem={(props) => renderItem2({ ...props })} />
         </Layout>
       </Layout>
     </Layout>
@@ -466,7 +496,7 @@ const ShippingNav = ({ data }) => {
     <Layout style={[styles.settingsCard]}>
       <Layout style={styles.inner}>
         <Layout style={{ justifyContent: "flex-start" }}>
-          <List data={data} renderItem={renderItem3} />
+          <List data={data} renderItem={(props) => renderItem3({ ...props })} />
         </Layout>
       </Layout>
     </Layout>

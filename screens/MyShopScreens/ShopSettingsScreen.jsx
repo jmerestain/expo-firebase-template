@@ -19,7 +19,14 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
 import OrdersScreen from "../OrdersScreen";
+import PopUpMessage from "../../components/PopUpMessage";
+import LoadingModal from "../../components/LoadingModal";
 import { ScrollView } from "react-native-gesture-handler";
+import {
+  getShopDetails,
+  updateVendor,
+  deleteShop,
+} from "../../services/vendor";
 
 const SettingsStack = createStackNavigator();
 
@@ -40,15 +47,31 @@ const SettingsScreenNavigation = () => (
 function ShopSettingsScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
+  const [blob, setBlob] = useState(null);
   const [businessName, setBusinessName] = useState("");
   const [fullName, setFullName] = useState("");
   const [location, setLocation] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getShopDetails((shopDetails) => {
+      const shop = shopDetails.shop;
+      setBusinessName(shop.name);
+      setFullName(shop.owner);
+      setLocation(shop.location);
+      setContactNumber(shop.contactNumber);
+      setImage(shopDetails.avatarUrl);
+    });
+  }, []);
 
   return (
     <ScrollView>
       <Layout style={styles.container}>
-        <PreviewComponent image={image} setImage={setImage} />
+        <LoadingModal loading={loading} />
+        {message == "" ? null : <PopUpMessage message={message} />}
+        <PreviewComponent image={image} setImage={setImage} setBlob={setBlob} />
         <Text
           style={{
             fontFamily: "NunitoSans-Bold",
@@ -124,6 +147,34 @@ function ShopSettingsScreen({ navigation }) {
           style={{ paddingHorizontal: 16 }}
           defaultValue={contactNumber}
         />
+        <Button
+          size="large"
+          onPress={() => {
+            if (businessName && fullName && location && contactNumber) {
+              setLoading(true);
+              const shop = {
+                name: businessName,
+                owner: fullName,
+                location,
+                contactNumber,
+              };
+              updateVendor({ shop }, blob, (message) => {
+                setLoading(false);
+                setMessage(message);
+              });
+            } else {
+              setMessage("Please input your details correctly.");
+            }
+          }}
+          style={{
+            marginLeft: 16,
+            marginRight: 16,
+            marginTop: 24,
+            marginBottom: 24,
+          }}
+        >
+          Submit
+        </Button>
         {/*<Text style={{ fontFamily:'NunitoSans-Bold', fontSize: 17, paddingHorizontal:16, paddingVertical: 12}}>Notifications</Text>
             <Divider style={{ marginBottom: 12 }} />
             <Layout style={{flexDirection:'row', paddingHorizontal:16, alignItems: 'flex-end', justifyContent: 'space-between', borderColor: 'rgb(186,186,186)'}}>
@@ -203,7 +254,21 @@ function ShopSettingsScreen({ navigation }) {
                 </Button>
                 <Button
                   appearance="outline"
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setLoading(true);
+                    deleteShop((isSuccess) => {
+                      setLoading(false);
+                      if (isSuccess) {
+                        setMessage("Successfully deleeted the shop!");
+                        navigation.goBack();
+                      } else {
+                        setMessage(
+                          "Shop was not deleted. Please try again in a few minutes."
+                        );
+                      }
+                    });
+                  }}
                   style={{ marginTop: 12 }}
                 >
                   Delete Now

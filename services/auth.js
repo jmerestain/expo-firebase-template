@@ -65,7 +65,7 @@ export const checkAuthenticated = (setUser, navigation) => {
 };
 
 export const authOnOpen = (navigation) => {
-  firebase.auth().onAuthStateChanged((user) => {
+  var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       navigation.reset({
         index: 0,
@@ -73,6 +73,8 @@ export const authOnOpen = (navigation) => {
       });
     }
   });
+
+  return unsubscribe;
 };
 
 export const getUserID = (callback) => {

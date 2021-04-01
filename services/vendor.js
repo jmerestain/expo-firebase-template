@@ -1,7 +1,13 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-export const vendorApply = (shopDetails, validIdImage, certImage, callback) => {
+export const vendorApply = (
+  shopDetails,
+  validIdImage,
+  certImage,
+  avatar,
+  callback
+) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
   const storage = firebase.storage().ref();
@@ -11,9 +17,11 @@ export const vendorApply = (shopDetails, validIdImage, certImage, callback) => {
   const certImageRef = storage.child(
     `certificate-images/${currentUserUID}.jpg`
   );
+  const avatarRef = storage.child(`vendor-images/${currentUserUID}.jpg`);
 
   let idImageUrl;
   let certImageUrl;
+  let avatarUrl;
 
   idImageRef
     .put(validIdImage)
@@ -31,22 +39,94 @@ export const vendorApply = (shopDetails, validIdImage, certImage, callback) => {
                 certImageUrl = url;
               })
               .then(() => {
-                const vendorDetails = {
-                  ...shopDetails,
-                  validID: idImageUrl,
-                  DTICert: certImageUrl,
-                  isApproved: false,
-                };
+                if (avatar) {
+                  avatarRef.put(avatar).then(() => {
+                    avatarRef
+                      .getDownloadURL()
+                      .then((url) => {
+                        avatarUrl = url;
+                      })
+                      .then(() => {
+                        const vendorDetails = {
+                          ...shopDetails,
+                          validID: idImageUrl,
+                          DTICert: certImageUrl,
+                          avatarUrl,
+                          isApproved: false,
+                        };
 
-                db.collection("vendor-profiles")
-                  .doc(currentUserUID)
-                  .set(vendorDetails)
-                  .then(() => callback());
+                        db.collection("vendor-profiles")
+                          .doc(currentUserUID)
+                          .set(vendorDetails)
+                          .then(() => callback());
+                      });
+                  });
+                } else {
+                  const vendorDetails = {
+                    ...shopDetails,
+                    validID: idImageUrl,
+                    DTICert: certImageUrl,
+                    isApproved: false,
+                  };
+
+                  db.collection("vendor-profiles")
+                    .doc(currentUserUID)
+                    .set(vendorDetails)
+                    .then(() => callback());
+                }
               });
           });
         });
     })
     .catch((e) => console.log(e));
+};
+
+export const updateVendor = (shopDetails, avatar, callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const storage = firebase.storage().ref();
+
+  const currentUserUID = auth.currentUser.uid;
+  const avatarRef = storage.child(`vendor-images/${currentUserUID}.jpg`);
+
+  let avatarUrl;
+
+  if (avatar) {
+    avatarRef.put(avatar).then(() => {
+      avatarRef
+        .getDownloadURL()
+        .then((url) => {
+          avatarUrl = url;
+        })
+        .then(() => {
+          const vendorDetails = {
+            ...shopDetails,
+            avatarUrl,
+          };
+
+          db.collection("vendor-profiles")
+            .doc(currentUserUID)
+            .update(vendorDetails)
+            .then(() => callback("Successfully updated your details!"));
+        })
+        .catch((e) =>
+          callback(
+            "Could not update your details because of the following: " +
+              e.message
+          )
+        );
+    });
+  } else {
+    db.collection("vendor-profiles")
+      .doc(currentUserUID)
+      .update(shopDetails)
+      .then(() => callback("Successfully updated your details!"))
+      .catch((e) =>
+        callback(
+          "Could not update your details because of the following: " + e.message
+        )
+      );
+  }
 };
 
 export const getShopDetails = (callback) => {
@@ -58,7 +138,11 @@ export const getShopDetails = (callback) => {
     .doc(currentUserUID)
     .get()
     .then((vendor) => {
-      callback({ ...vendor.data(), id: vendor.id });
+      const shop = {
+        ...vendor.data().shop,
+        avatarUrl: vendor.data().avatarUrl,
+      };
+      callback({ ...vendor.data(), shop, id: vendor.id });
     })
     .catch((e) => console.log(e));
 };
@@ -70,7 +154,11 @@ export const getShopDetailsByUID = (uid, callback) => {
     .doc(uid)
     .get()
     .then((vendor) => {
-      callback({ ...vendor.data().shop, id: vendor.id });
+      callback({
+        ...vendor.data().shop,
+        id: vendor.id,
+        ...vendor.data().avatarUrl,
+      });
     })
     .catch((e) => console.log(e));
 };
@@ -88,6 +176,22 @@ export const getShopDetailsByManyUID = (uids, callback) => {
       callback(vendors);
     })
     .catch((e) => console.log(e));
+};
+
+export const deleteShop = (callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("vendor-profiles")
+    .doc(currentUserUID)
+    .delete()
+    .then(() => {
+      callback(true);
+    })
+    .catch((e) => {
+      callback(false);
+    });
 };
 
 export const vendorApplyStatus = (callback) => {

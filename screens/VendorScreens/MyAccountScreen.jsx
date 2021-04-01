@@ -176,8 +176,8 @@ function MyAccountScreen({ navigation }) {
             size="giant"
             shape="round"
             source={
-              profile.photoURL
-                ? { uri: profile.photoURL }
+              profile.avatarUrl
+                ? { uri: profile.avatarUrl }
                 : require("../../screens/avatar-icon.png")
             }
             style={{

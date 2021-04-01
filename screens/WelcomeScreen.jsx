@@ -35,7 +35,11 @@ const WelcomeScreen = ({ navigation }) => {
       setFirstTime(value);
     }
     fetchData();
-    authOnOpen(navigation);
+    var unsubscribe = authOnOpen(navigation);
+
+    return function cleanup() {
+      unsubscribe();
+    };
   }, []);
 
   return (

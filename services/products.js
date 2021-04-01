@@ -234,16 +234,18 @@ export const updateProduct = (
   }
 };
 
-export const deleteProduct = (productId, callback) => {
+export const deleteProduct = (productId, setMessage, setVisible) => {
   const db = firebase.firestore();
 
   db.collection("products")
   .doc(productId)
   .delete()
   .then(() => {
-    callback()
+    setMessage("Product successfully deleted");
+    setVisible(true);
   })
   .catch((e) => {
-    console.log(e);
+    setMessage("There was an error in deleting. Please try again in a few minutes.");
+    setVisible(true);
   })
 }
