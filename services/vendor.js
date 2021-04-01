@@ -81,6 +81,54 @@ export const vendorApply = (
     .catch((e) => console.log(e));
 };
 
+export const updateVendor = (shopDetails, avatar, callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const storage = firebase.storage().ref();
+
+  const currentUserUID = auth.currentUser.uid;
+  const avatarRef = storage.child(`vendor-images/${currentUserUID}.jpg`);
+
+  let avatarUrl;
+
+  if (avatar) {
+    avatarRef.put(avatar).then(() => {
+      avatarRef
+        .getDownloadURL()
+        .then((url) => {
+          avatarUrl = url;
+        })
+        .then(() => {
+          const vendorDetails = {
+            ...shopDetails,
+            avatarUrl,
+          };
+
+          db.collection("vendor-profiles")
+            .doc(currentUserUID)
+            .update(vendorDetails)
+            .then(() => callback("Successfully updated your details!"));
+        })
+        .catch((e) =>
+          callback(
+            "Could not update your details because of the following: " +
+              e.message
+          )
+        );
+    });
+  } else {
+    db.collection("vendor-profiles")
+      .doc(currentUserUID)
+      .update(shopDetails)
+      .then(() => callback("Successfully updated your details!"))
+      .catch((e) =>
+        callback(
+          "Could not update your details because of the following: " + e.message
+        )
+      );
+  }
+};
+
 export const getShopDetails = (callback) => {
   const db = firebase.firestore();
   const auth = firebase.auth();
@@ -93,7 +141,7 @@ export const getShopDetails = (callback) => {
       const shop = {
         ...vendor.data().shop,
         avatarUrl: vendor.data().avatarUrl,
-      }
+      };
       callback({ ...vendor.data(), shop, id: vendor.id });
     })
     .catch((e) => console.log(e));
@@ -128,6 +176,22 @@ export const getShopDetailsByManyUID = (uids, callback) => {
       callback(vendors);
     })
     .catch((e) => console.log(e));
+};
+
+export const deleteShop = (callback) => {
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const currentUserUID = auth.currentUser.uid;
+
+  db.collection("vendor-profiles")
+    .doc(currentUserUID)
+    .delete()
+    .then(() => {
+      callback(true);
+    })
+    .catch((e) => {
+      callback(false);
+    });
 };
 
 export const vendorApplyStatus = (callback) => {

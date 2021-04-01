@@ -10,80 +10,93 @@ import {
   Input,
   Icon,
 } from "@ui-kitten/components";
-import { StyleSheet, 
-  TouchableOpacity,
-  Image,
-  ScrollView, } from "react-native";
+import { StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 import { searchFromData } from "../../services/search";
-import { getProductsCurrentVendor } from "../../services/products";
 
 const SearchIcon = (props) => <Icon name="search-outline" {...props} />;
 
 const RenderItem = ({ item, navigation }) => (
   <ScrollView>
-  <Layout style={styles.containerTop}>
-    <Layout style={styles.inner}>
-    <TouchableOpacity>
-      <Layout style={styles.containerList}>
-      
-        <Layout style={styles.innerList}>
-        <Image
-            style={{ resizeMode: "cover", height: 80, width: 80, marginHorizontal: 18, borderRadius: 4 }}
-            source={{ uri: item.imageUrl }}
-          />
-          <Layout style={styles.textList}>
-            <Text
-              style={{
-                alignContent: "center",
-                marginTop: 8,
-                marginBottom: 2,
-                fontSize: 16,
-                fontFamily: "NunitoSans-Bold",
-              }}
-            >
-              {item.type == "product"
-                ? item.title
-                : item.shop
-                ? item.shop.name
-                : ""}
-            </Text>
-            <Text
-              category="s2"
-              style={{
-                alignContent: "center",
-                marginVertical: 2,
-                color: "#000000",
-              }}
-            >
-              {item.type == "product"
-                ? "P" + item.price
-                : item.shop
-                ? item.shop.owner
-                : ""}
-            </Text>
-            {item.type == "product" && (
-              <Text
-                category="s2"
+    <Layout style={styles.containerTop}>
+      <Layout style={styles.inner}>
+        <TouchableOpacity
+          onPress={() =>
+            item.type == "product"
+              ? navigation.navigate("Product", {
+                  productId: item.id,
+                  title: item.title,
+                })
+              : item.type == "vendor"
+              ? navigation.navigate("Vendor Shop", {
+                  vendorName: item.shop.name,
+                  vendorId: item.id,
+                })
+              : null
+          }
+        >
+          <Layout style={styles.containerList}>
+            <Layout style={styles.innerList}>
+              <Image
                 style={{
-                  alignContent: "center",
-                  marginVertical: 2,
-                  color: "#00000060",
-                  fontFamily: "NunitoSans-Regular",
-                  fontSize: 12,
+                  resizeMode: "cover",
+                  height: 80,
+                  width: 80,
+                  marginHorizontal: 18,
+                  borderRadius: 4,
                 }}
-              >
-                {item.stock} left
-              </Text>
-            )}
+                source={{ uri: item.imageUrl || item.avatarUrl }}
+              />
+              <Layout style={styles.textList}>
+                <Text
+                  style={{
+                    alignContent: "center",
+                    marginTop: 8,
+                    marginBottom: 2,
+                    fontSize: 16,
+                    fontFamily: "NunitoSans-Bold",
+                  }}
+                >
+                  {item.type == "product"
+                    ? item.title
+                    : item.shop
+                    ? item.shop.name
+                    : ""}
+                </Text>
+                <Text
+                  category="s2"
+                  style={{
+                    alignContent: "center",
+                    marginVertical: 2,
+                    color: "#000000",
+                  }}
+                >
+                  {item.type == "product"
+                    ? "P" + item.price
+                    : item.shop
+                    ? item.shop.owner
+                    : ""}
+                </Text>
+                {item.type == "product" && (
+                  <Text
+                    category="s2"
+                    style={{
+                      alignContent: "center",
+                      marginVertical: 2,
+                      color: "#00000060",
+                      fontFamily: "NunitoSans-Regular",
+                      fontSize: 12,
+                    }}
+                  >
+                    {item.stock} left
+                  </Text>
+                )}
+              </Layout>
+            </Layout>
           </Layout>
-          
-        </Layout>
-        
+        </TouchableOpacity>
       </Layout>
-      </TouchableOpacity>
+      <Divider />
     </Layout>
-    <Divider />
-  </Layout>
   </ScrollView>
 );
 

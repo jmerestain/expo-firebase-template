@@ -14,10 +14,11 @@ import {
   Icon,
   Divider,
   Toggle,
-  Avatar
+  Avatar,
 } from "@ui-kitten/components";
 import { updateUser, getCurrentUserFromUID } from "../../services/users";
 import PopUpMessage from "../../components/PopUpMessage";
+import LoadingModal from "../../components/LoadingModal";
 import { Input } from "@ui-kitten/components";
 import * as ImagePicker from "expo-image-picker";
 
@@ -28,11 +29,14 @@ function AccountSetttingsScreen({ navigation }) {
   const [confirmPass, setConfirmPass] = useState("");
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
+  const [blob, setBlob] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const populateFields = (userProfile) => {
       setEmail(userProfile.email);
       setUsername(userProfile.username || "");
+      setImage(userProfile.avatarUrl);
     };
 
     getCurrentUserFromUID(populateFields);
@@ -41,8 +45,9 @@ function AccountSetttingsScreen({ navigation }) {
   return (
     <ScrollView>
       <Layout style={styles.container}>
+        <LoadingModal loading={loading} />
         {message == "" ? null : <PopUpMessage message={message} />}
-        <PreviewComponent image={image} setImage={setImage} />
+        <PreviewComponent image={image} setImage={setImage} setBlob={setBlob} />
         <Text
           style={{
             fontFamily: "NunitoSans-Bold",
@@ -134,9 +139,11 @@ function AccountSetttingsScreen({ navigation }) {
           size="large"
           onPress={() => {
             if (email != "" && password == confirmPass) {
-              updateUser({ email, password, username }, (message) =>
-                setMessage(message)
-              );
+              setLoading(true);
+              updateUser({ email, password, username }, blob, (message) => {
+                setLoading(false);
+                setMessage(message);
+              });
             } else {
               setMessage(
                 "Please input your details correctly. Passwords may not have matched."
@@ -157,72 +164,73 @@ function AccountSetttingsScreen({ navigation }) {
   );
 }
 
-
 const PreviewComponent = ({ setImage, setBlob, image }) => {
-    return (
-      <Layout style={styles.field}>
-          <Avatar
-            source={{ uri: image }}
-            style={{
-              width: 100,
-              height: 100,
-              resizeMode: "contain",
-              marginVertical: 5,
-              alignSelf: "center",
-              borderWidth: 1,
-              borderColor: "#BDBDBD",
-            }}
-          />
-          <ImagePickerComponent
-            setImage={setImage}
-            setBlob={setBlob}
-            image={image}
-          />
-      </Layout>
-    );
-  };
-  
-  function ImagePickerComponent({ setImage, setBlob, image }) {
-    useEffect(() => {
-      (async () => {
-        if (Platform.OS !== "web") {
-          const {
-            status,
-          } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== "granted") {
-            alert("Sorry, we need camera roll permissions to add images");
-          }
+  return (
+    <Layout style={styles.field}>
+      <Avatar
+        source={{ uri: image }}
+        style={{
+          width: 100,
+          height: 100,
+          resizeMode: "contain",
+          marginVertical: 5,
+          alignSelf: "center",
+          borderWidth: 1,
+          borderColor: "#BDBDBD",
+        }}
+      />
+      <ImagePickerComponent
+        setImage={setImage}
+        setBlob={setBlob}
+        image={image}
+      />
+    </Layout>
+  );
+};
+
+function ImagePickerComponent({ setImage, setBlob, image }) {
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to add images");
         }
-      })();
-    }, []);
-  
-    const pickImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-  
-      console.log(result);
-  
-      if (!result.cancelled) {
-        setImage(result.uri);
-        const response = await fetch(result.uri);
-        const blob = await response.blob();
-        setBlob(blob);
       }
-    };
-  
-    return (
-      <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal:  16}}>
-        <Button onPress={pickImage} size="small" appearance="ghost" style={{ marginTop: 16 }}>
-          {image != null ? "Change Avatar" : "Set Avatar"}
-        </Button>
-      </Layout>
-    );
-  }
-  
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      const response = await fetch(result.uri);
+      const blob = await response.blob();
+      setBlob(blob);
+    }
+  };
+
+  return (
+    <Layout style={{ flex: 1, justifyContent: "center", marginHorizontal: 16 }}>
+      <Button
+        onPress={pickImage}
+        size="small"
+        appearance="ghost"
+        style={{ marginTop: 16 }}
+      >
+        {image != null ? "Change Avatar" : "Set Avatar"}
+      </Button>
+    </Layout>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
