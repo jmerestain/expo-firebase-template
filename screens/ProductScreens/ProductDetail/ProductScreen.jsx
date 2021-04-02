@@ -446,7 +446,7 @@ function ProductScreen({ route, navigation }) {
           </Layout>
         </Modal>
       </Layout>
-      <Layout style={{ position: "sticky", flex: 1 }}>
+      <Layout style={{ position: "relative", flex: 1 }}>
         <Layout
           style={{
             position: "absolute",

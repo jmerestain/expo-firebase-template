@@ -280,14 +280,13 @@ const styles = StyleSheet.create({
     height: 240,
     resizeMode: "contain",
     alignSelf: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   categoryEntry: {
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
-    padding: 8,
-    width: 120,
+    padding: 0,
+    width: 100,
     marginBottom: 10,
   },
   categorySection: {
