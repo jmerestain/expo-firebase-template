@@ -53,6 +53,9 @@ export const vendorApply = (
                           DTICert: certImageUrl,
                           avatarUrl,
                           isApproved: false,
+                          createdAt: firebase.firestore.Timestamp.fromDate(
+                            new Date()
+                          ),
                         };
 
                         db.collection("vendor-profiles")
