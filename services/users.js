@@ -89,6 +89,7 @@ export const createUserProfile = (
               ...userDetails,
               avatarId: imageId,
               avatarUrl: imageUrl,
+              createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
             };
             db.collection("user-profiles")
               .doc(currentUserUID)
