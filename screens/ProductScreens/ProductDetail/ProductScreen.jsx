@@ -233,7 +233,7 @@ function ProductScreen({ route, navigation }) {
 
   return (
     <Layout style={{ display: "flex", flexDirection: "column" }}>
-      <ScrollView>
+      <ScrollView style={{marginBottom: 55}}>
         <LoadingModal loading={loading} />
         <Layout style={styles.container}>
           <Image
@@ -368,6 +368,36 @@ function ProductScreen({ route, navigation }) {
           </Layout>
         </Layout>
       </ScrollView>
+      <Layout style={{ position: "absolute", flex: 1, bottom: 0 }}>
+        <Layout
+          style={{
+            bottom: 0,
+            flexDirection: "row",
+            justifyContent: "center",
+            backgroundColor: "rgb(250,250,250)",
+            paddingVertical: 8,
+          }}
+        >
+          <Button
+            size="large"
+            style={{
+              width: "48%",
+              marginHorizontal: 4,
+              backgroundColor: "rgb(87,11,13)",
+            }}
+            onPress={contactSellerOnPress}
+          >
+            Contact Seller
+          </Button>
+          <Button
+            size="large"
+            style={{ width: "48%", marginHorizontal: 4 }}
+            onPress={() => setModalVisible(true)}
+          >
+            Add to Cart
+          </Button>
+        </Layout>
+      </Layout>
       <Layout style={styles.centeredView}>
         <Modal
           style={{ margin: 0 }}
@@ -445,37 +475,6 @@ function ProductScreen({ route, navigation }) {
             </Layout>
           </Layout>
         </Modal>
-      </Layout>
-      <Layout style={{ position: "sticky", flex: 1 }}>
-        <Layout
-          style={{
-            position: "absolute",
-            bottom: 0,
-            flexDirection: "row",
-            justifyContent: "center",
-            backgroundColor: "rgb(250,250,250)",
-            paddingVertical: 8,
-          }}
-        >
-          <Button
-            size="large"
-            style={{
-              width: "48%",
-              marginHorizontal: 4,
-              backgroundColor: "rgb(87,11,13)",
-            }}
-            onPress={contactSellerOnPress}
-          >
-            Contact Seller
-          </Button>
-          <Button
-            size="large"
-            style={{ width: "48%", marginHorizontal: 4 }}
-            onPress={() => setModalVisible(true)}
-          >
-            Add to Cart
-          </Button>
-        </Layout>
       </Layout>
     </Layout>
   );

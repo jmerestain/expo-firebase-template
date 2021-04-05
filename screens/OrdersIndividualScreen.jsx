@@ -15,7 +15,7 @@ import {
   Divider,
   Avatar,
 } from "@ui-kitten/components";
-import { createStackNavigator } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 import { getCurrentUserFromUID } from "../services/users";
 import { getShopDetailsByUID } from "../services/vendor";
 import {
@@ -34,80 +34,91 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const renderItem = ({ item, index }) => (
-  <Layout style={styles.innerList}>
-    <Image
-      style={{ resizeMode: "cover", height: 80, width: "20%" }}
-      source={{ uri: item.imageUrl }}
-    />
-    <Layout style={styles.textList}>
-      <Layout
-        style={{
-          paddingHorizontal: 8,
-          shadowRadius: 1,
-          borderColor: "rgb(220,220,220)",
-          marginVertical: 8,
-        }}
-      >
-        <Text
-          category="s1"
-          style={{
-            fontFamily: "NunitoSans-Bold",
-            alignContent: "center",
-            marginTop: 4,
-          }}
-        >
-          {item.product.title}
-        </Text>
-        <Text
-          category="s2"
-          style={{
-            alignContent: "center",
-            fontFamily: "NunitoSans-Bold",
-            marginVertical: 3,
-            color: "rgb(128, 128, 128)",
-          }}
-        >
-          P{item.product.price}
-        </Text>
-        <Layout
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Layout>
+const renderItem = ({ item, index }) => {
+  const {title, id} = item;
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity onPress={() => {
+      navigation.navigate("Product", {
+        title,
+        productId: id
+      })
+    }}>
+      <Layout style={styles.innerList}>
+        <Image
+          style={{ resizeMode: "cover", height: 80, width: "20%" }}
+          source={{ uri: item.imageUrl }}
+        />
+        <Layout style={styles.textList}>
+          <Layout
+            style={{
+              paddingHorizontal: 8,
+              shadowRadius: 1,
+              borderColor: "rgb(220,220,220)",
+              marginVertical: 8,
+            }}
+          >
+            <Text
+              category="s1"
+              style={{
+                fontFamily: "NunitoSans-Bold",
+                alignContent: "center",
+                marginTop: 4,
+              }}
+            >
+              {item.product.title}
+            </Text>
             <Text
               category="s2"
               style={{
                 alignContent: "center",
-                fontFamily: "NunitoSans-Regular",
-                marginBottom: 3,
+                fontFamily: "NunitoSans-Bold",
+                marginVertical: 3,
                 color: "rgb(128, 128, 128)",
               }}
             >
-              x{item.quantity}
+              P{item.product.price}
             </Text>
-          </Layout>
-          <Layout style={{ alignItems: "flex-end" }}>
-            <Text
-              category="s2"
+            <Layout
               style={{
-                alignContent: "flex-end",
-                fontFamily: "NunitoSans-Regular",
-                marginBottom: 3,
-                color: "rgb(128, 128, 128)",
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
               }}
             >
-              Subtotal: P{item.product.price * item.quantity}
-            </Text>
+              <Layout>
+                <Text
+                  category="s2"
+                  style={{
+                    alignContent: "center",
+                    fontFamily: "NunitoSans-Regular",
+                    marginBottom: 3,
+                    color: "rgb(128, 128, 128)",
+                  }}
+                >
+                  x{item.quantity}
+                </Text>
+              </Layout>
+              <Layout style={{ alignItems: "flex-end" }}>
+                <Text
+                  category="s2"
+                  style={{
+                    alignContent: "flex-end",
+                    fontFamily: "NunitoSans-Regular",
+                    marginBottom: 3,
+                    color: "rgb(128, 128, 128)",
+                  }}
+                >
+                  Subtotal: P{item.product.price * item.quantity}
+                </Text>
+              </Layout>
+            </Layout>
           </Layout>
         </Layout>
       </Layout>
-    </Layout>
-  </Layout>
-);
+    </TouchableOpacity>
+  )
+}
 
 function OrdersIndividualScreen({ route, navigation }) {
   return (

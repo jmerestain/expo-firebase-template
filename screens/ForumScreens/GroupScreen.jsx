@@ -22,11 +22,11 @@ const GroupScreen = ({ navigation }) => {
       }
     >
       <Image
-        style={{ resizeMode: "contain" }}
+        style={{ resizeMode: "contain", width: '98%' }}
         source={require("../../screens/Rectangle_164.png")}
       />
-      <Layout style={{ alignSelf: "flex-start" }}>
-        <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 8 }}>
+      <Layout style={{alignSelf: 'flex-start' }}>
+        <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 6 }}>
           {item.name}
         </Text>
         {/* <Layout style={{ flexDirection: "row", marginVertical: 6 }}>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: "center",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
 });
 

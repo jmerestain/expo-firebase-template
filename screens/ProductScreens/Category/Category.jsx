@@ -14,20 +14,20 @@ const renderItem = ({ item, index, navigation }) => (
       }}
     >
       <Image
-        style={{ resizeMode: "cover", height: 160, width: 160 }}
+        style={{ resizeMode: "cover", height: 155, width: 155 }}
         source={{ uri: item.imageUrl }}
       />
-      <Layout style={{ alignSelf: "flex-start" }}>
-      <Text category="s1" style={{ fontWeight: "bold", marginBottom: 3, marginTop: 10, fontFamily: "NunitoSans-Bold", color: '#000' }}>
+      <Layout style={{ alignSelf: "flex-start"}}>
+        <Text category="s1" style={{ fontWeight: "bold", marginBottom: 3, marginTop: 10, fontFamily: "NunitoSans-Bold", color: '#000' }}>
           {item.title}
         </Text>
         <Text category="s2" style={{paddingBottom: 4}}>P {parseFloat(item.price).toFixed(2)}</Text>
         {/*<Text category="s2" style={{ marginVertical: 4, color: '#00000070', fontFamily: "NunitoSans-Regular" }}>{item.vendor}</Text>*/}
         <Text
-        style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
-      >
-        {item.vendorName}
-      </Text>
+          style={{ fontSize: 13, fontWeight: "bold", color: "rgb(138,18,20)" }}
+        >
+          {item.vendorName}
+        </Text>
       </Layout>
     </TouchableOpacity>
   </Layout>
@@ -85,10 +85,10 @@ const Category = ({ route, navigation }) => {
           showsVerticalScrollIndicator={false}
           numColumns={2}
           renderItem={(props) => renderItem({...props, navigation})}
-          style={{
+          style={[{
             backgroundColor: "transparent",
             flex: 1,
-          }}
+          }]}
           columnWrapperStyle={{
             justifyContent: "space-between",
           }}
