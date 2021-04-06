@@ -15,7 +15,7 @@ import {
   Divider,
   Avatar,
 } from "@ui-kitten/components";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import { getCurrentUserFromUID } from "../services/users";
 import { getShopDetailsByUID } from "../services/vendor";
 import {
@@ -34,9 +34,9 @@ const dateToString = (date) => {
   return month + "/" + day + "/" + year;
 };
 
-const renderItem = ({ item, index }) => {
+const renderItem = ({ item, index, navigation }) => {
   const {title, id} = item;
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   return (
     <TouchableOpacity onPress={() => {
       navigation.navigate("Product", {
@@ -318,7 +318,7 @@ const DeliverAddress = ({ route, navigation }) => {
           <Layout style={[styles.settingsCard]}>
             <Layout style={styles.inner}>
               <Layout style={{ justifyContent: "flex-start" }}>
-                <List data={orders} renderItem={renderItem} />
+                <List data={orders} renderItem={(props) => renderItem({...props, navigation})} />
               </Layout>
             </Layout>
             <Layout>
